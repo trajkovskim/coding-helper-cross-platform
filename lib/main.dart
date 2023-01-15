@@ -3,16 +3,16 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'components/layout/coding_helper_layout.dart';
-import 'context/index.dart';
-import 'pages/initial_page.dart';
-import 'pages/problems/problem_overview_page.dart';
-import 'pages/problems/problems_discover_page.dart';
-import 'pages/problems/problems_overview_page.dart';
-import 'pages/profile/profile_page.dart';
-import 'pages/profile/saved_page.dart';
-import 'pages/profile/settings_page.dart';
-import 'pages/profile/stats_page.dart';
+import 'src/components/layout/coding_helper_layout.dart';
+import 'src/context/index.dart';
+import 'src/pages/initial_page.dart';
+import 'src/pages/problems/problem_overview_page.dart';
+import 'src/pages/problems/problems_discover_page.dart';
+import 'src/pages/problems/problems_overview_page.dart';
+import 'src/pages/profile/profile_page.dart';
+import 'src/pages/profile/saved_page.dart';
+import 'src/pages/profile/settings_page.dart';
+import 'src/pages/profile/stats_page.dart';
 
 void main() {
   runApp(const MyApp());

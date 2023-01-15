@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/common/grid_view.dart';
 import '../../components/common/list_options.dart';
 import '../../components/common/modal.dart';
 import '../../components/common/search_input.dart';
@@ -8,6 +9,11 @@ import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 import '../../services/index.dart';
+
+enum View {
+  LIST,
+  GRID;
+}
 
 class ProblemsDiscoverPage extends StatefulWidget {
   const ProblemsDiscoverPage({super.key});
@@ -23,6 +29,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
   bool showSearch = false;
   bool init = false;
   bool loading = false;
+  View view = View.LIST;
 
   List<String> options = [];
 
@@ -196,30 +203,52 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                             label: Text(tListOptions('sort')),
                           ),
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () => setState(() {
+                              view = view == View.GRID ? View.LIST : View.GRID;
+                            }),
                             icon: const Icon(Icons.settings),
                             label: Text(tListOptions('view')),
                           ),
                         ],
                       ),
                       ListOptions(
-                          options: options, onRemove: handleRemoveOption),
-                      Expanded(
-                        child: VerticalListView(
-                          children: problems
-                              .map(
-                                (entry) => ListItem(
-                                  title: entry.title,
-                                  onTap: () => navigator.pushNamed(
-                                    '/problem-overview',
-                                    arguments: {'id': entry.id},
-                                  ),
-                                  subtitle: entry.description,
-                                ),
-                              )
-                              .toList(),
-                        ),
+                        options: options,
+                        onRemove: handleRemoveOption,
                       ),
+                      if (view == View.LIST)
+                        Expanded(
+                          child: VerticalListView(
+                            children: problems
+                                .map(
+                                  (entry) => ListItem(
+                                    title: entry.title,
+                                    onTap: () => navigator.pushNamed(
+                                      '/problem-overview',
+                                      arguments: {'id': entry.id},
+                                    ),
+                                    subtitle: entry.description,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      if (view == View.GRID)
+                        Expanded(
+                          child: CustomGridView(
+                            children: problems
+                                .map(
+                                  (entry) => GridItem(
+                                    title: entry.title,
+                                    onTap: () => navigator.pushNamed(
+                                      '/problem-overview',
+                                      arguments: {'id': entry.id},
+                                    ),
+                                    subtitle: entry.description,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
                     ],
                   ),
                 )

@@ -39,10 +39,14 @@ dependencies:
   flutter_code_editor: ^0.2.5
   shared_preferences: ^2.0.15
   flutter_i18n: ^0.32.4
+  openapi_generator_annotations: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: 
+  openapi_generator: ^4.0.0
+    
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

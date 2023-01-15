@@ -8,21 +8,25 @@
       "name": "coding_helper_cross_platform",
       "request": "launch",
       "type": "dart",
-      "program": "src/main.dart"
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "CODING_HELPER_API_URL=http://localhost:3000",
+      ]
     },
     {
       "name": "coding_helper_cross_platform (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
-      "program": "src/main.dart"
+      "program": "lib/main.dart"
     },
     {
       "name": "coding_helper_cross_platform (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",
-      "program": "src/main.dart"
+      "program": "lib/main.dart"
     }
   ]
 }
