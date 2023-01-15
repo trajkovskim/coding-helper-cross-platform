@@ -1,3 +1,4 @@
+import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/common/code_editor.dart';
@@ -17,7 +18,7 @@ class ProblemOverviewPage extends StatefulWidget {
 
 class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
   final ProblemsService problemsService = const ProblemsService();
-  ProblemEntry? problem;
+  ProblemByLikes? entry;
   String? id;
   bool init = false;
   bool loading = false;
@@ -31,7 +32,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
         builder: (context) => ProblemArenaPage(),
         settings: RouteSettings(
           arguments: {
-            'problem': problem,
+            'problem': entry,
             'language': selectedLanguage,
           },
         ),
@@ -67,7 +68,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     problemsService
         .getProblemEntry(id!)
         .then((entry) => setState(() {
-              problem = entry;
+              this.entry = entry;
             }))
         .onError(
           (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
@@ -88,7 +89,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(problem?.title ?? ''),
+        title: Text(entry?.problem.title ?? ''),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         if (loading) {
@@ -123,15 +124,17 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('${t('difficulty')} ${problem?.code}'),
-                                    Text('${t('duration')} ${problem?.code}'),
-                                    Text('${t('participants')} ${problem?.code}'),
-                                    Text('${t('reviews')} ${problem?.code}'),
+                                    Text(
+                                      '${t('difficulty')} ${entry?.problem.difficulty.name}',
+                                    ),
+                                    Text('${t('duration')} ${'1h30m'}'),
+                                    Text('${t('participants')} ${0}'),
+                                    Text('${t('reviews')} ${0}'),
                                   ],
                                 )
                               ],
                             ),
-                            Text(problem!.title),
+                            Text(entry?.problem.title ?? ''),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -166,7 +169,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(t('description')),
-                          Text(problem!.description ?? t('noDescription'))
+                          Text(entry?.problem.markdown ?? t('noDescription'))
                         ],
                       ),
                     ),

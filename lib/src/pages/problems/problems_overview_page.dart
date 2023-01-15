@@ -22,9 +22,6 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!mounted) {
-      return;
-    }
     if (init) {
       return;
     }
@@ -38,16 +35,18 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
         .getProblemEntries()
         .then((value) => problemsContext.setProblems(value))
         .onError(
-          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
-        )
-        .whenComplete(
+      (error, stackTrace) {
+        print(error);
+        handleError(context, ErrorCode.PROBLEMS);
+      },
+    ).whenComplete(
       () {
-        init = true;
         setState(() {
           loading = false;
         });
       },
     );
+    init = true;
   }
 
   @override
@@ -104,7 +103,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                           onTap: () {
                             navigator.pushNamed(
                               '/problem-overview',
-                              arguments: {'id': entry.id},
+                              arguments: {'id': entry.id.toString()},
                             );
                           },
                         ),
@@ -122,7 +121,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                           onTap: () {
                             navigator.pushNamed(
                               '/problem-overview',
-                              arguments: {'id': entry.id},
+                              arguments: {'id': entry.id.toString()},
                             );
                           },
                         ),

@@ -40,6 +40,8 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_i18n: ^0.32.4
   openapi_generator_annotations: ^4.0.0
+  coding_helper_api:
+    path: api/coding_helper_api
 
 dev_dependencies:
   flutter_test:

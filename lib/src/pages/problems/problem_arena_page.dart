@@ -1,9 +1,9 @@
+import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 
 import '../../components/common/code_editor.dart';
 import '../../i18n/i18n.dart';
-import '../../services/index.dart';
 
 class ProblemArenaPage extends StatelessWidget {
   final CodeController codeController = CodeController();
@@ -23,7 +23,7 @@ class ProblemArenaPage extends StatelessWidget {
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String;
-    final problem = params['problem'] as ProblemEntry?;
+    final entry = params['problem'] as ProblemByLikes?;
 
     final t = getTranslation(context, 'problem');
 
@@ -34,7 +34,7 @@ class ProblemArenaPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(problem?.title ?? ''),
+          title: Text(entry?.problem.title ?? ''),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -54,7 +54,7 @@ class ProblemArenaPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   // TODO 195063 2023-01-08: parse markdown ??
-                  child: Text(problem?.markdown ?? ''),
+                  child: Text(entry?.problem.markdown ?? ''),
                 ),
               ),
             ),

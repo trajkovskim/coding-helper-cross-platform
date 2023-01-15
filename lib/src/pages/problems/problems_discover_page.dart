@@ -224,9 +224,9 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                                     title: entry.title,
                                     onTap: () => navigator.pushNamed(
                                       '/problem-overview',
-                                      arguments: {'id': entry.id},
+                                      arguments: {'id': entry.id.toString()},
                                     ),
-                                    subtitle: entry.description,
+                                    subtitle: entry.markdown,
                                   ),
                                 )
                                 .toList(),
@@ -241,9 +241,9 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                                     title: entry.title,
                                     onTap: () => navigator.pushNamed(
                                       '/problem-overview',
-                                      arguments: {'id': entry.id},
+                                      arguments: {'id': entry.id.toString()},
                                     ),
-                                    subtitle: entry.description,
+                                    subtitle: entry.markdown,
                                   ),
                                 )
                                 .toList(),
