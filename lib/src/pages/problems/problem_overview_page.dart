@@ -32,7 +32,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
         builder: (context) => ProblemArenaPage(),
         settings: RouteSettings(
           arguments: {
-            'problem': entry,
+            'problem': entry?.problem,
             'language': selectedLanguage,
           },
         ),

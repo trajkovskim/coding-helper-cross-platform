@@ -28,32 +28,34 @@ class VerticalListView extends StatelessWidget {
       ),
       elevation: 2,
       child: Column(
-        children: children
-            .map(
-              (item) => [
-                InkWell(
-                  onTap: item.onTap,
-                  child: ListTile(
-                    leading: item.image != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: item.image,
-                          )
-                        : null,
-                    title: item.title != null ? Text(item.title!) : null,
-                    subtitle:
-                        item.subtitle != null ? Text(item.subtitle!) : null,
-                    trailing: item.trailing,
-                  ),
-                ),
-                const Divider(
-                  color: Colors.black,
+        children: children.isNotEmpty
+            ? children
+                .map(
+                  (item) => [
+                    InkWell(
+                      onTap: item.onTap,
+                      child: ListTile(
+                        leading: item.image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: item.image,
+                              )
+                            : null,
+                        title: item.title != null ? Text(item.title!) : null,
+                        subtitle:
+                            item.subtitle != null ? Text(item.subtitle!) : null,
+                        trailing: item.trailing,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                    )
+                  ],
                 )
-              ],
-            )
-            .expand((element) => element)
-            .take(2 * children.length - 1)
-            .toList(),
+                .expand((element) => element)
+                .take(2 * children.length - 1)
+                .toList()
+            : [],
       ),
     );
   }

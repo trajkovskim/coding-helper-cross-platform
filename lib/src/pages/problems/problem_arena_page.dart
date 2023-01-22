@@ -1,40 +1,136 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
+import 'package:coding_helper_cross_platform/src/components/common/code_test_input_modal.dart';
+import 'package:coding_helper_cross_platform/src/components/common/vertical_list_view.dart';
+import 'package:coding_helper_cross_platform/src/context/index.dart';
+import 'package:coding_helper_cross_platform/src/services/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/common/code_editor.dart';
 import '../../i18n/i18n.dart';
 
-class ProblemArenaPage extends StatelessWidget {
+class Params {
+  final String? language;
+  final ProblemEntry? entry;
+
+  const Params({required this.language, required this.entry});
+}
+
+class ProblemArenaPage extends StatefulWidget {
+  const ProblemArenaPage({super.key});
+
+  @override
+  State<ProblemArenaPage> createState() => _ProblemArenaPageState();
+}
+
+class _ProblemArenaPageState extends State<ProblemArenaPage> {
+  final CodeRunnerService codeRunnerService = const CodeRunnerService();
+  final SubmissionsService submissionsService = const SubmissionsService();
+
   final CodeController codeController = CodeController();
 
-  ProblemArenaPage({super.key});
+  bool init = false;
 
-  void handleSubmit() {
-    // TODO 195063 2023-01-08: use service to submit
+  Params useParams() {
+    final params =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final language = params['language'] as String?;
+    final entry = params['problem'] as ProblemEntry?;
+    return Params(language: language, entry: entry);
   }
 
-  void handleTest() {
-    // TODO 195063 2023-01-08: use service to test code
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (init) {
+      return;
+    }
+
+    print('Arena page');
+
+    final submissionsContext =
+        Provider.of<SubmissionsContext>(context, listen: false);
+    final params = useParams();
+
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
+      ..problemId = params.entry?.id;
+    submissionsService
+        .getSubmissionEntries(builder.build())
+        .then((value) => submissionsContext.setSubmissions(value))
+        .onError(
+          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
+        )
+        .whenComplete(() {
+      init = true;
+    });
+  }
+
+  void handleSubmit() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final params = useParams();
+
+    SubmissionReqBodyBuilder builder = SubmissionReqBodyBuilder()
+      ..code = codeController.text
+      ..language = params.language
+      ..problemId = params.entry?.id;
+
+    submissionsService.submit(builder.build()).then<void>((value) {
+      showSnackBar(scaffoldMessenger, value);
+      init = false;
+    }).onError(
+      (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
+    );
+  }
+
+  void handleTest() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final params = useParams();
+
+    final String input = await showModalBottomSheet(
+      context: context,
+      builder: (context) => const CodeTestInputModal(),
+    );
+
+    RunCodeRequestBuilder builder = RunCodeRequestBuilder()
+      ..code = codeController.text
+      ..language = params.language
+      ..input = input
+      ..problemId = params.entry?.id;
+
+    codeRunnerService
+        .runCode(builder.build())
+        .then((value) => showSnackBar(scaffoldMessenger, value))
+        .onError(
+          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
+        );
+  }
+
+  void showSnackBar(ScaffoldMessengerState scaffoldMessenger, String value) {
+    final snackBar = SnackBar(
+      content: Text(value),
+      duration: const Duration(seconds: 5),
+      dismissDirection: DismissDirection.startToEnd,
+    );
+    scaffoldMessenger.showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
-    final params =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    final language = params['language'] as String;
-    final entry = params['problem'] as ProblemByLikes?;
-
+    final params = useParams();
     final t = getTranslation(context, 'problem');
 
-    codeController.language = CodeEditor.EDITOR_LANGUAGES[language];
+    codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
+    codeController.text = params.entry?.starterCode ?? '';
 
     return DefaultTabController(
       initialIndex: 0,
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(entry?.problem.title ?? ''),
+          title: Text(params.entry?.title ?? ''),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -43,6 +139,7 @@ class ProblemArenaPage extends StatelessWidget {
               Tab(
                 child: Text(t('editor')),
               ),
+              Tab(child: Text(t('submissions'))),
             ],
           ),
         ),
@@ -50,13 +147,7 @@ class ProblemArenaPage extends StatelessWidget {
           children: [
             Card(
               elevation: 200,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  // TODO 195063 2023-01-08: parse markdown ??
-                  child: Text(entry?.problem.markdown ?? ''),
-                ),
-              ),
+              child: Markdown(data: params.entry?.markdown ?? ''),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -78,6 +169,27 @@ class ProblemArenaPage extends StatelessWidget {
                   ],
                 )
               ],
+            ),
+            Consumer<SubmissionsContext>(
+              builder: (context, submissionsContext, child) => Column(
+                children: [
+                  Expanded(
+                    child: VerticalListView(
+                      children: submissionsContext.entries
+                          .map(
+                            (submission) => ListItem(
+                              title: submission.timeSubmitted.toString(),
+                              subtitle: submission.code,
+                              onTap: () {
+                                codeController.text = submission.code;
+                              },
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

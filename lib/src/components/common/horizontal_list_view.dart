@@ -23,6 +23,7 @@ class HorizontalListView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (title != null) Text(title!),

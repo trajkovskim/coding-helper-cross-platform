@@ -23,7 +23,8 @@
     "modal": {
       "filter": "Филтрирај",
       "cancel": "Затвори",
-      "sort": "Сортирај"
+      "sort": "Сортирај",
+      "submit": "Прикачи"
     },
     "listOptions": {
       "filters": "Филтри",
@@ -33,15 +34,17 @@
       "optionsPlaceholder": "Опции пр: search: two way"
     },
     "home": {
-      "title": "Дома"
+      "title": "Coding helper",
+      "activeContests": "Започнати натпревари"
+    },
+    "contests": {
+      "title": "Натпревари",
+      "startsOn": "Започнува на"
     },
     "problems": {
       "title": "Проблеми",
       "recent": {
         "title": "Неодамна"
-      },
-      "contests": {
-        "title": "Натпревари"
       },
       "discover": {
         "title": "Истражи"
@@ -61,7 +64,8 @@
       "editor": "Едитор",
       "start": "Старт",
       "test": "Тестирај",
-      "submit": "Поднеси"
+      "submit": "Поднеси",
+      "submissions": "Поднесувања"
     },
     "profile": {
       "title": "Профил",

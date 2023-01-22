@@ -35,11 +35,9 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
         .getProblemEntries()
         .then((value) => problemsContext.setProblems(value))
         .onError(
-      (error, stackTrace) {
-        print(error);
-        handleError(context, ErrorCode.PROBLEMS);
-      },
-    ).whenComplete(
+          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
+        )
+        .whenComplete(
       () {
         setState(() {
           loading = false;
@@ -56,6 +54,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
     final problems = problemsContext.entries;
 
     final t = getTranslation(context, 'problems');
+    final tContests = getTranslation(context, 'contests');
 
     return Scaffold(
       appBar: AppBar(
@@ -82,9 +81,9 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                       onTap: () => navigator.pushNamed('/problems-discover'),
                     ),
                     FloatingTile(
-                      title: t('contests.title'),
+                      title: tContests('title'),
                       image: const Icon(Icons.abc, size: 64),
-                      onTap: () => navigator.pushNamed('/problems-discover'),
+                      onTap: () => navigator.pushNamed('/contests-discover'),
                     ),
                     FloatingTile(
                       title: t('discover.title'),

@@ -2,7 +2,9 @@ import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:dio/dio.dart';
 
 final dio = Dio(
-  BaseOptions(baseUrl: const String.fromEnvironment('CODING_HELPER_API_URL')),
+  BaseOptions(
+    baseUrl: const String.fromEnvironment('CODING_HELPER_API_URL'),
+  ),
 );
 
 final _API = CodingHelperApi(dio: dio);

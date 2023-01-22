@@ -23,7 +23,8 @@
     "modal": {
       "filter": "Filter",
       "cancel": "Cancel",
-      "sort": "Sort"
+      "sort": "Sort",
+      "submit": "Submit"
     },
     "listOptions": {
       "filters": "Filters",
@@ -33,15 +34,17 @@
       "optionsPlaceholder": "Options ex: search: two way"
     },
     "home": {
-      "title": "Home"
+      "title": "Coding helper",
+      "activeContests": "Active Contests"
+    },
+    "contests": {
+      "title": "Contests",
+      "startsOn": "Starts On"
     },
     "problems": {
       "title": "Problems",
       "recent": {
         "title": "Recent"
-      },
-      "contests": {
-        "title": "Contests"
       },
       "discover": {
         "title": "Discover"
@@ -54,14 +57,15 @@
       "duration": "Duration",
       "participants": "Participants",
       "reviews": "Reviews",
-      "description": "description",
+      "description": "Description",
       "noDescription": "No description!",
       "attempt": "attempt",
       "testCases": "Test cases",
       "editor": "Editor",
       "start": "Start",
       "test": "Test",
-      "submit": "Submit"
+      "submit": "Submit",
+      "submissions": "Submissions"
     },
     "profile": {
       "title": "Profile",

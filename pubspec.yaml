@@ -42,6 +42,7 @@ dependencies:
   openapi_generator_annotations: ^4.0.0
   coding_helper_api:
     path: api/coding_helper_api
+  flutter_markdown: ^0.6.13
 
 dev_dependencies:
   flutter_test:

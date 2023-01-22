@@ -1,3 +1,6 @@
+import 'package:coding_helper_cross_platform/src/context/contests.dart';
+import 'package:coding_helper_cross_platform/src/context/submissions.dart';
+import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -32,6 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => SubmissionsContext()),
+        ChangeNotifierProvider(create: (context) => ContestsContext()),
         ChangeNotifierProvider(create: (context) => ProblemsContext()),
         ChangeNotifierProvider(create: (context) => SharedContext()),
       ],
@@ -60,6 +65,8 @@ class MyApp extends StatelessWidget {
               '/': (context) => CodingHelperLayout(widgets),
               '/problem-overview': (context) => const ProblemOverviewPage(),
               '/problems-discover': (context) => const ProblemsDiscoverPage(),
+              '/contest-overview': (context) => const ContestsDiscoverPage(),
+              '/contests-discover': (context) => const ContestsDiscoverPage(),
               '/stats': (context) => const StatsPage(),
               '/saved': (context) => const SavedPage(),
               '/settings': (context) => const SettingsPage(),
