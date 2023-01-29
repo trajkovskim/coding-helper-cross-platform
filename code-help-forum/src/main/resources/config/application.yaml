@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/code_help
+    username: user
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      schema: forum
+  graphql:
+    graphiql:
+      enabled: false
+      path: /graphiql
+    schema:
+      introspection:
+        enabled: false
+  flyway:
+    default-schema: forum
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+        default_schema: forum
+        connection:
+          autocommit: false
+        format_sql: true
+
+    show-sql: true
+
+
+
+
+server:
+  port: 3000
+
+graphql:
+  servlet:
+    cors-enabled: false
+
+forum:
+  auth:
+    login:
+      path: /api/auth/login
+    refresh:
+      path: /api/auth/refresh
+    token:
+      prefix: "Bearer "
+      secret: b52784ef-d8bd-4361-ba23-812ced3b483f
+      refresh:
+        timeout: 1440
+      access:
+        timeout: 1440

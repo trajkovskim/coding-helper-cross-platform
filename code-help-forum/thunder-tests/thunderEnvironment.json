@@ -1,0 +1,48 @@
+[
+  {
+    "_id": "c275d12f-62f4-4235-9cd6-db59ed2f6964",
+    "name": "forum",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:40.660Z",
+    "modified": "2023-01-15T18:44:40.660Z",
+    "data": [
+      {
+        "name": "postUid",
+        "value": "33758ac6-9f3e-4240-9b83-e2a6446a353f"
+      },
+      {
+        "name": "community",
+        "value": "initial1"
+      },
+      {
+        "name": "commentUid",
+        "value": ""
+      },
+      {
+        "name": "replyUid",
+        "value": ""
+      },
+      {
+        "name": "username",
+        "value": "admin"
+      },
+      {
+        "name": "password",
+        "value": "password"
+      },
+      {
+        "name": "authorization",
+        "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwL2FwaS9hdXRoL2xvZ2luIiwiZXhwIjoxNjczODk2NzgwLCJpYXQiOjE2NzM4MTAzODB9.ZDu-X8elYFBTMjPhOdbw_6EIaL585qhcVU_ZptZxbMI"
+      },
+      {
+        "name": "category",
+        "value": "meme"
+      },
+      {
+        "name": "categoryUid",
+        "value": "9adf7455-a829-441c-8d44-e2df3d898349"
+      }
+    ]
+  }
+]

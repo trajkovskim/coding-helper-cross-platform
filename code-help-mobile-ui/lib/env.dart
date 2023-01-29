@@ -1,0 +1,1 @@
+const CODING_HELPER_OPENAPI_SPEC = "../code-help-core/code-help-core-api-docs/src/main/resources/code-help-core-api.yaml";

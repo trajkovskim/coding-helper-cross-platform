@@ -1,0 +1,530 @@
+[
+  {
+    "_id": "05c7de55-f9c8-41a9-ad73-c5e4e61e741a",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "6ffc0d27-029a-41bb-9a13-127f81d03165",
+    "name": "login",
+    "url": "/auth/login",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:43:26.165Z",
+    "modified": "2023-01-15T19:19:40.272Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+      "form": []
+    },
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.accessToken",
+        "action": "setto",
+        "value": "{{authorization}}"
+      }
+    ]
+  },
+  {
+    "_id": "7e3f26c2-39dc-4631-9397-4916b02ef773",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "fe966443-febf-4331-9413-47216c88795d",
+    "name": "comments",
+    "url": "/v1/comment/{{replyUid}}",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:26.522Z",
+    "modified": "2023-01-15T19:18:02.252Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "9ba7b26f-aa20-4a77-9170-6e5b097a4630",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "a189af96-05a0-4834-a9f2-a11badd30581",
+    "name": "post",
+    "url": "/v1/comment?post={{postUid}}",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:26.523Z",
+    "modified": "2023-01-15T19:18:05.208Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "post",
+        "value": "{{postUid}}",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "32364cea-e3b6-4158-bf22-8393275d2dba",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "140f2340-c0eb-4d55-b707-4a4b10b215b8",
+    "name": "comments",
+    "url": "/v1/comment/{{commentUid}}",
+    "method": "GET",
+    "sortNum": 15000,
+    "created": "2023-01-15T18:44:26.524Z",
+    "modified": "2023-01-15T19:18:13.781Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "1f8eee97-8c93-45b1-ae69-7404efc47ae1",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "a189af96-05a0-4834-a9f2-a11badd30581",
+    "name": "create",
+    "url": "/v1/comment?post={{postUid}}",
+    "method": "POST",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.525Z",
+    "modified": "2023-01-15T19:18:07.092Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "post",
+        "value": "{{postUid}}",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"content\": \"Welcome!!\"\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "{{authorization}}"
+    },
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.uid",
+        "action": "setto",
+        "value": "{{commentUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "a56004d6-b0b9-4686-bd61-533ad6a70a9c",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "140f2340-c0eb-4d55-b707-4a4b10b215b8",
+    "name": "repply",
+    "url": "/v1/comment/{{commentUid}}",
+    "method": "POST",
+    "sortNum": 17500,
+    "created": "2023-01-15T18:44:26.526Z",
+    "modified": "2023-01-15T19:19:30.956Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"content\": \"Welcome reply!!\"\n}",
+      "form": []
+    },
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.uid",
+        "action": "setto",
+        "value": "{{replyUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "07ac179d-183f-4355-a7f2-68c59a1f1322",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "fe966443-febf-4331-9413-47216c88795d",
+    "name": "delete",
+    "url": "/v1/comment/{{replyUid}}",
+    "method": "DELETE",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.527Z",
+    "modified": "2023-01-15T19:20:52.103Z",
+    "headers": [],
+    "params": [],
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "null",
+        "action": "setto",
+        "value": "{{replyUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "4fa6f943-902f-4203-a4a4-9da2b7c92e20",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "140f2340-c0eb-4d55-b707-4a4b10b215b8",
+    "name": "delete",
+    "url": "/v1/comment/{{commentUid}}",
+    "method": "DELETE",
+    "sortNum": 30000,
+    "created": "2023-01-15T18:44:26.528Z",
+    "modified": "2023-01-15T19:20:31.131Z",
+    "headers": [],
+    "params": [],
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "null",
+        "action": "setto",
+        "value": "{{commentUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "fe935de6-49d5-4586-849b-3db5132a57cc",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "22581a22-af48-4255-9613-cf7e5c4448fc",
+    "name": "all",
+    "url": "/v1/community",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:26.530Z",
+    "modified": "2023-01-15T19:15:53.278Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "5423658f-18a9-4c52-b624-16f937420b11",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "0815c9c5-c54e-4a75-8e39-47f2c4f5f35b",
+    "name": "join",
+    "url": "http://localhost:3000/api/v1/community/member?community={{community}}",
+    "method": "PATCH",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:26.531Z",
+    "modified": "2023-01-15T19:03:32.307Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      }
+    ],
+    "auth": {
+      "type": "bearer",
+      "bearer": "{{authorization}}"
+    },
+    "tests": []
+  },
+  {
+    "_id": "2ed857b0-8c99-4ab6-b37a-c08dfc67cc6d",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "db39e6bb-4e92-4c17-97f4-8eb781234dd0",
+    "name": "add",
+    "url": "/v1/community/moderator?community={{community}}",
+    "method": "PATCH",
+    "sortNum": 10000,
+    "created": "2023-01-15T18:44:26.532Z",
+    "modified": "2023-01-15T19:16:53.283Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"username\": \"admin\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "14b52c34-a217-4ba3-897e-7cadda1325ae",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "22581a22-af48-4255-9613-cf7e5c4448fc",
+    "name": "single",
+    "url": "/v1/community/{{community}}",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.533Z",
+    "modified": "2023-01-15T19:16:13.738Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "0472ae6e-0956-4431-81c1-5645e9c211d0",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "0815c9c5-c54e-4a75-8e39-47f2c4f5f35b",
+    "name": "leave",
+    "url": "/community/member?community={{community}}",
+    "method": "DELETE",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.534Z",
+    "modified": "2023-01-15T19:03:41.561Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      }
+    ],
+    "auth": {
+      "type": "bearer",
+      "bearer": "{{authorization}}"
+    },
+    "tests": []
+  },
+  {
+    "_id": "7abaab00-1215-4a2d-8a73-af980b6475b3",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "db39e6bb-4e92-4c17-97f4-8eb781234dd0",
+    "name": "remove",
+    "url": "/v1/community/moderator?community={{community}}&username={{username}}",
+    "method": "DELETE",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.535Z",
+    "modified": "2023-01-15T19:16:54.712Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      },
+      {
+        "name": "username",
+        "value": "{{username}}",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "15e53ea0-d479-4ac9-891a-afd2bc1790fe",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "22581a22-af48-4255-9613-cf7e5c4448fc",
+    "name": "create",
+    "url": "/v1/community",
+    "method": "POST",
+    "sortNum": 30000,
+    "created": "2023-01-15T18:44:26.536Z",
+    "modified": "2023-01-15T19:15:56.749Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\": \"initial\",\n  \"description\": \"Initial community\",\n  \"categories\": {\n    \"uids\":[]\n  }\n}",
+      "form": []
+    },
+    "tests": [
+      {
+        "type": "json-query",
+        "custom": "json.name",
+        "action": "equal",
+        "value": "initial"
+      },
+      {
+        "type": "json-query",
+        "custom": "json.description",
+        "action": "equal",
+        "value": "Initial community"
+      },
+      {
+        "type": "set-env-var",
+        "custom": "json.name",
+        "action": "setto",
+        "value": "{{community}}"
+      }
+    ]
+  },
+  {
+    "_id": "5e92fbc5-166e-46f3-88f6-9b9d45d31410",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "22581a22-af48-4255-9613-cf7e5c4448fc",
+    "name": "update",
+    "url": "/v1/community/{{community}}",
+    "method": "PUT",
+    "sortNum": 50000,
+    "created": "2023-01-15T18:44:26.537Z",
+    "modified": "2023-01-15T19:26:27.365Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\": \"initial1\",\n  \"description\": \"Initial description updated\",\n  \"categories\": {\n    \"uids\": [\n      \"{{categoryUid}}\"\n    ]\n  }\n}",
+      "form": []
+    },
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.name",
+        "action": "setto",
+        "value": "{{community}}"
+      }
+    ]
+  },
+  {
+    "_id": "46277b11-c441-430e-a649-af1ef64a324f",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "22581a22-af48-4255-9613-cf7e5c4448fc",
+    "name": "delete",
+    "url": "/v1/community/{{community}}",
+    "method": "DELETE",
+    "sortNum": 60000,
+    "created": "2023-01-15T18:44:26.538Z",
+    "modified": "2023-01-15T19:29:38.831Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "3b03cfc3-b758-4cf0-8be1-687d10ff1eec",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
+    "name": "all",
+    "url": "/post?community={{community}}",
+    "method": "GET",
+    "sortNum": 5000,
+    "created": "2023-01-15T18:44:26.544Z",
+    "modified": "2023-01-15T19:08:37.659Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "0626ad95-fb0d-4dcc-a395-3e419637a1b1",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
+    "name": "single",
+    "url": "/post/{{postUid}}",
+    "method": "GET",
+    "sortNum": 7500,
+    "created": "2023-01-15T18:44:26.545Z",
+    "modified": "2023-01-15T19:08:45.705Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "17e9eb8c-6135-41c1-9a3d-954e5dc68db9",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
+    "name": "create",
+    "url": "/v1/post?community={{community}}",
+    "method": "POST",
+    "sortNum": 13750,
+    "created": "2023-01-15T18:44:26.546Z",
+    "modified": "2023-01-15T19:22:31.388Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "community",
+        "value": "{{community}}",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"title\": \"My first post here\",\n  \"content\": \"How are you all doing\"\n}",
+      "form": []
+    },
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.uid",
+        "action": "setto",
+        "value": "{{postUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "ff99dd8f-511e-4928-8fe4-18cc7ef6a12e",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
+    "name": "update",
+    "url": "/v1/post/{{postUid}}",
+    "method": "PUT",
+    "sortNum": 20000,
+    "created": "2023-01-15T18:44:26.547Z",
+    "modified": "2023-01-15T19:17:27.406Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"title\": \"My first post here updated\",\n  \"content\": \"How are you all doing updated\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "7653ce44-f7da-4b6a-ae70-86cccdadcabd",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
+    "name": "delete",
+    "url": "/v1/post/{{postUid}}",
+    "method": "DELETE",
+    "sortNum": 40000,
+    "created": "2023-01-15T18:44:26.548Z",
+    "modified": "2023-01-15T19:18:21.499Z",
+    "headers": [],
+    "params": [],
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "null",
+        "action": "setto",
+        "value": "{{postUid}}"
+      }
+    ]
+  },
+  {
+    "_id": "aa6c3c3f-2c93-469d-9e60-39ba44cc06bd",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "0d96c070-9af4-4987-907f-80fb555de88c",
+    "name": "create",
+    "url": "/v1/category",
+    "method": "POST",
+    "sortNum": 70000,
+    "created": "2023-01-15T19:23:17.253Z",
+    "modified": "2023-01-15T19:24:33.234Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"name\": \"{{category}}\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "0743055e-7268-4d55-9e82-a903317e3bfb",
+    "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+    "containerId": "0d96c070-9af4-4987-907f-80fb555de88c",
+    "name": "all",
+    "url": "/v1/category",
+    "method": "GET",
+    "sortNum": 35000,
+    "created": "2023-01-15T19:24:43.130Z",
+    "modified": "2023-01-15T19:25:46.557Z",
+    "headers": [],
+    "params": [],
+    "tests": [
+      {
+        "type": "set-env-var",
+        "custom": "json.categories[0].uid",
+        "action": "setto",
+        "value": "{{categoryUid}}"
+      }
+    ]
+  }
+]

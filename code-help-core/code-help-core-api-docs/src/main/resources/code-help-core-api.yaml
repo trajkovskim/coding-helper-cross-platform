@@ -1,0 +1,960 @@
+openapi: 3.0.1
+info:
+  title: Coding helper API
+  description: Coding helper application
+  version: 1.0.0
+servers:
+  - url: http://localhost
+    description: Generated server url
+security:
+  - Authorization_JWT: [ ]
+tags:
+  - name: categories
+    description: the categories API
+  - name: run-code
+    description: the run-code API
+  - name: submit
+    description: the submit API
+  - name: auth
+    description: the auth API
+  - name: contest
+    description: the contest API
+  - name: contests
+    description: the contests API
+  - name: problems
+    description: the problems API
+  - name: submissions
+    description: the submissions API
+paths:
+  /api/problems/{id}:
+    get:
+      tags:
+        - Problem
+        - problems
+      operationId: getProblemEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemByLikes'
+      security:
+        - Authorization_JWT: [ ]
+    put:
+      tags:
+        - Problem
+        - problems
+      operationId: editProblemEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - EASY
+              - MEDIUM
+              - HARD
+        - name: markdown
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                starterCode:
+                  type: string
+                  format: binary
+                runnerCode:
+                  type: string
+                  format: binary
+                testCases:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "204":
+          description: void
+      security:
+        - Authorization_JWT: [ ]
+    delete:
+      tags:
+        - Problem
+        - problems
+      operationId: deleteProblemEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: void
+      security:
+        - Authorization_JWT: [ ]
+  /api/contests/{id}:
+    get:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: getContestEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: A list of contests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestEntry'
+      security:
+        - Authorization_JWT: [ ]
+    put:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: editContestEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestBaseEntry'
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+    post:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: createContestProblemEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - EASY
+              - MEDIUM
+              - HARD
+        - name: markdown
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                starterCode:
+                  type: string
+                  format: binary
+                runnerCode:
+                  type: string
+                  format: binary
+                testCases:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+    delete:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: deleteContestEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /user/upload-avatar:
+    post:
+      tags:
+        - user-controller
+      operationId: uploadAvatar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/submit:
+    post:
+      tags:
+        - Submission
+        - submit
+        - submissions
+      operationId: createSubmissionsEntry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionReqBody'
+      responses:
+        "204":
+          description: Output string
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - Authorization_JWT: [ ]
+  /api/submissions:
+    post:
+      tags:
+        - Submission
+        - submit
+        - submissions
+      operationId: getSubmissions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSubmissionsRequest'
+      responses:
+        "200":
+          description: List of Submissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionsResponse'
+      security:
+        - Authorization_JWT: [ ]
+  /api/run-code:
+    post:
+      tags:
+        - run-code
+        - CodeRunner
+      operationId: runCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunCodeRequest'
+      responses:
+        "200":
+          description: Output string
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - Authorization_JWT: [ ]
+  /api/problems/create:
+    post:
+      tags:
+        - Problem
+        - problems
+      operationId: createProblemEntry
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - EASY
+              - MEDIUM
+              - HARD
+        - name: markdown
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                starterCode:
+                  type: string
+                  format: binary
+                runnerCode:
+                  type: string
+                  format: binary
+                testCases:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "204":
+          description: void
+      security:
+        - Authorization_JWT: [ ]
+  /api/contests:
+    get:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: getContestEntries
+      responses:
+        "200":
+          description: A list of contests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestsResponse'
+      security:
+        - Authorization_JWT: [ ]
+    post:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: createContestEntry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestBaseEntry'
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /api/contest/{contestId}/problems/{problemId}/set-score:
+    post:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: setContestProblemScore
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: problemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetContestProblemScoreRequest'
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /api/categories:
+    get:
+      tags:
+        - Category
+        - categories
+      operationId: getCategories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesResponse'
+      security:
+        - Authorization_JWT: [ ]
+    post:
+      tags:
+        - Category
+        - categories
+      operationId: createCategories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /api/auth/register:
+    post:
+      tags:
+        - auth
+        - Auth
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        "204":
+          description: void
+      security:
+        - Authorization_JWT: [ ]
+  /api/auth/login:
+    post:
+      tags:
+        - auth
+        - Auth
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: token
+          content:
+            application/json:
+              schema:
+                type: string
+      security:
+        - Authorization_JWT: [ ]
+  /users-with-total-accepted:
+    get:
+      tags:
+        - user-controller
+      operationId: usersWithTotalSolved
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsernameWithTotalSolvedDto'
+  /api/problems:
+    get:
+      tags:
+        - Problem
+        - problems
+      operationId: getProblemEntries
+      responses:
+        "200":
+          description: A list of problems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsResponse'
+      security:
+        - Authorization_JWT: [ ]
+  /api/problems/{id}/like:
+    get:
+      tags:
+        - Problem
+        - problems
+      operationId: toggleLikeProblemEntry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: void
+      security:
+        - Authorization_JWT: [ ]
+  /api/problems/{id}/is-liked:
+    get:
+      tags:
+        - Problem
+        - problems
+      operationId: isProblemEntryLiked
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Returns boolean
+          content:
+            application/json:
+              schema:
+                type: boolean
+      security:
+        - Authorization_JWT: [ ]
+  /api/problems/top10:
+    get:
+      tags:
+        - Problem
+        - problems
+      operationId: getTop10Problems
+      responses:
+        "200":
+          description: problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsTop10Response'
+      security:
+        - Authorization_JWT: [ ]
+  /api/contest/{id}/start:
+    get:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: startContest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /api/contest/{id}/close:
+    get:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: closeContest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+  /api/contest/{contestId}/problems/{problemId}:
+    get:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: getContestProblem
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: problemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Contest problem entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestProblem'
+      security:
+        - Authorization_JWT: [ ]
+    delete:
+      tags:
+        - contests
+        - contest
+        - Contest
+      operationId: deleteContestProblem
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: problemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: No content
+      security:
+        - Authorization_JWT: [ ]
+components:
+  schemas:
+    ContestBaseEntry:
+      required:
+        - duration
+        - name
+        - startsOn
+      type: object
+      properties:
+        name:
+          type: string
+          example: Bitweekly 122 contest
+        duration:
+          type: string
+          example: 1h30m
+        startsOn:
+          type: string
+          format: date
+    SubmissionReqBody:
+      required:
+        - code
+        - language
+        - problemId
+      type: object
+      properties:
+        problemId:
+          type: integer
+          format: int64
+          example: 23
+        language:
+          type: string
+          example: javascript
+        code:
+          type: string
+          example: "function(...) {...}"
+    SubmissionEntry:
+      required:
+        - code
+        - language
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 23
+        timeSubmitted:
+          type: string
+          format: date
+        language:
+          type: string
+          example: javascript
+        code:
+          type: string
+          example: "function(...) {...}"
+    SubmissionsResponse:
+      required:
+        - submissions
+      type: object
+      properties:
+        submissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmissionEntry'
+    GetSubmissionsRequest:
+      type: object
+      properties:
+        problemId:
+          type: integer
+          format: int64
+          example: 23
+    RunCodeRequest:
+      type: object
+      properties:
+        problemId:
+          type: integer
+          format: int64
+          example: 23
+        language:
+          type: string
+          example: javascript
+        code:
+          type: string
+          example: "function(...) {...)"
+        input:
+          type: string
+          example: "[1,2]"
+    SetContestProblemScoreRequest:
+      type: object
+      properties:
+        score:
+          type: integer
+          format: int64
+          example: 15
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        email:
+          type: string
+          example: your-email@coding-helper.com
+        password:
+          type: string
+          example: '******'
+        firstName:
+          type: string
+          example: Your first name
+        lastName:
+          type: string
+          example: Your last name
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        birthday:
+          type: string
+          format: date
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: your-email@coding-helper.com
+        password:
+          type: string
+          example: '******'
+    UsernameWithTotalSolvedDto:
+      type: object
+      properties:
+        username:
+          type: string
+        solved:
+          type: integer
+          format: int64
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Binary trees
+    ProblemEntry:
+      required:
+        - difficulty
+        - starterCode
+        - title
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 23
+        starterCode:
+          type: string
+          example: "function(...) {...}"
+        category:
+          $ref: '#/components/schemas/Category'
+        title:
+          type: string
+          example: Two sum
+        difficulty:
+          type: string
+          enum:
+            - EASY
+            - MEDIUM
+            - HARD
+        markdown:
+          type: string
+          example: '## Two Sum... problem description'
+    ProblemsResponse:
+      required:
+        - problems
+      type: object
+      properties:
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemEntry'
+    ProblemByLikes:
+      required:
+        - likes
+        - problem
+      type: object
+      properties:
+        problem:
+          $ref: '#/components/schemas/ProblemEntry'
+        likes:
+          type: integer
+          format: int64
+          example: 23
+    ProblemsTop10Response:
+      required:
+        - problems
+      type: object
+      properties:
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemByLikes'
+    ContestEntry:
+      required:
+        - duration
+        - name
+        - problems
+        - startsOn
+      type: object
+      properties:
+        name:
+          type: string
+          example: Bitweekly 122 contest
+        duration:
+          type: string
+          example: 1h30m
+        startsOn:
+          type: string
+          format: date
+        id:
+          type: integer
+          format: int64
+          example: 23
+        status:
+          type: string
+          enum:
+            - OPEN
+            - STARTED
+            - CLOSED
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestProblem'
+    ContestProblem:
+      required:
+        - problem
+        - score
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 23
+        problem:
+          $ref: '#/components/schemas/ProblemEntry'
+        score:
+          type: integer
+          format: int64
+          example: 53
+    ContestsResponse:
+      required:
+        - contests
+      type: object
+      properties:
+        contests:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestEntry'
+    CategoriesResponse:
+      required:
+        - categories
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+  securitySchemes:
+    Authorization_JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

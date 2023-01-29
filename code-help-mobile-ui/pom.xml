@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>mk.com.code-help</groupId>
+        <artifactId>code-help</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>code-help-mobile-ui</artifactId>
+
+    <build>
+        <directory>${project.basedir}/.dart_tool</directory>
+        <plugins>
+            <plugin>
+                <groupId>hu.blackbelt</groupId>
+                <artifactId>flutter-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <id>install-flutter</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-flutter</goal>
+                        </goals>
+                        <configuration>
+                            <flutterVersion>3.3.8</flutterVersion>
+                            <flutterChannel>stable</flutterChannel>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>flutter-pub-get</id>
+                        <phase>compile</phase>
+                        <goals><goal>flutter</goal></goals>
+                        <configuration>
+                            <arguments>pub get</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>flutter-generate</id>
+                        <phase>compile</phase>
+                        <goals><goal>flutter</goal></goals>
+                        <configuration>
+                            <arguments>pub run build_runner build --delete-conflicting-outputs</arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+

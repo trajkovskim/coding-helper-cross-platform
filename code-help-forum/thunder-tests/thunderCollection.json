@@ -1,0 +1,117 @@
+[
+  {
+    "_id": "043bc884-5094-421b-a71c-eab31efe8984",
+    "colName": "Forum",
+    "created": "2023-01-15T18:42:51.776Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "a189af96-05a0-4834-a9f2-a11badd30581",
+        "name": "post",
+        "containerId": "256d5e4c-dbf3-4f09-a653-9a45ec5ca449",
+        "created": "2023-01-15T18:44:26.516Z",
+        "sortNum": 10000
+      },
+      {
+        "_id": "140f2340-c0eb-4d55-b707-4a4b10b215b8",
+        "name": "comment",
+        "containerId": "256d5e4c-dbf3-4f09-a653-9a45ec5ca449",
+        "created": "2023-01-15T18:44:26.517Z",
+        "sortNum": 20000
+      },
+      {
+        "_id": "fe966443-febf-4331-9413-47216c88795d",
+        "name": "reply",
+        "containerId": "256d5e4c-dbf3-4f09-a653-9a45ec5ca449",
+        "created": "2023-01-15T18:44:26.518Z",
+        "sortNum": 30000
+      },
+      {
+        "_id": "22581a22-af48-4255-9613-cf7e5c4448fc",
+        "name": "community",
+        "containerId": "b0fcfeb2-2879-4ded-a789-1a648bf2d86d",
+        "created": "2023-01-15T18:44:26.528Z",
+        "sortNum": 10000
+      },
+      {
+        "_id": "0815c9c5-c54e-4a75-8e39-47f2c4f5f35b",
+        "name": "member",
+        "containerId": "b0fcfeb2-2879-4ded-a789-1a648bf2d86d",
+        "created": "2023-01-15T18:44:26.529Z",
+        "sortNum": 20000
+      },
+      {
+        "_id": "db39e6bb-4e92-4c17-97f4-8eb781234dd0",
+        "name": "moderator",
+        "containerId": "b0fcfeb2-2879-4ded-a789-1a648bf2d86d",
+        "created": "2023-01-15T18:44:26.530Z",
+        "sortNum": 30000
+      },
+      {
+        "_id": "256d5e4c-dbf3-4f09-a653-9a45ec5ca449",
+        "name": "Comment",
+        "containerId": "",
+        "created": "2023-01-15T18:45:06.465Z",
+        "sortNum": 10000
+      },
+      {
+        "_id": "b0fcfeb2-2879-4ded-a789-1a648bf2d86d",
+        "name": "Community",
+        "containerId": "",
+        "created": "2023-01-15T18:46:18.260Z",
+        "sortNum": 5000
+      },
+      {
+        "_id": "652caf61-2b07-4645-8682-323c49d8d685",
+        "name": "Post",
+        "containerId": "",
+        "created": "2023-01-15T18:46:41.561Z",
+        "sortNum": 7500
+      },
+      {
+        "_id": "6ffc0d27-029a-41bb-9a13-127f81d03165",
+        "name": "Auth",
+        "containerId": "",
+        "created": "2023-01-15T19:13:48.572Z",
+        "sortNum": 20000
+      },
+      {
+        "_id": "0d96c070-9af4-4987-907f-80fb555de88c",
+        "name": "Category",
+        "containerId": "",
+        "created": "2023-01-15T19:22:54.650Z",
+        "sortNum": 15000
+      }
+    ],
+    "settings": {
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "*/*"
+        },
+        {
+          "name": "User-Agent",
+          "value": "Thunder Client (https://www.thunderclient.com)"
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{authorization}}"
+      },
+      "tests": [],
+      "options": {
+        "baseUrl": "http://localhost:3000/api"
+      },
+      "preReq": {
+        "runRequests": [
+          {
+            "reqId": "05c7de55-f9c8-41a9-ad73-c5e4e61e741a",
+            "colId": "043bc884-5094-421b-a71c-eab31efe8984",
+            "triggerCondition": "run-var-empty",
+            "triggerValue": "{{authorization}}"
+          }
+        ]
+      }
+    }
+  }
+]

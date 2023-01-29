@@ -1,0 +1,27 @@
+server:
+  port: 3001
+
+spring:
+  mvc:
+    static-path-pattern: /public/**
+    hiddenmethod:
+      filter:
+        enabled: true
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  neo4j:
+    authentication:
+      username: neo4j
+      password: password
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+  show-actuator: true
+
+jwt:
+  secret: "secret"

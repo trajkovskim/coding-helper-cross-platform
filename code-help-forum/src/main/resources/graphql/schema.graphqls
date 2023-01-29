@@ -1,0 +1,117 @@
+type Category {
+    communities: [Community!]!
+    id: ID!
+    name: String!
+}
+
+input CategoryInput {
+    name: String!
+}
+
+type Comment {
+    createdAt: DateTime!
+    id: ID!
+    replies: [Comment!]!
+    text: String!
+    user: User!
+}
+
+input CommentInput {
+    text: String!
+}
+
+type Community {
+    admin: User!
+    avatarImage: String
+    description: String!
+    id: ID!
+    moderators: [User!]!
+    name: String!
+    posts: [Post!]!
+}
+
+input CommunityInput {
+    description: String!
+    name: String!
+}
+
+type Country {
+    id: ID!
+    country: String!
+    iso2: String!
+    iso3: String!
+}
+
+scalar DateTime
+
+type Mutation {
+    changeAvatar(communityId: String!): Community!
+    createCategory(categoryInput: CategoryInput!): Category!
+    createComment(commentInput: CommentInput!, postId: String!, userId: String!): Comment!
+    createCommunity(adminId: String!, categoryName: String!, communityInput: CommunityInput!): Community!
+    createPost(communityId: String!, postInput: PostInput!, userId: String!): Post!
+    deleteById(communityId: String!): Community!
+    deleteUser(userId: String!): User!
+    joinCommunity(communityId: String!, userId: String!): Community!
+    register(userData: UserInput!): User!
+    reply(commentId: String!, replyInput: CommentInput!, userId: String!): Comment!
+}
+
+type Post {
+    comments: [Comment!]!
+    createdAt: DateTime!
+    id: ID!
+    content: String
+    title: String!
+    user: User!
+}
+
+input PostInput {
+    str: String!
+    title: String!
+}
+
+type Query {
+    categories(categoryName: String): [Category!]!
+    categoryById(categoryId: String!): Category!
+    categoryByName(categoryName: String!): Category!
+    comments: [Comment!]!
+    communities: [Community!]!
+    community(communityId: String!): Community!
+    countries: [Country!]!
+    loginUser(userCredentialsInput: UserCredentialsInput!): User!
+    posts: [Post!]!
+    user(userId: String!): User
+    users: [User!]!
+}
+
+
+#"""The `Upload` scalar type represents a file upload."""
+#scalar Upload
+
+type User {
+    #    birthDate: DateTime
+    username: String!
+    comments: [Comment!]!
+    communities: [Community!]!
+    createdAt: DateTime!
+    email: String!
+    #    firstName: String
+    #    gender: String
+    id: ID!
+    #    lastName: String
+    #    location: String
+    #    options: UserOptions
+    posts: [Post!]!
+}
+
+input UserCredentialsInput {
+    password: String!
+    username: String!
+}
+
+input UserInput {
+    email: String!
+    password: String!
+    username: String!
+}
