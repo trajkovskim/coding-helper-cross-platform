@@ -8,4 +8,14 @@ import 'package:coding_helper_cross_platform/env.dart' as env;
   alwaysRun: true,
   outputDirectory: 'api/coding_helper_api',
 )
-class CodingHelperApiConfigration extends OpenapiGeneratorConfig {}
+class CodingHelperApiConfiguration extends OpenapiGeneratorConfig {}
+
+
+@Openapi(
+  additionalProperties: DioProperties(pubName: 'coding_helper_forum_api'),
+  inputSpecFile: env.CODING_HELPER_OPENAPI_FORUM_SPEC,
+  generatorName: Generator.dio,
+  alwaysRun: true,
+  outputDirectory: 'api/coding_helper_forum_api',
+)
+class CodingHelperForumApiConfiguration extends OpenapiGeneratorConfig {}

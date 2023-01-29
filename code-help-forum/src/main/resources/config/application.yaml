@@ -33,7 +33,7 @@ spring:
 
 
 server:
-  port: 3000
+  port: 3001
 
 graphql:
   servlet:

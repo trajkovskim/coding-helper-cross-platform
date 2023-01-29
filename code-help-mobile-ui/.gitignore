@@ -46,11 +46,11 @@ app.*.map.json
 
 # Apis
 api/*
-!api/coding_helper_api
-api/coding_helper_api/*
-!api/coding_helper_api/pubspec.yaml
-!api/coding_helper_api/pubspec.lock
-!api/coding_helper_api/.gitignore
+!api/*
+api/*/*
+!api/*/pubspec.yaml
+!api/*/pubspec.lock
+!api/*/.gitignore
 
 
 # other
