@@ -161,7 +161,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/forum.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/forum-api.yaml</inputSpec>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <generatorName>spring</generatorName>
                             <modelPackage>com.codehelp.forum.generated.rest.model</modelPackage>
