@@ -53,7 +53,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params = useParams();
 
     codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
-    if(codeController.text.isEmpty) {
+    if (codeController.text.isEmpty) {
       codeController.text = params.entry?.starterCode ?? '';
     }
 

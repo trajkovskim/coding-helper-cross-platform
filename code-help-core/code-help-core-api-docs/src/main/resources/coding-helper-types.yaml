@@ -442,7 +442,7 @@ paths:
         204:
           description: Output string
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 example: 'All test cases passed'
@@ -633,7 +633,7 @@ paths:
         200:
           description: token
           content:
-            application/json:
+            tetx/plain:
               schema:
                 type: string
                 example: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJ0aW50cmFqa292c2tpNzBAZ21haWwuY29tIiwiZXhwIjoxNjY5NTEwNTI0LCJpYXQiOjE2Njk0OTI1MjR9.nIoHo3qgItLF20vIQSHUBHCQoak5nL9u2tGRMB19Bg21RFCrOXDh0kcidWsVfEctGtH1BINV2TS9yl7caC9'
@@ -664,7 +664,7 @@ paths:
         200:
           description: Output string
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
                 example: '[1, 2, 3]'

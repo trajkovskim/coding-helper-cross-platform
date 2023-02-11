@@ -25,6 +25,7 @@ public class CodeRunnerController implements RunCodeApi {
         body.getCode()
     );
     String output = codeRunnerService.runCode(body.getInput(), mergedCode, body.getLanguage());
+
     return ResponseEntity.ok(output);
   }
 }
