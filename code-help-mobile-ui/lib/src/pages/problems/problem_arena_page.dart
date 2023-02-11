@@ -48,12 +48,14 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     if (init) {
       return;
     }
-
-    print('Arena page');
-
     final submissionsContext =
         Provider.of<SubmissionsContext>(context, listen: false);
     final params = useParams();
+
+    codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
+    if(codeController.text.isEmpty) {
+      codeController.text = params.entry?.starterCode ?? '';
+    }
 
     GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
       ..problemId = params.entry?.id;
@@ -79,7 +81,9 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
 
     submissionsService.submit(builder.build()).then<void>((value) {
       showSnackBar(scaffoldMessenger, value);
-      init = false;
+      setState(() {
+        init = false;
+      });
     }).onError(
       (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
     );
@@ -122,9 +126,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params = useParams();
     final t = getTranslation(context, 'problem');
 
-    codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
-    codeController.text = params.entry?.starterCode ?? '';
-
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
@@ -146,7 +147,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         body: TabBarView(
           children: [
             Card(
-              elevation: 200,
               child: Markdown(data: params.entry?.markdown ?? ''),
             ),
             Column(

@@ -1,28 +1,43 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
       "name": "code-help-mobile-ui",
       "cwd": "code-help-mobile-ui",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "--dart-define",
+        "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
+        "--dart-define",
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+      ]
     },
     {
       "name": "code-help-mobile-ui (profile mode)",
       "cwd": "code-help-mobile-ui",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "args": [
+        "--dart-define",
+        "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
+        "--dart-define",
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+      ]
     },
     {
       "name": "code-help-mobile-ui (release mode)",
       "cwd": "code-help-mobile-ui",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "args": [
+        "--dart-define",
+        "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
+        "--dart-define",
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+      ]
     },
     {
       "name": ".flutter",

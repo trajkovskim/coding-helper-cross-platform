@@ -93,48 +93,55 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: constraints.maxHeight * 0.35,
-                child: HorizontalListView(
-                  items: problems
-                      .map(
-                        (entry) => Item(
-                          onTap: () {
-                            navigator.pushNamed(
-                              '/problem-overview',
-                              arguments: {'id': entry.id.toString()},
-                            );
-                          },
-                        ),
-                      )
-                      .toList(),
-                  title: t('active'),
+              if (problems.isNotEmpty)
+                SizedBox(
+                  height: constraints.maxHeight * 0.35,
+                  child: HorizontalListView(
+                    items: problems
+                        .map(
+                          (entry) => Item(
+                            title: entry.title,
+                            onTap: () {
+                              navigator.pushNamed(
+                                '/problem-overview',
+                                arguments: {'id': entry.id.toString()},
+                              );
+                            },
+                          ),
+                        )
+                        .toList(),
+                    title: t('active'),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: constraints.maxHeight * 0.35,
-                child: HorizontalListView(
-                  items: problems
-                      .map(
-                        (entry) => Item(
-                          onTap: () {
-                            navigator.pushNamed(
-                              '/problem-overview',
-                              arguments: {'id': entry.id.toString()},
-                            );
-                          },
-                        ),
-                      )
-                      .toList(),
-                  title: t('recommended'),
+              if (problems.isNotEmpty)
+                SizedBox(
+                  height: constraints.maxHeight * 0.35,
+                  child: HorizontalListView(
+                    items: problems
+                        .map(
+                          (entry) => Item(
+                            title: entry.title,
+                            onTap: () {
+                              navigator.pushNamed(
+                                '/problem-overview',
+                                arguments: {'id': entry.id.toString()},
+                              );
+                            },
+                          ),
+                        )
+                        .toList(),
+                    title: t('recommended'),
+                  ),
                 ),
-              ),
-              SizedBox(
+              
+              if (problems.isNotEmpty)
+                SizedBox(
                 height: constraints.maxHeight * 0.35,
                 child: HorizontalListView(
                   items: problems
                       .map(
                         (entry) => Item(
+                          title: entry.title,
                           onTap: () {
                             navigator.pushNamed(
                               '/problem-overview',

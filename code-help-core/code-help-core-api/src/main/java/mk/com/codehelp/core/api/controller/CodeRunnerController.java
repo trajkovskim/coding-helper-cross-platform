@@ -18,14 +18,13 @@ public class CodeRunnerController implements RunCodeApi {
   public ResponseEntity<String> runCode(RunCodeRequest body) {
     String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    String codeFilePath = codeRunnerService.createCodeFile(
+    String mergedCode = codeRunnerService.createCode(
         body.getProblemId(),
         email,
         body.getLanguage(),
         body.getCode()
     );
-    String output = codeRunnerService.runCode(body.getInput(), codeFilePath, body.getLanguage());
-
+    String output = codeRunnerService.runCode(body.getInput(), mergedCode, body.getLanguage());
     return ResponseEntity.ok(output);
   }
 }

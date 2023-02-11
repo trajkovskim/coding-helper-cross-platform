@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class Item {
   Key? key;
+  String? title;
   void Function()? onTap;
 
-  Item({this.key, this.onTap});
+  Item({this.key, this.title, this.onTap});
 }
 
 class HorizontalListView extends StatelessWidget {
@@ -15,43 +16,41 @@ class HorizontalListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          elevation: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (title != null) Text(title!),
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: items
-                        .map(
-                          (item) => SizedBox(
-                            width: constraints.maxWidth * 0.2,
-                            child: Card(
-                              elevation: 2,
-                              child: ListTile(
-                                key: item.key,
-                                title: const Text('title'),
-                                onTap: item.onTap,
-                              ),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (title != null) Text(title!),
+              Expanded(
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: items
+                      .map(
+                        (item) => SizedBox(
+                          width: constraints.maxWidth * 0.2,
+                          child: Card(
+                            elevation: 2,
+                            child: ListTile(
+                              key: item.key,
+                              title: item.title != null ? Center(child: Text(item.title!)) : null,
+                              onTap: item.onTap,
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
+                        ),
+                      )
+                      .toList(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

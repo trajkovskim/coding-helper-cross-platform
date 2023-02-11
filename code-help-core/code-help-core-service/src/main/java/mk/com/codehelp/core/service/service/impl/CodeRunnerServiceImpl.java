@@ -5,30 +5,28 @@ import mk.com.codehelp.core.service.service.CodeRunnerService;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CodeRunnerServiceImpl implements CodeRunnerService {
   @Override
-  public String runTestCases(File[] testCases, String codeFilePath, String language) throws IOException {
+  public String runTestCases(File[] testCases, String code, String language) throws IOException, InterruptedException {
     int n = testCases.length;
     int i = 1;
     for (File testCase : testCases) {
       // Read IN file
       String inFilePath = testCase.getPath();
       var input = new BufferedReader(new FileReader(inFilePath))
-          .lines()
-          .reduce(String::concat)
-          .orElse("");
+          .lines().collect(Collectors.joining("\n"));
 
-      var output = this.runCode(input, codeFilePath, language);
+      var output = this.runCode(input, code, language);
 
       // Read OUT file
       String outFilePath = testCase.getPath().replace("IN", "OUT");
       var expectedOutput = new BufferedReader(new FileReader(outFilePath))
-          .lines()
-          .reduce(String::concat)
-          .orElse("");
+          .lines().collect(Collectors.joining("\n"));
 
       if (!output.equals(expectedOutput)) {
         return String.format("Test case %d of %d failed\nOutput: %s\nExpected: %s", i, n, output, expectedOutput);
@@ -39,52 +37,53 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   }
 
   @Override
-  public String runCode(String input, String codeFilePath, String language) throws IOException {
+  public String runCode(String input, String code, String language) throws IOException, InterruptedException {
     String compilerPath = null;
     if (language.equalsIgnoreCase("javascript")) {
       compilerPath = "res\\compilers\\node.exe";
     }
 
-    String execCommand = String.format("cmd.exe /c echo %s | %s %s", input, compilerPath, codeFilePath);
-    Process process = new ProcessBuilder(execCommand).start();
-    InputStream inputStream = process.getInputStream();
+    String codeFilePath = UUID.randomUUID() + ".code";
+    PrintWriter pw = new PrintWriter(codeFilePath);
+    pw.println(code);
+    pw.close();
 
-    return new BufferedReader(new InputStreamReader(inputStream))
-        .lines()
-        .reduce(String::concat)
-        .orElse("");
+    String execCommand = String.format("cmd.exe /c echo %s | %s %s", input, compilerPath, codeFilePath);
+    Process process = Runtime.getRuntime().exec(execCommand);
+    InputStream stream = process.getInputStream();
+
+    process.waitFor();
+    process.destroy();
+
+    new File(codeFilePath).delete();
+
+    return new BufferedReader(new InputStreamReader(stream))
+        .lines().collect(Collectors.joining());
   }
 
   @Override
   public String runCodeWithTestCases(Long problemId, String fileName, String language, String code)
-      throws IOException {
-    var codeFilePath = this.createCodeFile(problemId, fileName, language, code);
+      throws IOException, InterruptedException {
+    var mergedCode = this.createCode(problemId, fileName, language, code);
     var testCases =
         new File("res/problems-starter-code/")
             .listFiles((dir, name) -> name.startsWith(problemId.toString()) && name.contains("IN"));
-    return runTestCases(testCases, codeFilePath, language);
+
+    return runTestCases(testCases, mergedCode, language);
   }
 
   @Override
-  public String createCodeFile(Long problemId, String fileName, String language, String code)
+  public String createCode(Long problemId, String fileName, String language, String code)
       throws FileNotFoundException {
     String ext = null;
     if (language.equalsIgnoreCase("javascript")) {
       ext = ".js";
     }
 
-    String codeFilePath = String.format("res\\users-code\\%s%s", fileName, ext);
-    PrintWriter pw_userCode = new PrintWriter(codeFilePath); // Creates or recreates file
-
     String runnerCodeFileName = String.format("res\\problems-starter-code\\%d-runner%s", problemId, ext);
-    new BufferedReader(new FileReader(runnerCodeFileName))
-        .lines()
-        .forEach(pw_userCode::print);
+    String runnerCode = new BufferedReader(new FileReader(runnerCodeFileName))
+        .lines().collect(Collectors.joining("\n"));
 
-    pw_userCode.println();
-    pw_userCode.print(code);
-    pw_userCode.close();
-
-    return codeFilePath;
+    return runnerCode + "\n" + code;
   }
 }
