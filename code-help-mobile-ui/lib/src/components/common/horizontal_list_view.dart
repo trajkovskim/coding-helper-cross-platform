@@ -33,12 +33,12 @@ class HorizontalListView extends StatelessWidget {
                   children: items
                       .map(
                         (item) => SizedBox(
-                          width: constraints.maxWidth * 0.2,
+                          width: 100,
                           child: Card(
                             elevation: 2,
                             child: ListTile(
                               key: item.key,
-                              title: item.title != null ? Center(child: Text(item.title!)) : null,
+                              title: item.title != null ? Center(child: Text(item.title!, textAlign: TextAlign.center,)) : null,
                               onTap: item.onTap,
                             ),
                           ),

@@ -1,18 +1,18 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:dio/dio.dart';
 
+const codeHelpUrl = String.fromEnvironment('CODING_HELPER_API_URL');
+
 final dio = Dio(
   BaseOptions(
-    baseUrl: const String.fromEnvironment('CODING_HELPER_API_URL'),
+    baseUrl: '$codeHelpUrl/api',
   ),
 );
 
 final _API = CodingHelperApi(dio: dio);
 
-final PROBLEMS_API = _API.getProblemsApi();
-final CONTEST_API = _API.getContestApi();
-final CONTESTS_API = _API.getContestsApi();
+final PROBLEMS_API = _API.getProblemApi();
+final CONTESTS_API = _API.getContestApi();
 final CODE_RUNNER_API = _API.getCodeRunnerApi();
 final AUTH_API = _API.getAuthApi();
-final SUBMISSIONS_API = _API.getSubmissionsApi();
-final SUBMIT_API = _API.getSubmitApi();
+final SUBMISSIONS_API = _API.getSubmissionApi();

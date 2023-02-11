@@ -51,7 +51,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/coding-helper-types.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/code-help-core-api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>mk.com.codehelp.core.rest.api</apiPackage>
                             <modelPackage>mk.com.codehelp.core.rest.model</modelPackage>

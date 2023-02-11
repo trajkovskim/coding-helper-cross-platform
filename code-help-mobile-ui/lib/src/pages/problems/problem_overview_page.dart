@@ -1,5 +1,6 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/common/code_editor.dart';
 import '../../components/common/dropdown.dart';
@@ -18,6 +19,7 @@ class ProblemOverviewPage extends StatefulWidget {
 
 class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
   final ProblemsService problemsService = const ProblemsService();
+  final SubmissionsService submissionsService = const SubmissionsService();
   ProblemByLikes? entry;
   String? id;
   bool init = false;
@@ -65,15 +67,27 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
       throw Error();
     }
 
-    problemsService
-        .getProblemEntry(id!)
-        .then((entry) => setState(() {
-              this.entry = entry;
-            }))
-        .onError(
-          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
-        )
-        .whenComplete(
+    final submissionsContext = Provider.of<SubmissionsContext>(context);
+
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
+      ..problemId = int.parse(id!);
+
+    Future.wait([
+      problemsService
+          .getProblemEntry(id!)
+          .then((entry) => setState(() {
+                this.entry = entry;
+              }))
+          .onError(
+            (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
+          ),
+      submissionsService
+          .getSubmissionEntries(builder.build())
+          .then(submissionsContext.setSubmissions)
+          .onError(
+            (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
+          )
+    ]).whenComplete(
       () {
         init = true;
         setState(() {
@@ -86,6 +100,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'problem');
+    final submissionsContext = Provider.of<SubmissionsContext>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -176,16 +191,10 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                   ),
                   Expanded(
                     child: VerticalListView(
-                      children: [
-                        ListItem(
-                          title: '${t('attempt')} 1',
-                          subtitle: '${t('testCases')} 8/8',
-                        ),
-                        ListItem(
-                          title: '${t('attempt')} 1',
-                          subtitle: '${t('testCases')} 8/8',
-                        ),
-                      ],
+                      children: submissionsContext.entries.map((entry) => ListItem(
+                          title: '${t('attempt')} ${entry.id}',
+                          subtitle: '${t('status')} ${entry.status.name}',
+                        )).toList()
                     ),
                   ),
                 ],

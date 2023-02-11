@@ -179,7 +179,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                           .map(
                             (submission) => ListItem(
                               title: submission.timeSubmitted.toString(),
-                              subtitle: submission.code,
+                              subtitle: submission.status.name,
                               onTap: () {
                                 codeController.text = submission.code;
                               },

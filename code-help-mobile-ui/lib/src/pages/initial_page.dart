@@ -65,22 +65,23 @@ class _InitialPageState extends State<InitialPage> {
 
         return Column(
           children: [
-            SizedBox(
-              height: constraints.maxHeight * 0.20,
-              child: HorizontalListView(
-                title: t('activeContests'),
-                items: contests
-                    .map(
-                      (contest) => Item(
-                        onTap: () => navigator.pushNamed(
-                          '/contest-overview',
-                          arguments: {'id': contest.id.toString()},
+            if (contests.isNotEmpty)
+              SizedBox(
+                height: constraints.maxHeight * 0.20,
+                child: HorizontalListView(
+                  title: t('activeContests'),
+                  items: contests
+                      .map(
+                        (contest) => Item(
+                          onTap: () => navigator.pushNamed(
+                            '/contest-overview',
+                            arguments: {'id': contest.id.toString()},
+                          ),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            )
+                      )
+                      .toList(),
+                ),
+              )
           ],
         );
       }),

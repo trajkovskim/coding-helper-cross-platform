@@ -1,10 +1,6 @@
-import 'package:coding_helper_cross_platform/src/context/contests.dart';
-import 'package:coding_helper_cross_platform/src/context/submissions.dart';
 import 'package:coding_helper_cross_platform/src/forum/service/ForumServiceInitializer.dart';
-import 'package:coding_helper_cross_platform/src/forum/service/forumAuthService.dart';
 import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
-import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

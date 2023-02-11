@@ -20,7 +20,7 @@ class AuthService {
     required String firstName,
     required String lastName,
     required String username,
-    required RegisterRequestGenderEnum gender,
+    required Gender gender,
     required Date date,
   }) {
     RegisterRequestBuilder builder = RegisterRequestBuilder()

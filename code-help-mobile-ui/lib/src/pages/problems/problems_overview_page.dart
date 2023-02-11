@@ -56,6 +56,8 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
     final t = getTranslation(context, 'problems');
     final tContests = getTranslation(context, 'contests');
 
+    const listHeightFactor = 0.30;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(t('title')),
@@ -71,7 +73,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                height: constraints.maxHeight * 0.17,
+                height: 100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -93,9 +95,10 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
               if (problems.isNotEmpty)
                 SizedBox(
-                  height: constraints.maxHeight * 0.35,
+                  height: constraints.maxHeight * listHeightFactor,
                   child: HorizontalListView(
                     items: problems
                         .map(
@@ -115,7 +118,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                 ),
               if (problems.isNotEmpty)
                 SizedBox(
-                  height: constraints.maxHeight * 0.35,
+                  height: constraints.maxHeight * listHeightFactor,
                   child: HorizontalListView(
                     items: problems
                         .map(
@@ -133,27 +136,26 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                     title: t('recommended'),
                   ),
                 ),
-              
               if (problems.isNotEmpty)
                 SizedBox(
-                height: constraints.maxHeight * 0.35,
-                child: HorizontalListView(
-                  items: problems
-                      .map(
-                        (entry) => Item(
-                          title: entry.title,
-                          onTap: () {
-                            navigator.pushNamed(
-                              '/problem-overview',
-                              arguments: {'id': entry.id},
-                            );
-                          },
-                        ),
-                      )
-                      .toList(),
-                  title: t('recommended'),
-                ),
-              )
+                  height: constraints.maxHeight * listHeightFactor,
+                  child: HorizontalListView(
+                    items: problems
+                        .map(
+                          (entry) => Item(
+                            title: entry.title,
+                            onTap: () {
+                              navigator.pushNamed(
+                                '/problem-overview',
+                                arguments: {'id': entry.id.toString()},
+                              );
+                            },
+                          ),
+                        )
+                        .toList(),
+                    title: t('recommended'),
+                  ),
+                )
             ],
           ),
         );
