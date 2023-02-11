@@ -34,7 +34,7 @@
       "optionsPlaceholder": "Опции пр: search: two way"
     },
     "home": {
-      "title": "Coding helper",
+      "title": "Дома",
       "activeContests": "Започнати натпревари"
     },
     "contests": {
@@ -95,6 +95,11 @@
         "applicationLanguage": "Јазик"
       },
       "logout": "Одлогирај се"
+    },
+    "message": {
+      "forum": {
+        "posts-not-loaded": "Нема податоци"
+      }
     }
   }
 }

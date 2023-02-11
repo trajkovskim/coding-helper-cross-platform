@@ -1,5 +1,7 @@
 package com.codehelp.forum.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import org.hibernate.annotations.NaturalId
 import java.time.Instant
@@ -23,6 +25,7 @@ data class Post(
     val content: String,
 
     @ManyToOne
+    @JsonManagedReference
     val community: Community,
 
     @ManyToOne

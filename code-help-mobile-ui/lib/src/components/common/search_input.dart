@@ -14,15 +14,19 @@ class SearchInput extends StatelessWidget {
     final tListOptions = getTranslation(context, 'listOptions');
 
     return SizedBox(
-      height: 40,
+      height: 35,
       child: TextField(
         controller: controller,
         onSubmitted: (value) => onSubmit != null ? onSubmit!() : null,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(left: 10),
+          alignLabelWithHint: true,
           hintText: tListOptions('search'),
           suffixIcon: IconButton(
             onPressed: onClear,
             icon: const Icon(Icons.clear),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 10),
           ),
           fillColor: Colors.white,
           filled: true,

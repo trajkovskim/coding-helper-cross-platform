@@ -34,7 +34,7 @@
       "optionsPlaceholder": "Options ex: search: two way"
     },
     "home": {
-      "title": "Coding helper",
+      "title": "Home",
       "activeContests": "Active Contests"
     },
     "contests": {
@@ -99,6 +99,11 @@
         "applicationLanguage": "Application Language"
       },
       "logout": "Logout"
+    },
+    "message": {
+      "forum": {
+        "posts-not-loaded": "No Data"
+      }
     }
   }
 }

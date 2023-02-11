@@ -14,14 +14,15 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final t = getTranslation(context);
 
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       currentIndex: pageIndex,
       onTap: onChange,
       items: [
         BottomNavigationBarItem(
-          icon: const Icon(Icons.abc),
+          icon: const Icon(Icons.home_rounded),
           label: t('home.title'),
           activeIcon: const Icon(
-            Icons.abc,
+            Icons.home_rounded,
             color: navigationBarItemActiveColor,
           ),
         ),
@@ -30,6 +31,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: t('problems.title'),
           activeIcon: const Icon(
             Icons.menu_book,
+            color: navigationBarItemActiveColor,
+          ),
+        ),
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.forum),
+          label: t('forum.title'),
+          activeIcon: const Icon(
+            Icons.forum,
             color: navigationBarItemActiveColor,
           ),
         ),

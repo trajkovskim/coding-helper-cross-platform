@@ -12,7 +12,7 @@ interface PostService {
 
     fun getSingle(uid: String): PostDto
 
-    fun getAll(community: String): List<ShortPostDto>
+    fun getAll(community: String?): List<ShortPostDto>
 
     fun update(uid: String, postRequestDto: PostRequestDto): PostDto
 }

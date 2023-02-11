@@ -1,8 +1,8 @@
 package com.codehelp.forum.service
 
-import com.codehelp.forum.domain.Comment
 import com.codehelp.forum.generated.rest.model.CommentDto
 import com.codehelp.forum.generated.rest.model.CommentRequestDto
+import org.springframework.data.jpa.repository.Query
 
 interface CommentService {
 

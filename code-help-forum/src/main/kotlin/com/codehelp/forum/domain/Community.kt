@@ -1,5 +1,7 @@
 package com.codehelp.forum.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
@@ -20,6 +22,7 @@ data class Community(
     @ManyToOne
     val user: User,
 
+    @JsonBackReference
     @OneToMany(mappedBy = "community", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val posts: List<Post> = listOf(),
 

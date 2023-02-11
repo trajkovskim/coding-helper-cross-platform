@@ -45,6 +45,7 @@ dependencies:
   coding_helper_forum_api:
     path: api/coding_helper_forum_api
   flutter_markdown: ^0.6.13
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_test:

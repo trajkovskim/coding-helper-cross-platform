@@ -29,7 +29,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     final navigator = Navigator.of(context);
     navigator.push(
       MaterialPageRoute(
-        builder: (context) => ProblemArenaPage(),
+        builder: (context) => const ProblemArenaPage(),
         settings: RouteSettings(
           arguments: {
             'problem': entry?.problem,

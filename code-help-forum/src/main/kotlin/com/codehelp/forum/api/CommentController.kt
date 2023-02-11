@@ -26,7 +26,6 @@ class CommentController(private val commentService: CommentService) : CommentApi
     override fun getCommentsForPost(post: String): ResponseEntity<CommentsDto> {
         val comments = commentService.getPostComments(post)
 
-
         val dto = CommentsDto().comments(comments)
 
         return ResponseEntity.ok(dto)

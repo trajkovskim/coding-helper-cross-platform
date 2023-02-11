@@ -1,0 +1,200 @@
+import 'package:coding_helper_cross_platform/src/forum/service/CommunityService.dart';
+import 'package:coding_helper_cross_platform/src/forum/service/PostService.dart';
+import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
+import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+class ForumOverviewPage extends StatelessWidget {
+  ForumOverviewPage({Key? key}) : super(key: key);
+
+  final postService = PostService.getInstance();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = getTranslation(context, 'message.forum');
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Hello"),
+      ),
+      body: FutureBuilder<ShortPosts?>(
+        future: postService.getAllPosts(),
+        builder: (BuildContext context, AsyncSnapshot<ShortPosts?> snapshot) {
+          if (snapshot.hasData) {
+            return PaddedList<ShortPost>(
+                items: snapshot.data?.posts?.toList() ?? [], builder: (context, item) => ForumPostCard(post: item));
+          }
+          return Container(
+            alignment: Alignment.center,
+            child: Text(t("posts-not-loaded")),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PaddedWidgetList extends StatelessWidget {
+  const PaddedWidgetList({
+    Key? key,
+    required this.children,
+    this.spacing = 15,
+    this.padding = const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    this.controller,
+  }) : super(key: key);
+
+  final List<Widget> children;
+  final double spacing;
+  final EdgeInsets padding;
+  final ScrollController? controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return PaddedList(
+      controller: controller,
+      items: children,
+      padding: padding,
+      spacing: spacing,
+      builder: (context, item) => item,
+    );
+  }
+}
+
+class PaddedList<T> extends StatelessWidget {
+  const PaddedList({
+    Key? key,
+    required this.items,
+    required this.builder,
+    this.spacing = 15,
+    this.padding = const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    this.controller,
+  }) : super(key: key);
+
+  final List<T> items;
+  final Widget Function(BuildContext context, T item) builder;
+  final double spacing;
+  final EdgeInsets padding;
+  final ScrollController? controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      controller: controller,
+      itemCount: items.length,
+      scrollDirection: Axis.vertical,
+      padding: padding,
+      shrinkWrap: true,
+      itemBuilder: (context, index) => builder(context, items[index]),
+      separatorBuilder: (BuildContext context, int index) => SizedBox(height: spacing),
+    );
+  }
+}
+
+class ForumPostCard extends StatelessWidget {
+  const ForumPostCard({Key? key, required this.post}) : super(key: key);
+
+  final ShortPost post;
+
+  @override
+  Widget build(BuildContext context) {
+    handleTap(String uid) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ForumPostPage(postUid: uid)));
+    }
+
+    return ForumCard(
+      onTap: () => handleTap(post.uid),
+      child: ForumCardPostData(
+        title: post.title,
+        content: post.title,
+        username: post.user.username,
+      ),
+    );
+  }
+}
+
+class ForumCard extends StatelessWidget {
+  const ForumCard({Key? key, this.onTap, required this.child}) : super(key: key);
+
+  // final String title;
+  // final String content;
+  // final String username;
+  final Function()? onTap;
+
+  //
+  //
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          // highlightColor : Colors.white,
+          // focusColor: Colors.white,
+          child: Card(
+            color: Colors.transparent,
+            shadowColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              color: Colors.transparent,
+              child: child,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ForumCardPostData extends StatelessWidget {
+  const ForumCardPostData({Key? key, required this.title, required this.content, required this.username})
+      : super(key: key);
+
+  final String title;
+  final String content;
+  final String username;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 15,
+      direction: Axis.vertical,
+      children: [
+        Wrap(
+          spacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const CircleAvatar(
+              backgroundColor: Colors.black12,
+              radius: 15,
+            ),
+            Text(
+              username,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        Text(content),
+      ],
+    );
+  }
+}

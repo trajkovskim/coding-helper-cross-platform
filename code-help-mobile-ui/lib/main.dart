@@ -1,6 +1,10 @@
 import 'package:coding_helper_cross_platform/src/context/contests.dart';
 import 'package:coding_helper_cross_platform/src/context/submissions.dart';
+import 'package:coding_helper_cross_platform/src/forum/service/ForumServiceInitializer.dart';
+import 'package:coding_helper_cross_platform/src/forum/service/forumAuthService.dart';
 import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,6 +22,7 @@ import 'src/pages/profile/settings_page.dart';
 import 'src/pages/profile/stats_page.dart';
 
 void main() {
+  initializeForumServices();
   runApp(const MyApp());
 }
 
@@ -25,6 +30,7 @@ class MyApp extends StatelessWidget {
   static final List<Widget> widgets = [
     const InitialPage(),
     const ProblemsOverviewPage(),
+    ForumOverviewPage(),
     const ProfilePage(),
   ];
 
@@ -45,7 +51,7 @@ class MyApp extends StatelessWidget {
           final activeLocale = sharedContext.locale;
 
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: 'Code help',
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),

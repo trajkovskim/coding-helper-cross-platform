@@ -4,7 +4,6 @@ import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Comment
 import com.codehelp.forum.generated.rest.model.CommentDto
-import com.codehelp.forum.generated.rest.model.CommentRepliesDto
 import com.codehelp.forum.generated.rest.model.CommentRequestDto
 import com.codehelp.forum.repository.CommentRepository
 import com.codehelp.forum.repository.PostRepository
@@ -26,7 +25,38 @@ class CommentServiceImpl(
     override fun getPostComments(postUid: String): List<CommentDto> {
         val post = postRepository.findByUid(UUID.fromString(postUid)) ?: throw RuntimeException("not found")
 
-        return post.comments.map { it.toDto() }
+        val coms = post.comments
+            .filter { it.parent == null }
+            .map { it.toDto() }
+            .reversed()
+
+        return listOf(
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+            coms.get(0),
+        )
     }
 
     @Transactional(readOnly = true)

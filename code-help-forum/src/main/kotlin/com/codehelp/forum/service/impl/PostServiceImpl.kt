@@ -45,8 +45,13 @@ class PostServiceImpl(
         return post.toDto()
     }
 
-    override fun getAll(community: String): List<ShortPostDto> {
-        return postRepository.findAllByCommunityName(community).map { it.toShortDto() }
+    override fun getAll(community: String?): List<ShortPostDto> {
+
+
+        return (community?.let { postRepository.findAllByCommunityName(it) } ?: postRepository.findAll())
+            .map { it.toShortDto() }
+
+
     }
 
     override fun update(uid: String, postRequestDto: PostRequestDto): PostDto {

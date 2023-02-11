@@ -6,6 +6,7 @@ import com.codehelp.forum.generated.rest.model.PostRequestDto
 import com.codehelp.forum.generated.rest.model.ShortPostsDto
 import com.codehelp.forum.service.PostService
 import org.springframework.http.ResponseEntity
+import java.util.stream.Stream
 
 @RestControllerV1
 class PostController(private val postService: PostService) : PostApi {
@@ -27,11 +28,43 @@ class PostController(private val postService: PostService) : PostApi {
         return ResponseEntity.ok(post)
     }
 
-    override fun getPosts(community: String): ResponseEntity<ShortPostsDto> {
+    override fun getPosts(community: String?): ResponseEntity<ShortPostsDto> {
         val posts = postService.getAll(community)
 
         val dto = ShortPostsDto()
-            .posts(posts)
+            .posts(Stream.of(
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+                posts.stream(),
+            ).flatMap { it }.toList())
 
         return ResponseEntity.ok(dto)
     }
