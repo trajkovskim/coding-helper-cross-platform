@@ -34,8 +34,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   bool init = false;
 
   Params useParams() {
-    final params =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final params = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String?;
     final entry = params['problem'] as ProblemEntry?;
     return Params(language: language, entry: entry);
@@ -48,8 +47,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     if (init) {
       return;
     }
-    final submissionsContext =
-        Provider.of<SubmissionsContext>(context, listen: false);
+    final submissionsContext = Provider.of<SubmissionsContext>(context, listen: false);
     final params = useParams();
 
     codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
@@ -57,8 +55,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       codeController.text = params.entry?.starterCode ?? '';
     }
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
-      ..problemId = params.entry?.id;
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()..problemId = params.entry?.id;
     submissionsService
         .getSubmissionEntries(builder.build())
         .then((value) => submissionsContext.setSubmissions(value))
@@ -104,10 +101,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       ..input = input
       ..problemId = params.entry?.id;
 
-    codeRunnerService
-        .runCode(builder.build())
-        .then((value) => showSnackBar(scaffoldMessenger, value))
-        .onError(
+    codeRunnerService.runCode(builder.build()).then((value) => showSnackBar(scaffoldMessenger, value)).onError(
           (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
         );
   }
@@ -135,12 +129,12 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
           bottom: TabBar(
             tabs: [
               Tab(
-                child: Text(t('description')),
+                child: Text(t('description'), style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
               Tab(
-                child: Text(t('editor')),
+                child: Text(t('editor'), style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
-              Tab(child: Text(t('submissions'))),
+              Tab(child: Text(t('submissions'), style: const TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
         ),

@@ -35,62 +35,65 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(t('title')),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const UserFrame(),
-            VerticalListView(
-              children: [
-                ListItem(
-                  title: t('accentColor'),
-                  trailing: Dropdown(
-                    value: settings?.accentColor,
-                    onChange: sharedContext.setAccentColor,
-                    items: accentColorOptions
-                        .map((option) => DropdownItem(tColors(option), option))
-                        .toList(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const UserFrame(),
+              VerticalListView(
+                children: [
+                  ListItem(
+                    title: t('accentColor'),
+                    trailing: Dropdown(
+                      value: settings?.accentColor,
+                      onChange: sharedContext.setAccentColor,
+                      items: accentColorOptions
+                          .map((option) => DropdownItem(tColors(option), option))
+                          .toList(),
+                    ),
                   ),
-                ),
-                ListItem(
-                  title: t('defaultLanguage'),
-                  trailing: Dropdown(
-                    value: settings?.defaultLanguage,
-                    onChange: sharedContext.setDefaultLanguage,
-                    items: defaultLanguageOptions
-                        .map(
-                          (option) => DropdownItem(
-                            option[0].toUpperCase() + option.substring(1),
-                            option,
-                          ),
-                        )
-                        .toList(),
+                  ListItem(
+                    title: t('defaultLanguage'),
+                    trailing: Dropdown(
+                      value: settings?.defaultLanguage,
+                      onChange: sharedContext.setDefaultLanguage,
+                      items: defaultLanguageOptions
+                          .map(
+                            (option) => DropdownItem(
+                              option[0].toUpperCase() + option.substring(1),
+                              option,
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
-                ListItem(
-                  title: t('theme'),
-                  trailing: Dropdown(
-                    value: settings?.theme,
-                    onChange: sharedContext.setTheme,
-                    items: themesOptions
-                        .map((option) => DropdownItem(tThemes(option), option))
-                        .toList(),
+                  ListItem(
+                    title: t('theme'),
+                    trailing: Dropdown(
+                      value: settings?.theme,
+                      onChange: sharedContext.setTheme,
+                      items: themesOptions
+                          .map((option) => DropdownItem(tThemes(option), option))
+                          .toList(),
+                    ),
                   ),
-                ),
-                ListItem(
-                  title: t('applicationLanguage'),
-                  trailing: Dropdown(
-                    value: settings?.locale,
-                    onChange: sharedContext.setLocale,
-                    items: applicationLanguageOptions
-                        .map(
-                          (option) => DropdownItem(tLanguages(option), option),
-                        )
-                        .toList(),
+                  ListItem(
+                    title: t('applicationLanguage'),
+                    trailing: Dropdown(
+                      value: settings?.locale,
+                      onChange: sharedContext.setLocale,
+                      items: applicationLanguageOptions
+                          .map(
+                            (option) => DropdownItem(tLanguages(option), option),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -20,21 +20,24 @@ class SavedPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(t('title')),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const UserFrame(),
-              VerticalListView(
-                children: [
-                  ListItem(
-                    title: 'Test project',
-                    subtitle: '${t('language')}: ${'react'}',
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const UserFrame(),
+                VerticalListView(
+                  children: [
+                    ListItem(
+                      title: 'Test project',
+                      subtitle: '${t('language')}: ${'react'}',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ));
   }

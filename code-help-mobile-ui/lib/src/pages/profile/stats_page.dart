@@ -38,45 +38,48 @@ class StatsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(t('title')),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          // ignore: prefer_const_constructors
-          children: [
-            const UserFrame(),
-            ...data
-                .map(
-                  (m) => Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: m.entries
-                            .map(
-                              (entry) => [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(t(entry.key)),
-                                    Text(entry.value),
-                                  ],
-                                ),
-                                const Divider()
-                              ],
-                            )
-                            .expand((element) => element)
-                            .take(2 * m.length - 1)
-                            .toList(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            // ignore: prefer_const_constructors
+            children: [
+              const UserFrame(),
+              ...data
+                  .map(
+                    (m) => Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: m.entries
+                              .map(
+                                (entry) => [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(t(entry.key)),
+                                      Text(entry.value),
+                                    ],
+                                  ),
+                                  const Divider()
+                                ],
+                              )
+                              .expand((element) => element)
+                              .take(2 * m.length - 1)
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList()
-          ],
+                  )
+                  .toList()
+            ],
+          ),
         ),
       ),
     );
