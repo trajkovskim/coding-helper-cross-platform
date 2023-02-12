@@ -59,8 +59,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
       loading = true;
     });
 
-    final params =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
+    final params = ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
     id = params['id'];
 
     if (id == null) {
@@ -69,8 +68,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
     final submissionsContext = Provider.of<SubmissionsContext>(context);
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
-      ..problemId = int.parse(id!);
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()..problemId = int.parse(id!);
 
     Future.wait([
       problemsService
@@ -81,10 +79,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
           .onError(
             (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
           ),
-      submissionsService
-          .getSubmissionEntries(builder.build())
-          .then(submissionsContext.setSubmissions)
-          .onError(
+      submissionsService.getSubmissionEntries(builder.build()).then(submissionsContext.setSubmissions).onError(
             (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
           )
     ]).whenComplete(
@@ -112,95 +107,110 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
             child: CircularProgressIndicator.adaptive(),
           );
         }
-        return CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: constraints.maxHeight * 0.25,
-                    child: Card(
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: constraints.maxHeight * 0.25,
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.black.withOpacity(0.65),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: const Icon(Icons.javascript, size: 64),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${t('difficulty')} ${entry?.problem.difficulty.name.toLowerCase()}'),
+                                      Text('${t('duration')} ${'1h30m'}'),
+                                      Text('${t('participants')} ${0}'),
+                                      Text('${t('reviews')} ${0}'),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Text(
+                                entry?.problem.title ?? '',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Dropdown(
+                                    value: selectedLanguage,
+                                    items: CodeEditor.EDITOR_LANGUAGES.keys
+                                        .map(
+                                          (language) => DropdownItem(
+                                            language,
+                                            language,
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChange: handleChangeLanguage,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: handleTapStart,
+                                    style: ElevatedButton.styleFrom(shadowColor: Colors.black.withOpacity(0.25)),
+                                    child: Text(t('start')),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox.fromSize(size: const Size.fromHeight(10)),
+                    Card(
                       elevation: 2,
+                      shadowColor: Colors.black.withOpacity(0.5),
                       child: Padding(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: const Icon(Icons.abc, size: 64),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${t('difficulty')} ${entry?.problem.difficulty.name}',
-                                    ),
-                                    Text('${t('duration')} ${'1h30m'}'),
-                                    Text('${t('participants')} ${0}'),
-                                    Text('${t('reviews')} ${0}'),
-                                  ],
-                                )
-                              ],
+                            Text(
+                              t('description'),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                             ),
-                            Text(entry?.problem.title ?? ''),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Dropdown(
-                                  value: selectedLanguage,
-                                  items: CodeEditor.EDITOR_LANGUAGES.keys
-                                      .map(
-                                        (language) => DropdownItem(
-                                          language,
-                                          language,
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChange: handleChangeLanguage,
-                                ),
-                                ElevatedButton(
-                                  onPressed: handleTapStart,
-                                  child: Text(t('start')),
-                                )
-                              ],
-                            )
+                            SizedBox.fromSize(size: const Size.fromHeight(5)),
+                            Text(entry?.problem.markdown ?? t('noDescription')),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(t('description')),
-                          Text(entry?.problem.markdown ?? t('noDescription'))
-                        ],
+                    SizedBox.fromSize(size: const Size.fromHeight(10)),
+                    Expanded(
+                      child: VerticalListView(
+                        children: submissionsContext.entries
+                            .map((entry) => ListItem(
+                                  title: '${t('attempt')} ${entry.id}',
+                                  subtitle: '${t('status')} ${entry.status.name}',
+                                ))
+                            .toList(),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: VerticalListView(
-                      children: submissionsContext.entries.map((entry) => ListItem(
-                          title: '${t('attempt')} ${entry.id}',
-                          subtitle: '${t('status')} ${entry.status.name}',
-                        )).toList()
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }),
     );
