@@ -31,8 +31,10 @@ class CommunityService {
         .then((value) => value.data);
   }
 
-  getCommunityByName(String name) {
-    _forumAuthService.requestWithAuth((headers) => _communityApi.getCommunityByUid(name: name, headers: headers));
+  Future<Community?> getCommunityByName(String name) {
+    return _forumAuthService
+        .requestWithAuth((headers) => _communityApi.getCommunityByUid(name: name, headers: headers))
+        .then((value) => value.data);
   }
 
   createCommunity(String name, String description) {

@@ -56,7 +56,7 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
     final t = getTranslation(context, 'problems');
     final tContests = getTranslation(context, 'contests');
 
-    const listHeightFactor = 0.30;
+    const listHeightFactor = 0.25;
 
     return Scaffold(
       appBar: AppBar(
@@ -69,41 +69,43 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
           );
         }
         return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FloatingTile(
-                      title: t('recent.title'),
-                      image: const Icon(Icons.abc, size: 64),
-                      onTap: () => navigator.pushNamed('/problems-discover'),
-                    ),
-                    FloatingTile(
-                      title: tContests('title'),
-                      image: const Icon(Icons.abc, size: 64),
-                      onTap: () => navigator.pushNamed('/contests-discover'),
-                    ),
-                    FloatingTile(
-                      title: t('discover.title'),
-                      image: const Icon(Icons.abc, size: 64),
-                      onTap: () => navigator.pushNamed('/problems-discover'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              if (problems.isNotEmpty)
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 SizedBox(
-                  height: constraints.maxHeight * listHeightFactor,
+                  height: constraints.maxHeight * 0.17,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FloatingTile(
+                        title: t('recent.title'),
+                        image: const Icon(Icons.calendar_today, size: 32),
+                        onTap: () => navigator.pushNamed('/problems-discover'),
+                      ),
+                      FloatingTile(
+                        title: tContests('title'),
+                        image: const Icon(Icons.people, size: 32),
+                        onTap: () => navigator.pushNamed('/contests-discover'),
+                      ),
+                      FloatingTile(
+                        title: t('discover.title'),
+                        image: const Icon(Icons.store, size: 32),
+                        onTap: () => navigator.pushNamed('/problems-discover'),
+                      ),
+                    ],
+                  ),
+                ),
+                if (problems.isNotEmpty)
+                SizedBox.fromSize(size: const Size.fromHeight(20)),
+                if (problems.isNotEmpty)
+                SizedBox(
+                  height: constraints.maxHeight * 0.25,
                   child: HorizontalListView(
                     items: problems
                         .map(
                           (entry) => Item(
-                            title: entry.title,
                             onTap: () {
                               navigator.pushNamed(
                                 '/problem-overview',
@@ -116,14 +118,15 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                     title: t('active'),
                   ),
                 ),
-              if (problems.isNotEmpty)
+                if (problems.isNotEmpty)
+                SizedBox.fromSize(size: const Size.fromHeight(20)),
+                if (problems.isNotEmpty)
                 SizedBox(
                   height: constraints.maxHeight * listHeightFactor,
                   child: HorizontalListView(
                     items: problems
                         .map(
                           (entry) => Item(
-                            title: entry.title,
                             onTap: () {
                               navigator.pushNamed(
                                 '/problem-overview',
@@ -136,7 +139,9 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                     title: t('recommended'),
                   ),
                 ),
-              if (problems.isNotEmpty)
+                if (problems.isNotEmpty)
+                SizedBox.fromSize(size: const Size.fromHeight(20)),
+                if (problems.isNotEmpty)
                 SizedBox(
                   height: constraints.maxHeight * listHeightFactor,
                   child: HorizontalListView(
@@ -156,7 +161,8 @@ class _ProblemsOverviewPageState extends State<ProblemsOverviewPage> {
                     title: t('recommended'),
                   ),
                 )
-            ],
+              ],
+            ),
           ),
         );
       }),

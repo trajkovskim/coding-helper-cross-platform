@@ -71,6 +71,9 @@
       "title": "Forum",
       "comment": {
         "edited": "edited"
+      },
+      "community": {
+        "search": "Search communities"
       }
     },
     "profile": {

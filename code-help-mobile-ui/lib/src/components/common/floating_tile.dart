@@ -4,12 +4,14 @@ class FloatingTile extends StatelessWidget {
   final void Function()? onTap;
   final String title;
   final Widget? image;
+  final EdgeInsets padding;
 
   const FloatingTile({
     super.key,
     this.onTap,
     required this.title,
     required this.image,
+    this.padding = const EdgeInsets.all(16),
   });
 
   @override
@@ -25,8 +27,14 @@ class FloatingTile extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              elevation: 8,
-              child: Center(child: image),
+              shadowColor: Colors.black.withOpacity(0.85),
+              elevation: 2,
+              child: Center(
+                child: Padding(
+                  padding: padding,
+                  child: image,
+                ),
+              ),
             ),
           ),
           const SizedBox(

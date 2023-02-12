@@ -16,13 +16,14 @@ class ForumPostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
+    final ft = getTranslation(context, 'forum');
 
     ScrollController controller = ScrollController();
     ScrollController commentController = ScrollController();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hello"),
+        title: Text(ft("title")),
       ),
       body: FutureBuilder<PostWithComments>(
         future: Future.wait([postService.getPostByUid(postUid), commentService.getPostComments(postUid)])
@@ -102,8 +103,6 @@ class ForumCardCommentData extends StatelessWidget {
         ),
         Text(comment.content, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
         Container(
-          // color: Colors.black,
-          width: 310,
           alignment: AlignmentDirectional.centerEnd,
           child: TextButton(
             onPressed: onTap,
@@ -112,7 +111,7 @@ class ForumCardCommentData extends StatelessWidget {
               minimumSize: const Size(50, 30),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: const Text("Replies"),
+            child: Text("Replies ${comment.replies?.count ?? 0}"),
             // TODO: add translation
           ),
         )
@@ -146,6 +145,8 @@ class _CommentWithRepliesState extends State<CommentWithReplies> {
     });
   }
 
+  final commentService = CommentService.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -154,21 +155,38 @@ class _CommentWithRepliesState extends State<CommentWithReplies> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width - 60,
-          padding: EdgeInsets.only(left: 10 * (widget.level - 1)),
+          padding: EdgeInsets.only(left: 12.5 * (widget.level - 1)),
           child: ForumCard(
             onTap: showReplies,
-            child: ForumCardCommentData(comment: widget.comment),
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 0),
+            child: ForumCardCommentData(
+              comment: widget.comment,
+              onTap: showReplies,
+            ),
           ),
         ),
-        // replies ?
-        //  CommentWithReplies(comment: comment) :
-        widget.replies
-            ? CommentWithReplies(
-                comment: widget.comment,
-                replies: false,
-                level: widget.level + 1,
-              )
-            : Container(padding: EdgeInsets.zero)
+        ...(widget.replies
+            ? [
+                FutureBuilder<Comments?>(
+                    future: commentService.getCommentReplies(widget.comment.uid),
+                    builder: (BuildContext context, AsyncSnapshot<Comments?> snapshot) {
+                      if (snapshot.hasData) {
+                        var replies = snapshot.data?.comments!;
+                        return Column(
+                            children: replies
+                                    ?.map((comment) => CommentWithReplies(
+                                          comment: comment,
+                                          replies: false,
+                                          level: widget.level + 1,
+                                        ))
+                                    .toList() ??
+                                []);
+                      }
+
+                      return Container(padding: EdgeInsets.zero);
+                    })
+              ]
+            : [])
       ],
     );
   }

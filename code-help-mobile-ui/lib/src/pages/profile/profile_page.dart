@@ -41,26 +41,21 @@ class ProfilePage extends StatelessWidget {
         title: Text(t('title')),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const UserFrame(),
+            SizedBox.fromSize(size: const Size.fromHeight(10)),
             VerticalListView(
               children: [
-                ListItem(
-                    title: t('stats.title'),
-                    onTap: () => navigator.pushNamed('/stats')),
-                ListItem(
-                    title: t('saved.title'),
-                    onTap: () => navigator.pushNamed('/saved')),
-                ListItem(
-                    title: t('history.title'),
-                    onTap: () => navigator.pushNamed('/history')),
-                ListItem(
-                    title: t('settings.title'),
-                    onTap: () => navigator.pushNamed('/settings')),
+                ListItem(title: t('stats.title'), onTap: () => navigator.pushNamed('/stats')),
+                ListItem(title: t('saved.title'), onTap: () => navigator.pushNamed('/saved')),
+                ListItem(title: t('history.title'), onTap: () => navigator.pushNamed('/history')),
+                ListItem(title: t('settings.title'), onTap: () => navigator.pushNamed('/settings')),
               ],
             ),
+            SizedBox.fromSize(size: const Size.fromHeight(10)),
             VerticalListView(
               children: [
                 ListItem(title: t('logout'), onTap: () {}),

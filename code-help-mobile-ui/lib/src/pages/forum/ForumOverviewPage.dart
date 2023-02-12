@@ -1,10 +1,12 @@
-import 'package:coding_helper_cross_platform/src/forum/service/CommunityService.dart';
 import 'package:coding_helper_cross_platform/src/forum/service/PostService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../components/common/search_input.dart';
 
 class ForumOverviewPage extends StatelessWidget {
   ForumOverviewPage({Key? key}) : super(key: key);
@@ -14,10 +16,21 @@ class ForumOverviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
+    final ft = getTranslation(context, 'forum');
+
+    handleSearch() {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ForumCommunitySearchPage()));
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hello"),
+        title: Text(ft("title")),
+        actions: [
+          IconButton(
+            onPressed: handleSearch,
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       body: FutureBuilder<ShortPosts?>(
         future: postService.getAllPosts(),
@@ -115,16 +128,15 @@ class ForumPostCard extends StatelessWidget {
 }
 
 class ForumCard extends StatelessWidget {
-  const ForumCard({Key? key, this.onTap, required this.child}) : super(key: key);
+  const ForumCard(
+      {Key? key,
+      this.onTap,
+      required this.child,
+      this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 10)})
+      : super(key: key);
 
-  // final String title;
-  // final String content;
-  // final String username;
   final Function()? onTap;
-
-  //
-  //
-
+  final EdgeInsets padding;
   final Widget child;
 
   @override
@@ -147,13 +159,11 @@ class ForumCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          // highlightColor : Colors.white,
-          // focusColor: Colors.white,
           child: Card(
             color: Colors.transparent,
             shadowColor: Colors.transparent,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: padding,
               color: Colors.transparent,
               child: child,
             ),

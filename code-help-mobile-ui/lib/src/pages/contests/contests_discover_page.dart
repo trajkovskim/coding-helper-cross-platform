@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/components/common/SearchSettings.dart';
 import 'package:coding_helper_cross_platform/src/services/contests_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +12,6 @@ import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 import '../../services/index.dart';
 
-enum View {
-  LIST,
-  GRID;
-}
 
 class ContestsDiscoverPage extends StatefulWidget {
   const ContestsDiscoverPage({super.key});

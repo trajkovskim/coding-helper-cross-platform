@@ -588,6 +588,10 @@ components:
           type: string
         image:
           type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
     ShortCommunities:
       type: object
       required: [ communities ]

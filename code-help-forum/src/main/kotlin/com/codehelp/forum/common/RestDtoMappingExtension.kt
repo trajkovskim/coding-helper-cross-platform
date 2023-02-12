@@ -17,6 +17,7 @@ fun Community.toDto(): CommunityDto = CommunityDto()
 fun Community.toShortDto(): ShortCommunityDto = ShortCommunityDto()
     .name(this.name)
     .description(this.description)
+    .categories(this.categories.map { it.toDto() })
     .image(null)
 
 
