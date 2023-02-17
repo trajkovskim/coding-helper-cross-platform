@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
-class JwtUtils(private val authProperties: AuthProperties) {
+class
+JwtUtils(private val authProperties: AuthProperties) {
 
     private val accessTokenTimeout = authProperties.token.access.timeout * SECONDS * MILLISECONDS
     private val refreshTokenTimeout = authProperties.token.refresh.timeout * SECONDS * MILLISECONDS

@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:coding_helper_cross_platform/src/context/index.dart';
+import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/common/user_frame.dart';
 import '../../components/common/vertical_list_view.dart';
 import '../../i18n/i18n.dart';
 
-const avatarUrl =
-    'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.webp?s=612x612&w=is&k=20&c=PJjJWl0njGyow3AefY7KVNuhkbw5r2skqFiCFM5kyic=';
 const username = 'Username';
 
 class ProfilePage extends StatelessWidget {
@@ -29,11 +30,27 @@ class ProfilePage extends StatelessWidget {
     },
   ];
 
+  final authService = const AuthService();
+
   const ProfilePage({super.key});
+
+  Future<void> handleLogout(SharedContext sharedContext) async {
+    final storage = await SharedPreferences.getInstance();
+
+    final logoutUrl = storage.getString('logout-url');
+    authService.logout(logoutUrl!);
+
+    storage.remove('jwttoken');
+    storage.remove('logout-url');
+
+    sharedContext.setToken(null);
+    sharedContext.setUserData(null, null);
+  }
 
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
+    final sharedContext = Provider.of<SharedContext>(context);
     final t = getTranslation(context, 'profile');
 
     return Scaffold(
@@ -49,16 +66,28 @@ class ProfilePage extends StatelessWidget {
             SizedBox.fromSize(size: const Size.fromHeight(10)),
             VerticalListView(
               children: [
-                ListItem(title: t('stats.title'), onTap: () => navigator.pushNamed('/stats')),
-                ListItem(title: t('saved.title'), onTap: () => navigator.pushNamed('/saved')),
-                ListItem(title: t('history.title'), onTap: () => navigator.pushNamed('/history')),
-                ListItem(title: t('settings.title'), onTap: () => navigator.pushNamed('/settings')),
+                ListItem(
+                    title: t('stats.title'),
+                    onTap: () => navigator.pushNamed('/stats')),
+                ListItem(
+                    title: t('saved.title'),
+                    onTap: () => navigator.pushNamed('/saved')),
+                ListItem(
+                    title: t('history.title'),
+                    onTap: () => navigator.pushNamed('/history')),
+                ListItem(
+                    title: t('settings.title'),
+                    onTap: () => navigator.pushNamed('/settings')),
               ],
             ),
             SizedBox.fromSize(size: const Size.fromHeight(10)),
             VerticalListView(
               children: [
-                ListItem(title: t('logout'), onTap: () {}),
+                if (sharedContext.isAuthenticated)
+                  ListItem(
+                    title: t('logout'),
+                    onTap: () => handleLogout(sharedContext),
+                  ),
               ],
             ),
           ],

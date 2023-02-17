@@ -8,7 +8,7 @@ import '../../components/common/search_input.dart';
 import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
-import '../../services/index.dart';
+import '../../services/codehelp/index.dart';
 
 class ProblemsDiscoverPage extends StatefulWidget {
   const ProblemsDiscoverPage({super.key});

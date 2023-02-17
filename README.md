@@ -1,6 +1,12 @@
+Flutter generate types:
 ```
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+Keycloak run:
+```
+kc.bat start-dev --hostname=http://10.0.2.2
 ```
 
 # Coding helper (Flutter)

@@ -1,5 +1,5 @@
-import 'package:coding_helper_cross_platform/src/forum/service/CommentService.dart';
-import 'package:coding_helper_cross_platform/src/forum/service/PostService.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/CommentService.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/PostService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';

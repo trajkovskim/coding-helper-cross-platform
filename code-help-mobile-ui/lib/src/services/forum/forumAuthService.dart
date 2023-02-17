@@ -1,4 +1,4 @@
-import 'package:coding_helper_cross_platform/src/forum/api.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/api.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:dio/src/response.dart';
 import 'package:dio/src/dio_error.dart';

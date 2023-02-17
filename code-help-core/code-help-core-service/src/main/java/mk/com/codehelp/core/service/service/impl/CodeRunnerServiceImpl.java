@@ -62,9 +62,9 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   }
 
   @Override
-  public String runCodeWithTestCases(Long problemId, String fileName, String language, String code)
+  public String runCodeWithTestCases(Long problemId, String language, String code)
       throws IOException, InterruptedException {
-    var mergedCode = this.createCode(problemId, fileName, language, code);
+    var mergedCode = this.createCode(problemId, language, code);
     var testCases =
         new File("res/problems-starter-code/")
             .listFiles((dir, name) -> name.startsWith(problemId.toString()) && name.contains("IN"));
@@ -73,7 +73,7 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   }
 
   @Override
-  public String createCode(Long problemId, String fileName, String language, String code)
+  public String createCode(Long problemId, String language, String code)
       throws FileNotFoundException {
     String ext = null;
     if (language.equalsIgnoreCase("javascript")) {

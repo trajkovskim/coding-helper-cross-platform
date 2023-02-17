@@ -631,32 +631,6 @@ paths:
         204:
           description: No content
 
-  /auth/login:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: 'your-email@coding-helper.com'
-                password:
-                  type: string
-                  example: '******'
-      operationId: login
-      tags: [ Auth ]
-      description: Returns token if successfully logged in
-      responses:
-        200:
-          description: token
-          content:
-            tetx/plain:
-              schema:
-                type: string
-                example: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJ0aW50cmFqa292c2tpNzBAZ21haWwuY29tIiwiZXhwIjoxNjY5NTEwNTI0LCJpYXQiOjE2Njk0OTI1MjR9.nIoHo3qgItLF20vIQSHUBHCQoak5nL9u2tGRMB19Bg21RFCrOXDh0kcidWsVfEctGtH1BINV2TS9yl7caC9'
-
   /run-code:
     post:
       requestBody:
@@ -717,39 +691,3 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UsersWithTotalSolvedResponse'
-
-
-  /auth/register:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: 'username'
-                email:
-                  type: string
-                  example: 'your-email@coding-helper.com'
-                password:
-                  type: string
-                  example: '******'
-                firstName:
-                  type: string
-                  example: 'Your first name'
-                lastName:
-                  type: string
-                  example: 'Your last name'
-                gender:
-                  $ref: '#/components/schemas/Gender'
-                  example: MALE
-                birthday:
-                  $ref: '#/components/schemas/Date'
-      operationId: register
-      tags: [ Auth ]
-      description: Returns void
-      responses:
-        204:
-          description: void

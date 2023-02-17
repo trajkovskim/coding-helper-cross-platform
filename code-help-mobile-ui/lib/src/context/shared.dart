@@ -11,8 +11,8 @@ enum ErrorCode {
 }
 
 class UserData {
-  String username;
-  String image;
+  String? username;
+  String? image;
 
   UserData(this.username, this.image);
 }
@@ -72,12 +72,12 @@ class SharedContext extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserData(String username, String image) {
+  void setUserData(String? username, String? image) {
     _userData = UserData(username, image);
     notifyListeners();
   }
 
-  void setToken(String jwttoken) {
+  void setToken(String? jwttoken) {
     _jwttoken = jwttoken;
     notifyListeners();
   }

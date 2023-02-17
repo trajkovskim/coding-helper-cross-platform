@@ -1,5 +1,5 @@
-import 'package:coding_helper_cross_platform/src/forum/api.dart';
-import 'package:coding_helper_cross_platform/src/forum/service/forumAuthService.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/api.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/forumAuthService.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 
 class CommentService {

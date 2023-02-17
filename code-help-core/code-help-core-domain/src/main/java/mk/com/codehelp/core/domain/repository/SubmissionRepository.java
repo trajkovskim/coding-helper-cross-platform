@@ -10,9 +10,9 @@ import java.util.List;
 @Repository
 public interface SubmissionRepository extends Neo4jRepository<Submission, Long> {
 
-    List<SubmissionDto> findAllByUser_Email(String Email);
+    List<SubmissionDto> findAllByUser(String Email);
 
-    List<SubmissionDto> findAllByUser_EmailAndProblem_Id(String user_email, Long problem_id);
+    List<SubmissionDto> findAllByUserAndProblem_Id(String user_email, Long problem_id);
 
 
 }

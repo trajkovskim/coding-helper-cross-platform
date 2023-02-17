@@ -1,5 +1,5 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
-import 'package:coding_helper_cross_platform/src/services/api.dart';
+import 'api.dart';
 
 class SubmissionsService {
   const SubmissionsService();

@@ -1,4 +1,4 @@
-import 'package:coding_helper_cross_platform/src/forum/service/CommunityService.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/CommunityService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
@@ -154,8 +154,8 @@ class ForumCommunityPage extends StatelessWidget {
                                       ),
                                     )),
                                 ...((snapshot.data?.posts
-                                        ?.map((e) => Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 20),
+                                        .map((e) => Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20),
                                             child: ForumPostCard(post: e)))
                                         .toList()) ??
                                     []),

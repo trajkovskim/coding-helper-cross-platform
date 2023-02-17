@@ -9,7 +9,7 @@ public interface CodeRunnerService {
 
   String runCode(String input, String codeFilePath, String language) throws IOException, InterruptedException;
 
-  String runCodeWithTestCases(Long problemId, String fileName, String language, String code) throws IOException, InterruptedException;
+  String runCodeWithTestCases(Long problemId, String language, String code) throws IOException, InterruptedException;
 
-  String createCode(Long problemId, String fileName, String language, String code) throws FileNotFoundException;
+  String createCode(Long problemId, String language, String code) throws FileNotFoundException;
 }

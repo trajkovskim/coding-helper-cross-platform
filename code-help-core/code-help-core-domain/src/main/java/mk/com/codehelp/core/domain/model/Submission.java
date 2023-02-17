@@ -24,13 +24,12 @@ public class Submission {
   private String language;
   private String code;
 
-  @Relationship
-  private User user;
+  private String user;
 
   @Relationship
   private Problem problem;
 
-  public Submission(Date timeSubmitted, SubmissionStatus status, String language, String code, User user, Problem problem) {
+  public Submission(Date timeSubmitted, SubmissionStatus status, String language, String code, String user, Problem problem) {
     this.timeSubmitted = timeSubmitted;
     this.status = status;
     this.language = language;

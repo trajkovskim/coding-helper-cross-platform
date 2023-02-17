@@ -25,8 +25,7 @@ public class Problem {
   private String markdown;
   private String starterCode;
 
-  @Relationship(value = "LIKED_BY")
-  private List<User> likedBy;
+  private List<String> likedBy;
 
   public Problem(Category category, String title, Difficulty difficulty, String markdown, String starterCode) {
     this.category = category;

@@ -110,14 +110,14 @@ public class ProblemServiceImpl implements ProblemService {
   @Override
   public boolean likeToggle(Long id, String email) {
     Problem problem = findById(id);
-    boolean isNotLiked = problem.getLikedBy().stream().noneMatch(x -> x.getEmail().equals(email));
-    if (isNotLiked) {
-      problem.getLikedBy().add(this.userService.findByEmail(email));
+    boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.equals(email));
+    if (liked) {
+      problem.getLikedBy().removeIf(x -> x.equals(email));
     } else {
-      problem.getLikedBy().removeIf(x -> x.getEmail().equals(email));
+      problem.getLikedBy().add(email);
     }
     problemRepository.save(problem);
-    return isNotLiked;
+    return liked;
   }
 
   @Override
@@ -125,7 +125,7 @@ public class ProblemServiceImpl implements ProblemService {
     return findById(problemId)
         .getLikedBy()
         .stream()
-        .anyMatch(x -> x.getEmail().equals(email));
+        .anyMatch(x -> x.equals(email));
   }
 
   @Override

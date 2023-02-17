@@ -7,7 +7,7 @@ import '../../components/common/dropdown.dart';
 import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
-import '../../services/index.dart';
+import '../../services/codehelp/index.dart';
 import 'problem_arena_page.dart';
 
 class ProblemOverviewPage extends StatefulWidget {
@@ -59,7 +59,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
       loading = true;
     });
 
-    final params = ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
+    final params =
+        ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
     id = params['id'];
 
     if (id == null) {
@@ -68,7 +69,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
     final submissionsContext = Provider.of<SubmissionsContext>(context);
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()..problemId = int.parse(id!);
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
+      ..problemId = int.parse(id!);
 
     Future.wait([
       problemsService
@@ -79,13 +81,16 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
           .onError(
             (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
           ),
-      submissionsService.getSubmissionEntries(builder.build()).then(submissionsContext.setSubmissions).onError(
+      submissionsService
+          .getSubmissionEntries(builder.build())
+          .then(submissionsContext.setSubmissions)
+          .onError(
             (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
           )
     ]).whenComplete(
       () {
-        init = true;
         setState(() {
+          init = true;
           loading = false;
         });
       },
@@ -128,16 +133,20 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: const Icon(Icons.javascript, size: 64),
+                                    child:
+                                        const Icon(Icons.javascript, size: 64),
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('${t('difficulty')} ${entry?.problem.difficulty.name.toLowerCase()}'),
+                                      Text(
+                                          '${t('difficulty')} ${entry?.problem.difficulty.name.toLowerCase()}'),
                                       Text('${t('duration')} ${'1h30m'}'),
                                       Text('${t('participants')} ${0}'),
                                       Text('${t('reviews')} ${0}'),
@@ -147,10 +156,12 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                               ),
                               Text(
                                 entry?.problem.title ?? '',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Dropdown(
                                     value: selectedLanguage,
@@ -166,7 +177,9 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                   ),
                                   ElevatedButton(
                                     onPressed: handleTapStart,
-                                    style: ElevatedButton.styleFrom(shadowColor: Colors.black.withOpacity(0.25)),
+                                    style: ElevatedButton.styleFrom(
+                                        shadowColor:
+                                            Colors.black.withOpacity(0.25)),
                                     child: Text(t('start')),
                                   )
                                 ],
@@ -187,7 +200,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                           children: [
                             Text(
                               t('description'),
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                             SizedBox.fromSize(size: const Size.fromHeight(5)),
                             Text(entry?.problem.markdown ?? t('noDescription')),
@@ -201,7 +215,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                         children: submissionsContext.entries
                             .map((entry) => ListItem(
                                   title: '${t('attempt')} ${entry.id}',
-                                  subtitle: '${t('status')} ${entry.status.name}',
+                                  subtitle:
+                                      '${t('status')} ${entry.status.name}',
                                 ))
                             .toList(),
                       ),

@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:dio/dio.dart';
 
@@ -16,7 +17,7 @@ final dio = Dio(
 );
 
 final _forumAuth = CodingHelperForumApi(dio: dioAuth);
-final _forumApi = CodingHelperForumApi(dio: dio);
+final _forumApi = CodingHelperForumApi(dio: dio, interceptors: [BearerInterceptor()]);
 
 final _forumAuthApi = _forumAuth.getAuthApi();
 final _communityApi = _forumApi.getCommunityApi();

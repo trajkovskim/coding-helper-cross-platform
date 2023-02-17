@@ -10,7 +10,9 @@
         "--dart-define",
         "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
         "--dart-define",
-        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000",
+        "--dart-define",
+        "AUTH_ISSUER_URL=http://10.0.2.2:8080/realms/code-help"
       ]
     },
     {
@@ -23,7 +25,9 @@
         "--dart-define",
         "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
         "--dart-define",
-        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000",
+        "--dart-define",
+        "AUTH_ISSUER_URL=http://10.0.2.2:8080/realms/code-help"
       ]
     },
     {
@@ -36,7 +40,9 @@
         "--dart-define",
         "CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001",
         "--dart-define",
-        "CODING_HELPER_API_URL=http://10.0.2.2:3000"
+        "CODING_HELPER_API_URL=http://10.0.2.2:3000",
+        "--dart-define",
+        "AUTH_ISSUER_URL=http://10.0.2.2:8080/realms/code-help"
       ]
     },
     {

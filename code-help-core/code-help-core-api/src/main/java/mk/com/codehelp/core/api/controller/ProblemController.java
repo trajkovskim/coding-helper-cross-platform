@@ -9,7 +9,6 @@ import mk.com.codehelp.core.rest.api.ProblemsApi;
 import mk.com.codehelp.core.rest.model.*;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -103,9 +102,8 @@ public class ProblemController implements ProblemsApi {
 
   @Override
   public ResponseEntity<Void> toggleLikeProblemEntry(Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
-    problemService.likeToggle(id, email);
+    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+    problemService.likeToggle(id, user);
     return ResponseEntity.noContent().build();
   }
 
@@ -117,9 +115,8 @@ public class ProblemController implements ProblemsApi {
 
   @Override
   public ResponseEntity<Boolean> isProblemEntryLiked(Long id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
-    Boolean isLiked = problemService.isLikedBy(id, email);
+    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+    Boolean isLiked = problemService.isLikedBy(id, user);
     return ResponseEntity.ok(isLiked);
   }
 }

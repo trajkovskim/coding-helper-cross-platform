@@ -3,7 +3,7 @@ import 'package:coding_helper_cross_platform/src/components/common/grid_view.dar
 import 'package:coding_helper_cross_platform/src/components/common/list_options.dart';
 import 'package:coding_helper_cross_platform/src/components/common/search_input.dart';
 import 'package:coding_helper_cross_platform/src/components/common/vertical_list_view.dart';
-import 'package:coding_helper_cross_platform/src/forum/service/CommunityService.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/CommunityService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunityPage.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';

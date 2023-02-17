@@ -1,37 +1,42 @@
-import 'package:coding_helper_api/coding_helper_api.dart';
-import 'package:coding_helper_cross_platform/src/services/api.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:openid_client/openid_client_io.dart';
 
 class AuthService {
   const AuthService();
+  static const CLIENT_ID = "code-help-flutter";
+  static const ISSUER_URI = String.fromEnvironment("AUTH_ISSUER_URL");
 
-  Future<String> login(String email, String password) {
-    LoginRequestBuilder builder = LoginRequestBuilder()
-      ..email = email
-      ..password = password;
-
-    return AUTH_API
-        .login(loginRequest: builder.build())
-        .then((value) => value.data!);
+  Future<void> _urlLauncher(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
   }
 
-  Future<void> register({
-    required String email,
-    required String password,
-    required String firstName,
-    required String lastName,
-    required String username,
-    required Gender gender,
-    required Date date,
-  }) {
-    RegisterRequestBuilder builder = RegisterRequestBuilder()
-      ..firstName = firstName
-      ..lastName = lastName
-      ..email = email
-      ..password = password
-      ..username = username
-      ..gender = gender
-      ..birthday = date;
+  Future<Credential> authenticate() async {
+    final uri = Uri.parse(ISSUER_URI);
+    final issuer = await Issuer.discover(uri);
+    final client = Client(issuer, CLIENT_ID);
 
-    return AUTH_API.register(registerRequest: builder.build());
+    final authenticator = Authenticator(
+      client,
+      port: 4000,
+      urlLancher: _urlLauncher,
+    );
+
+    final user = await authenticator.authorize();
+
+    await closeInAppWebView();
+
+    return user;
+  }
+
+
+
+  Future<void> logout(String logoutUrl) async {
+    await _urlLauncher(logoutUrl);
+    await closeInAppWebView();
   }
 }
