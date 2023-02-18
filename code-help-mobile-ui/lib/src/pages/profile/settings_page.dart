@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/common/dropdown.dart';
-import '../../components/common/user_frame.dart';
+import 'user_frame.dart';
 import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';

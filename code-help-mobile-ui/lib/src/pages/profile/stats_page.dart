@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/common/user_frame.dart';
+import 'user_frame.dart';
 import '../../i18n/i18n.dart';
 
 const avatarUrl =
