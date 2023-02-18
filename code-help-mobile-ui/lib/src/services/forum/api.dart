@@ -17,7 +17,7 @@ final dio = Dio(
 );
 
 final _forumAuth = CodingHelperForumApi(dio: dioAuth);
-final _forumApi = CodingHelperForumApi(dio: dio, interceptors: [BearerInterceptor()]);
+final _forumApi = CodingHelperForumApi(dio: dio);
 
 final _forumAuthApi = _forumAuth.getAuthApi();
 final _communityApi = _forumApi.getCommunityApi();
