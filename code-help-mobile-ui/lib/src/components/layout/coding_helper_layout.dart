@@ -44,7 +44,8 @@ class _CodeHelpLayoutState extends State<CodeHelpLayout> {
             final builder = routes.entries
                 .firstWhere((element) => element.key == route)
                 .value;
-            return MaterialPageRoute(builder: builder);
+
+            return MaterialPageRoute(builder: builder, settings: settings);
           },
         ),
       ),

@@ -70,7 +70,8 @@
       "start": "Старт",
       "test": "Тестирај",
       "submit": "Поднеси",
-      "submissions": "Поднесувања"
+      "submissions": "Поднесувања",
+      "status": "Статус"
     },
     "forum": {
       "title": "Форум",

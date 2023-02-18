@@ -70,7 +70,8 @@
       "start": "Start",
       "test": "Test",
       "submit": "Submit",
-      "submissions": "Submissions"
+      "submissions": "Submissions",
+      "status": "Status"
     },
     "forum": {
       "title": "Forum",

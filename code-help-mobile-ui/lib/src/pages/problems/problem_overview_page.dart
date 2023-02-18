@@ -1,4 +1,5 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
+import 'package:coding_helper_cross_platform/src/components/common/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,6 @@ import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 import '../../services/codehelp/index.dart';
-import 'problem_arena_page.dart';
 
 class ProblemOverviewPage extends StatefulWidget {
   const ProblemOverviewPage({super.key});
@@ -20,22 +20,29 @@ class ProblemOverviewPage extends StatefulWidget {
 class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
   final ProblemsService problemsService = const ProblemsService();
   final SubmissionsService submissionsService = const SubmissionsService();
-
+  bool init = false;
   String selectedLanguage = CodeEditor.EDITOR_LANGUAGES.keys.first;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (init) {
+      return;
+    }
+    final sharedContext = Provider.of<SharedContext>(context);
+    final language = sharedContext.appSettings?.defaultLanguage;
+    if (language != null) {
+      selectedLanguage = language;
+    }
+    init = true;
+  }
 
   void handleTapStart(ProblemEntry entry) {
     final navigator = Navigator.of(context);
-    navigator.push(
-      MaterialPageRoute(
-        builder: (context) => const ProblemArenaPage(),
-        settings: RouteSettings(
-          arguments: {
-            'problem': entry,
-            'language': selectedLanguage,
-          },
-        ),
-      ),
-    );
+    navigator.pushNamed('/problem-arena', arguments: {
+      'problem': entry,
+      'language': selectedLanguage,
+    });
   }
 
   void handleChangeLanguage(String? language) {
@@ -49,28 +56,39 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     final t = getTranslation(context, 'problem');
 
     final params =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    final id = params['id'];
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final id = params?['id'] as String?;
+
+    if (id == null) {
+      throw 'id is null';
+    }
 
     GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
-      ..problemId = int.parse(id!);
+      ..problemId = int.parse(id);
 
     return FutureBuilder(
         future: Future.wait([
-          problemsService.getProblemEntry(id!),
+          problemsService.getProblemEntry(id),
           submissionsService.getSubmissionEntries(builder.build()),
         ]),
         builder: (context, snapshot) {
-          final entry = snapshot.data?[0] as ProblemByLikes?;
-          final entries = snapshot.data?[0] as List<SubmissionEntry>;
-
           if (snapshot.hasError) {
             throw ErrorCode.PROBLEM_OVERVIEW;
           }
 
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+
+          final entry = snapshot.data![0] as ProblemByLikes;
+          final entries = snapshot.data![1] as List<SubmissionEntry>;
+          final navigator = Navigator.of(context);
+
           return Scaffold(
             appBar: AppBar(
-              title: Text(entry?.problem.title ?? ''),
+              title: Text(entry.problem.title),
             ),
             body: LayoutBuilder(builder: (context, constraints) {
               if (!snapshot.hasData) {
@@ -79,8 +97,10 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                 );
               }
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 20,
+                ),
                 child: CustomScrollView(
                   slivers: [
                     SliverFillRemaining(
@@ -89,7 +109,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SizedBox(
-                            height: constraints.maxHeight * 0.25,
+                            height: constraints.maxHeight * 0.3,
                             child: Card(
                               elevation: 2,
                               shadowColor: Colors.black.withOpacity(0.65),
@@ -107,15 +127,17 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: const Icon(Icons.javascript,
-                                              size: 64),
+                                          child: const Icon(
+                                            Icons.javascript,
+                                            size: 64,
+                                          ),
                                         ),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                '${t('difficulty')} ${entry?.problem.difficulty.name.toLowerCase()}'),
+                                                '${t('difficulty')} ${entry.problem.difficulty.name.toLowerCase()}'),
                                             Text('${t('duration')} ${'1h30m'}'),
                                             Text('${t('participants')} ${0}'),
                                             Text('${t('reviews')} ${0}'),
@@ -124,10 +146,11 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                       ],
                                     ),
                                     Text(
-                                      entry?.problem.title ?? '',
+                                      entry.problem.title,
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -148,10 +171,11 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () =>
-                                              handleTapStart(entry!.problem),
+                                              handleTapStart(entry.problem),
                                           style: ElevatedButton.styleFrom(
-                                              shadowColor: Colors.black
-                                                  .withOpacity(0.25)),
+                                            shadowColor:
+                                                Colors.black.withOpacity(0.25),
+                                          ),
                                           child: Text(t('start')),
                                         )
                                       ],
@@ -173,13 +197,17 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                   Text(
                                     t('description'),
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   SizedBox.fromSize(
                                       size: const Size.fromHeight(5)),
-                                  Text(entry?.problem.markdown ??
-                                      t('noDescription')),
+                                  CustomText(
+                                    entry.problem.markdown ??
+                                        t('noDescription'),
+                                    maxLength: 100,
+                                  ),
                                 ],
                               ),
                             ),
@@ -188,10 +216,21 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                           Expanded(
                             child: VerticalListView(
                               children: entries
-                                  .map((entry) => ListItem(
-                                        title: '${t('attempt')} ${entry.id}',
+                                  .map((submission) => ListItem(
+                                        title:
+                                            '${t('attempt')} ${submission.id}',
                                         subtitle:
-                                            '${t('status')} ${entry.status.name}',
+                                            '${t('status')} ${submission.status.name}',
+                                        onTap: () {
+                                          navigator.pushNamed(
+                                            '/problem-arena',
+                                            arguments: {
+                                              'language': submission.language,
+                                              'problem': entry.problem,
+                                              'code': submission.code
+                                            },
+                                          );
+                                        },
                                       ))
                                   .toList(),
                             ),

@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,6 @@ public class Contest {
   private ContestStatus status;
 
   @Relationship(value = "IN_CONTEST", direction = Relationship.Direction.INCOMING)
-  List<ContestProblem> problems;
+  List<ContestProblem> problems = new ArrayList<>();
 
 }

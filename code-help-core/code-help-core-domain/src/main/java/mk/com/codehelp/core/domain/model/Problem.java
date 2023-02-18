@@ -24,15 +24,5 @@ public class Problem {
   private Difficulty difficulty;
   private String markdown;
   private String starterCode;
-
-  private List<String> likedBy;
-
-  public Problem(Category category, String title, Difficulty difficulty, String markdown, String starterCode) {
-    this.category = category;
-    this.title = title;
-    this.difficulty = difficulty;
-    this.markdown = markdown;
-    this.starterCode = starterCode;
-    this.likedBy = new ArrayList<>();
-  }
+  private List<String> likedBy = new ArrayList<>();
 }

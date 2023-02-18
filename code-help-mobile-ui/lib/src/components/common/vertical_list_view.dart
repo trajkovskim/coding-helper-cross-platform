@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'text.dart';
+
 class ListItem {
   String? title;
   String? subtitle;
@@ -8,10 +10,19 @@ class ListItem {
   Widget trailing;
   void Function()? onTap;
 
-  ListItem({this.title, this.subtitle, this.image, this.onTap, this.trailing = const Icon(Icons.arrow_forward_ios)});
+  ListItem(
+      {this.title,
+      this.subtitle,
+      this.image,
+      this.onTap,
+      this.trailing = const Icon(Icons.arrow_forward_ios)});
 
   ListItem.withSubContent(
-      {this.title, this.subContent, this.image, this.onTap, this.trailing = const Icon(Icons.arrow_forward_ios)});
+      {this.title,
+      this.subContent,
+      this.image,
+      this.onTap,
+      this.trailing = const Icon(Icons.arrow_forward_ios)});
 }
 
 class VerticalListView extends StatelessWidget {
@@ -56,10 +67,16 @@ class VerticalListView extends StatelessWidget {
                           title: item.title != null
                               ? Text(
                                   item.title!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 )
                               : null,
-                          subtitle: item.subtitle != null ? Text(item.subtitle!) : item.subContent,
+                          subtitle: item.subtitle != null
+                              ? CustomText(
+                                  item.subtitle!,
+                                  maxLength: 100,
+                                )
+                              : item.subContent,
                           trailing: item.trailing,
                         ),
                       ),

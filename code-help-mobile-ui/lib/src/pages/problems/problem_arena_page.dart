@@ -14,8 +14,13 @@ import '../../services/codehelp/index.dart';
 class Params {
   final String? language;
   final ProblemEntry? entry;
+  final String? code;
 
-  const Params({required this.language, required this.entry});
+  const Params({
+    required this.language,
+    required this.entry,
+    required this.code,
+  });
 }
 
 class ProblemArenaPage extends StatefulWidget {
@@ -38,7 +43,8 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String?;
     final entry = params['problem'] as ProblemEntry?;
-    return Params(language: language, entry: entry);
+    final code = params['code'] as String?;
+    return Params(language: language, entry: entry, code: code);
   }
 
   @override
@@ -52,7 +58,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
 
     codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
     if (codeController.text.isEmpty) {
-      codeController.text = params.entry?.starterCode ?? '';
+      codeController.text = params.code ?? params.entry?.starterCode ?? '';
     }
 
     init = true;
@@ -190,6 +196,8 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                                 subtitle: submission.status.name,
                                 onTap: () {
                                   codeController.text = submission.code;
+                                  DefaultTabController.of(context)
+                                      ?.animateTo(1);
                                 },
                               ),
                             )
@@ -204,5 +212,12 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    codeController.dispose();
   }
 }
