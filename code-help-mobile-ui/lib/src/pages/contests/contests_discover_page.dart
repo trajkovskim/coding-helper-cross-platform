@@ -11,7 +11,6 @@ import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 import '../../services/codehelp/index.dart';
 
-
 class ContestsDiscoverPage extends StatefulWidget {
   const ContestsDiscoverPage({super.key});
 
@@ -29,33 +28,6 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   View view = View.LIST;
 
   List<String> options = [];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (init) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    final contestsContext =
-        Provider.of<ContestsContext>(context, listen: false);
-    contestsService
-        .getContestEntries()
-        .then((entries) => contestsContext.setContests(entries))
-        .onError(
-          (error, stackTrace) => handleError(context, ErrorCode.CONTESTS),
-        )
-        .whenComplete(
-      () {
-        init = true;
-        setState(() {
-          loading = false;
-        });
-      },
-    );
-  }
 
   void handleTapSearch() {
     if (searchController.text.isEmpty) {
@@ -143,9 +115,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    final contestsContext = Provider.of<ContestsContext>(context);
     final navigator = Navigator.of(context);
-    final problems = contestsContext.entries;
 
     final t = getTranslation(context, 'contests');
     final tListOptions = getTranslation(context, 'listOptions');
@@ -174,11 +144,21 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
           ),
         ],
       ),
-      body: loading
-          ? const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
-          : Padding(
+      body: FutureBuilder(
+          future: contestsService.getContestEntries(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              throw ErrorCode.CONTESTS_DISCOVER;
+            }
+
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }
+
+            final entries = snapshot.data!;
+            return Padding(
               padding: const EdgeInsets.all(5).copyWith(bottom: 0),
               child: CustomScrollView(slivers: [
                 SliverFillRemaining(
@@ -211,7 +191,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                       if (view == View.LIST)
                         Expanded(
                           child: VerticalListView(
-                            children: problems
+                            children: entries
                                 .map(
                                   (entry) => ListItem(
                                     title: entry.name,
@@ -219,7 +199,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                       '/contest-overview',
                                       arguments: {'id': entry.id.toString()},
                                     ),
-                                    subtitle: 'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
+                                    subtitle:
+                                        'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
                                   ),
                                 )
                                 .toList(),
@@ -228,7 +209,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                       if (view == View.GRID)
                         Expanded(
                           child: CustomGridView(
-                            children: problems
+                            children: entries
                                 .map(
                                   (entry) => GridItem(
                                     title: entry.name,
@@ -236,7 +217,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                       '/contest-overview',
                                       arguments: {'id': entry.id.toString()},
                                     ),
-                                    subtitle: 'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
+                                    subtitle:
+                                        'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
                                   ),
                                 )
                                 .toList(),
@@ -246,7 +228,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                   ),
                 )
               ]),
-            ),
+            );
+          }),
     );
   }
 }

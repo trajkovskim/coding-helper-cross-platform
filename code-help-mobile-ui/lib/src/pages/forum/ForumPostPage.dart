@@ -26,36 +26,51 @@ class ForumPostPage extends StatelessWidget {
         title: Text(ft("title")),
       ),
       body: FutureBuilder<PostWithComments>(
-        future: Future.wait([postService.getPostByUid(postUid), commentService.getPostComments(postUid)])
-            .then((value) => PostWithComments(value[0] as Post, value[1] as Comments)),
-        builder: (BuildContext context, AsyncSnapshot<PostWithComments> snapshot) {
-          if (snapshot.hasData) {
-            final post = snapshot.data!.post;
-            final comments = snapshot.data!.comments;
-
-            return PaddedWidgetList(
-              controller: controller,
-              spacing: 25,
-              children: [
-                ForumCard(
-                  child: ForumCardPostData(title: post.title, content: post.content, username: post.user.username),
-                ),
-                const ForumCard(child: Text("Comments", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
-                NotificationListener<OverscrollNotification>(
-                  onNotification: (OverscrollNotification value) => handleInnerListScroll(value, controller),
-                  child: PaddedWidgetList(
-                    controller: commentController,
-                    padding: EdgeInsets.zero,
-                    children: comments.comments!.map((comment) => CommentWithReplies(comment: comment)).toList(),
-                  ),
-                )
-              ],
+        future: Future.wait([
+          postService.getPostByUid(postUid),
+          commentService.getPostComments(postUid)
+        ]).then((value) =>
+            PostWithComments(value[0] as Post, value[1] as Comments)),
+        builder:
+            (BuildContext context, AsyncSnapshot<PostWithComments> snapshot) {
+          if (snapshot.hasError) {
+            throw t("posts-not-loaded");
+          }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
             );
           }
 
-          return Container(
-            alignment: Alignment.center,
-            child: Text(t("posts-not-loaded")),
+          final post = snapshot.data!.post;
+          final comments = snapshot.data!.comments;
+
+          return PaddedWidgetList(
+            controller: controller,
+            spacing: 25,
+            children: [
+              ForumCard(
+                child: ForumCardPostData(
+                    title: post.title,
+                    content: post.content,
+                    username: post.user.username),
+              ),
+              const ForumCard(
+                  child: Text("Comments",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 15))),
+              NotificationListener<OverscrollNotification>(
+                onNotification: (OverscrollNotification value) =>
+                    handleInnerListScroll(value, controller),
+                child: PaddedWidgetList(
+                  controller: commentController,
+                  padding: EdgeInsets.zero,
+                  children: comments.comments!
+                      .map((comment) => CommentWithReplies(comment: comment))
+                      .toList(),
+                ),
+              )
+            ],
           );
         },
       ),
@@ -64,7 +79,8 @@ class ForumPostPage extends StatelessWidget {
 }
 
 class ForumCardCommentData extends StatelessWidget {
-  const ForumCardCommentData({Key? key, required this.comment, this.onTap}) : super(key: key);
+  const ForumCardCommentData({Key? key, required this.comment, this.onTap})
+      : super(key: key);
 
   final Comment comment;
 
@@ -95,13 +111,17 @@ class ForumCardCommentData extends StatelessWidget {
                 ),
                 Text(
                   '${timeago.format(comment.modified)} ${comment.modified != comment.created ? "(${t("edited")})" : ""}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      fontSize: 12),
                 ),
               ],
             )
           ],
         ),
-        Text(comment.content, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        Text(comment.content,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
         Container(
           alignment: AlignmentDirectional.centerEnd,
           child: TextButton(
@@ -158,7 +178,8 @@ class _CommentWithRepliesState extends State<CommentWithReplies> {
           padding: EdgeInsets.only(left: 12.5 * (widget.level - 1)),
           child: ForumCard(
             onTap: showReplies,
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 0),
             child: ForumCardCommentData(
               comment: widget.comment,
               onTap: showReplies,
@@ -168,23 +189,28 @@ class _CommentWithRepliesState extends State<CommentWithReplies> {
         ...(widget.replies
             ? [
                 FutureBuilder<Comments?>(
-                    future: commentService.getCommentReplies(widget.comment.uid),
-                    builder: (BuildContext context, AsyncSnapshot<Comments?> snapshot) {
-                      if (snapshot.hasData) {
-                        var replies = snapshot.data?.comments!;
-                        return Column(
-                            children: replies
-                                    ?.map((comment) => CommentWithReplies(
-                                          comment: comment,
-                                          replies: false,
-                                          level: widget.level + 1,
-                                        ))
-                                    .toList() ??
-                                []);
-                      }
-
+                  future: commentService.getCommentReplies(widget.comment.uid),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<Comments?> snapshot) {
+                    if (!snapshot.hasData) {
                       return Container(padding: EdgeInsets.zero);
-                    })
+                    }
+
+                    var replies = snapshot.data?.comments!;
+                    return Column(
+                      children: replies
+                              ?.map(
+                                (comment) => CommentWithReplies(
+                                  comment: comment,
+                                  replies: false,
+                                  level: widget.level + 1,
+                                ),
+                              )
+                              .toList() ??
+                          [],
+                    );
+                  },
+                )
               ]
             : [])
       ],
@@ -192,12 +218,14 @@ class _CommentWithRepliesState extends State<CommentWithReplies> {
   }
 }
 
-handleInnerListScroll(OverscrollNotification value, ScrollController controller) {
+handleInnerListScroll(
+    OverscrollNotification value, ScrollController controller) {
   if (value.overscroll < 0 && controller.offset + value.overscroll <= 0) {
     if (controller.offset != 0) controller.jumpTo(0);
     return true;
   }
-  if (controller.offset + value.overscroll >= controller.position.maxScrollExtent) {
+  if (controller.offset + value.overscroll >=
+      controller.position.maxScrollExtent) {
     if (controller.offset != controller.position.maxScrollExtent) {
       controller.jumpTo(controller.position.maxScrollExtent);
     }

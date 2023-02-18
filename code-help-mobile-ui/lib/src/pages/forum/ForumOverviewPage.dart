@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/context/index.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/PostService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
@@ -19,7 +20,10 @@ class ForumOverviewPage extends StatelessWidget {
     final ft = getTranslation(context, 'forum');
 
     handleSearch() {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ForumCommunitySearchPage()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const ForumCommunitySearchPage()));
     }
 
     return Scaffold(
@@ -35,14 +39,18 @@ class ForumOverviewPage extends StatelessWidget {
       body: FutureBuilder<ShortPosts?>(
         future: postService.getAllPosts(),
         builder: (BuildContext context, AsyncSnapshot<ShortPosts?> snapshot) {
-          if (snapshot.hasData) {
-            return PaddedList<ShortPost>(
-                items: snapshot.data?.posts?.toList() ?? [], builder: (context, item) => ForumPostCard(post: item));
+          if (snapshot.hasError) {
+            throw ErrorCode.FORUM_OVERVIEW;
           }
-          return Container(
-            alignment: Alignment.center,
-            child: Text(t("posts-not-loaded")),
-          );
+          if (!snapshot.hasData) {
+            return Container(
+              alignment: Alignment.center,
+              child: Text(t("posts-not-loaded")),
+            );
+          }
+          return PaddedList<ShortPost>(
+              items: snapshot.data?.posts?.toList() ?? [],
+              builder: (context, item) => ForumPostCard(post: item));
         },
       ),
     );
@@ -100,7 +108,8 @@ class PaddedList<T> extends StatelessWidget {
       padding: padding,
       shrinkWrap: true,
       itemBuilder: (context, index) => builder(context, items[index]),
-      separatorBuilder: (BuildContext context, int index) => SizedBox(height: spacing),
+      separatorBuilder: (BuildContext context, int index) =>
+          SizedBox(height: spacing),
     );
   }
 }
@@ -113,7 +122,8 @@ class ForumPostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     handleTap(String uid) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ForumPostPage(postUid: uid)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ForumPostPage(postUid: uid)));
     }
 
     return ForumCard(
@@ -175,7 +185,11 @@ class ForumCard extends StatelessWidget {
 }
 
 class ForumCardPostData extends StatelessWidget {
-  const ForumCardPostData({Key? key, required this.title, required this.content, required this.username})
+  const ForumCardPostData(
+      {Key? key,
+      required this.title,
+      required this.content,
+      required this.username})
       : super(key: key);
 
   final String title;
@@ -202,7 +216,8 @@ class ForumCardPostData extends StatelessWidget {
             )
           ],
         ),
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        Text(title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
         Text(content),
       ],
     );

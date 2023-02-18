@@ -7,6 +7,9 @@ flutter pub run build_runner build --delete-conflicting-outputs
 Keycloak run:
 ```
 kc.bat start-dev --hostname=http://10.0.2.2
+
+realm: code-help
+client_id: code-help-flutter
 ```
 
 # Coding helper (Flutter)

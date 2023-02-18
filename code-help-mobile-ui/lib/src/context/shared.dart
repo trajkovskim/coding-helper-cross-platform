@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 enum ErrorCode {
-  PROBLEMS(1000),
-  PROBLEMS_ARENA(2000),
-  CONTESTS(3000);
+  HOME(0000),
+  PROBLEMS_OVERVIEW(1000),
+  PROBLEM_OVERVIEW(2000),
+  PROBLEM_DISCOVER(3000),
+  PROBLEMS_ARENA(4000),
+  CONTESTS_OVERVIEW(5000),
+  CONTESTS_DISCOVER(6000),
+  FORUM_OVERVIEW(7000);
 
   final int value;
   const ErrorCode(this.value);
@@ -82,13 +87,4 @@ class SharedContext extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setErrorCode(ErrorCode errorCode) {
-    _errorCode = errorCode.value;
-    notifyListeners();
-  }
-}
-
-void handleError(context, ErrorCode errorCode) {
-  final sharedContext = Provider.of<SharedContext>(context, listen: false);
-  sharedContext.setErrorCode(errorCode);
 }

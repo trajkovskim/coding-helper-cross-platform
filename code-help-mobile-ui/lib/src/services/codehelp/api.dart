@@ -7,6 +7,8 @@ const codeHelpUrl = String.fromEnvironment('CODING_HELPER_API_URL');
 final dio = Dio(
   BaseOptions(
     baseUrl: '$codeHelpUrl/api',
+    connectTimeout: 5000,
+    receiveTimeout: 5000
   ),
 );
 

@@ -22,44 +22,17 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
 
   final TextEditingController searchController = TextEditingController();
   bool showSearch = false;
-  bool init = false;
-  bool loading = false;
   View view = View.LIST;
 
   List<String> options = [];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (init) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    final problemsContext = Provider.of<ProblemsContext>(context, listen: false);
-    problemsService
-        .getProblemEntries()
-        .then((entries) => problemsContext.setProblems(entries))
-        .onError(
-          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS),
-        )
-        .whenComplete(
-      () {
-        init = true;
-        setState(() {
-          loading = false;
-        });
-      },
-    );
-  }
 
   void handleTapSearch() {
     if (searchController.text.isEmpty) {
       return;
     }
 
-    String command = createCommand(Command.SEARCH, searchController.text.trim());
+    String command =
+        createCommand(Command.SEARCH, searchController.text.trim());
     setState(() {
       options.add(command);
       showSearch = false;
@@ -101,9 +74,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    final problemsContext = Provider.of<ProblemsContext>(context);
     final navigator = Navigator.of(context);
-    final problems = problemsContext.entries;
 
     final t = getTranslation(context, 'problems.discover');
 
@@ -131,11 +102,22 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
           ),
         ],
       ),
-      body: loading
-          ? const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
-          : Padding(
+      body: FutureBuilder(
+          future: problemsService.getProblemEntries(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              throw ErrorCode.PROBLEM_DISCOVER;
+            }
+
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            }
+
+            final entries = snapshot.data!;
+
+            return Padding(
               padding: const EdgeInsets.all(15).copyWith(bottom: 0),
               child: CustomScrollView(
                 slivers: [
@@ -158,16 +140,20 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                         SizedBox.fromSize(size: const Size.fromHeight(15)),
                         if (view == View.LIST)
                           Container(
-                            decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                             child: Expanded(
                               child: VerticalListView(
-                                children: problems
+                                children: entries
                                     .map(
                                       (entry) => ListItem(
                                         title: entry.title,
                                         onTap: () => navigator.pushNamed(
                                           '/problem-overview',
-                                          arguments: {'id': entry.id.toString()},
+                                          arguments: {
+                                            'id': entry.id.toString()
+                                          },
                                         ),
                                         subtitle: entry.markdown,
                                       ),
@@ -179,7 +165,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                         if (view == View.GRID)
                           Expanded(
                             child: CustomGridView(
-                              children: problems
+                              children: entries
                                   .map(
                                     (entry) => GridItem(
                                       title: entry.title,
@@ -198,7 +184,8 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                   )
                 ],
               ),
-            ),
+            );
+          }),
     );
   }
 }

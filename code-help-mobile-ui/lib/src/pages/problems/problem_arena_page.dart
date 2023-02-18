@@ -34,7 +34,8 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   bool init = false;
 
   Params useParams() {
-    final params = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final params =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String?;
     final entry = params['problem'] as ProblemEntry?;
     return Params(language: language, entry: entry);
@@ -47,7 +48,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     if (init) {
       return;
     }
-    final submissionsContext = Provider.of<SubmissionsContext>(context, listen: false);
     final params = useParams();
 
     codeController.language = CodeEditor.EDITOR_LANGUAGES[params.language];
@@ -55,16 +55,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       codeController.text = params.entry?.starterCode ?? '';
     }
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()..problemId = params.entry?.id;
-    submissionsService
-        .getSubmissionEntries(builder.build())
-        .then((value) => submissionsContext.setSubmissions(value))
-        .onError(
-          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
-        )
-        .whenComplete(() {
-      init = true;
-    });
+    init = true;
   }
 
   void handleSubmit() async {
@@ -82,7 +73,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         init = false;
       });
     }).onError(
-      (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
+      (error, stackTrace) => throw ErrorCode.PROBLEMS_ARENA,
     );
   }
 
@@ -101,8 +92,11 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       ..input = input
       ..problemId = params.entry?.id;
 
-    codeRunnerService.runCode(builder.build()).then((value) => showSnackBar(scaffoldMessenger, value)).onError(
-          (error, stackTrace) => handleError(context, ErrorCode.PROBLEMS_ARENA),
+    codeRunnerService
+        .runCode(builder.build())
+        .then((value) => showSnackBar(scaffoldMessenger, value))
+        .onError(
+          (error, stackTrace) => throw ErrorCode.PROBLEMS_ARENA,
         );
   }
 
@@ -120,6 +114,9 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params = useParams();
     final t = getTranslation(context, 'problem');
 
+    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
+      ..problemId = params.entry?.id;
+
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
@@ -129,12 +126,16 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
           bottom: TabBar(
             tabs: [
               Tab(
-                child: Text(t('description'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(t('description'),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
               Tab(
-                child: Text(t('editor'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(t('editor'),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
-              Tab(child: Text(t('submissions'), style: const TextStyle(fontWeight: FontWeight.bold))),
+              Tab(
+                  child: Text(t('submissions'),
+                      style: const TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
         ),
@@ -164,26 +165,40 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                 )
               ],
             ),
-            Consumer<SubmissionsContext>(
-              builder: (context, submissionsContext, child) => Column(
-                children: [
-                  Expanded(
-                    child: VerticalListView(
-                      children: submissionsContext.entries
-                          .map(
-                            (submission) => ListItem(
-                              title: submission.timeSubmitted.toString(),
-                              subtitle: submission.status.name,
-                              onTap: () {
-                                codeController.text = submission.code;
-                              },
-                            ),
-                          )
-                          .toList(),
+            FutureBuilder(
+              future: submissionsService.getSubmissionEntries(builder.build()),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  throw ErrorCode.PROBLEMS_ARENA;
+                }
+
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+
+                final entries = snapshot.data!;
+                return Column(
+                  children: [
+                    Expanded(
+                      child: VerticalListView(
+                        children: entries
+                            .map(
+                              (submission) => ListItem(
+                                title: submission.timeSubmitted.toString(),
+                                subtitle: submission.status.name,
+                                onTap: () {
+                                  codeController.text = submission.code;
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              },
             ),
           ],
         ),

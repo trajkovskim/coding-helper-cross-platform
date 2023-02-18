@@ -42,6 +42,7 @@ class ProfilePage extends StatelessWidget {
 
     storage.remove('jwttoken');
     storage.remove('logout-url');
+    storage.remove('user');
 
     sharedContext.setToken(null);
     sharedContext.setUserData(null, null);

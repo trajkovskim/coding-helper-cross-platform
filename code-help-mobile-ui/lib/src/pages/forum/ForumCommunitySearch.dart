@@ -13,7 +13,8 @@ class ForumCommunitySearchPage extends StatefulWidget {
   const ForumCommunitySearchPage({Key? key}) : super(key: key);
 
   @override
-  State<ForumCommunitySearchPage> createState() => _ForumCommunitySearchPageState();
+  State<ForumCommunitySearchPage> createState() =>
+      _ForumCommunitySearchPageState();
 }
 
 class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
@@ -87,14 +88,14 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
                   FutureBuilder<ShortCommunities?>(
                       future: communityService.getAllCommunities(),
                       builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ViewList(
-                            communities: snapshot.data!,
-                            view: view,
-                          );
+                        if (!snapshot.hasData) {
+                          throw 'No data';
                         }
 
-                        return const Text("No data");
+                        return ViewList(
+                          communities: snapshot.data!,
+                          view: view,
+                        );
                       })
                 ],
               ),
@@ -107,7 +108,8 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
 }
 
 class ViewList extends StatelessWidget {
-  const ViewList({Key? key, required this.view, required this.communities}) : super(key: key);
+  const ViewList({Key? key, required this.view, required this.communities})
+      : super(key: key);
 
   final View view;
   final ShortCommunities communities;
@@ -116,7 +118,8 @@ class ViewList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (view == View.LIST) {
       return Container(
-        decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Expanded(
           child: VerticalListView(
             children: communities.communities
@@ -135,7 +138,10 @@ class ViewList extends StatelessWidget {
                         Wrap(
                             alignment: WrapAlignment.start,
                             crossAxisAlignment: WrapCrossAlignment.end,
-                            children: entry.categories?.map((tag) => TagChip(category: tag)).toList() ?? []),
+                            children: entry.categories
+                                    ?.map((tag) => TagChip(category: tag))
+                                    .toList() ??
+                                []),
                       ],
                     ),
                   ),
@@ -167,7 +173,8 @@ class ViewList extends StatelessWidget {
 }
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
-  SearchAppBar({Key? key, required this.title, this.onSearch}) : super(key: key);
+  SearchAppBar({Key? key, required this.title, this.onSearch})
+      : super(key: key);
   final String title;
   final Function(String term)? onSearch;
 
@@ -217,7 +224,10 @@ class _SearchAppBarState extends State<SearchAppBar> {
     return AppBar(
       title: !showSearch
           ? Text(widget.title)
-          : SearchInput(controller: searchController, onClear: handleClearSearch, onSubmit: handleTapSearch),
+          : SearchInput(
+              controller: searchController,
+              onClear: handleClearSearch,
+              onSubmit: handleTapSearch),
       actions: [
         IconButton(
           onPressed: handleSearch,
@@ -262,7 +272,8 @@ class TagChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(category.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(category.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
         ),
