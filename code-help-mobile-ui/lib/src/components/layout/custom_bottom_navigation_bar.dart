@@ -2,27 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../i18n/i18n.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int pageIndex;
   final void Function(int value)? onChange;
 
-  const CustomBottomNavigationBar({super.key, this.onChange});
-
-  @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
-}
-
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int pageIndex = 0;
-
-  void handlePageIndexChange(int value) {
-    if (widget.onChange != null) {
-      widget.onChange!(value);
-    }
-    setState(() {
-      pageIndex = value;
-    });
-  }
+  const CustomBottomNavigationBar({super.key, required this.pageIndex, this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +16,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: pageIndex,
-      onTap: handlePageIndexChange,
+      onTap: onChange,
       items: [
         BottomNavigationBarItem(
           icon: const Icon(Icons.home_rounded),

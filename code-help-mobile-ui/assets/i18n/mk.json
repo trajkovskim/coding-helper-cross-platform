@@ -1,5 +1,6 @@
 {
-  "coding_helper": {
+  "codehelp": {
+    "error": "Грешка",
     "colors": {
       "purple": "Виолетова",
       "green": "Зелена",

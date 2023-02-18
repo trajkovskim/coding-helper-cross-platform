@@ -139,11 +139,12 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                         ),
                         SizedBox.fromSize(size: const Size.fromHeight(15)),
                         if (view == View.LIST)
-                          Container(
-                            decoration: const BoxDecoration(
+                          Expanded(
+                            child: Container(
+                              decoration: const BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Expanded(
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
                               child: VerticalListView(
                                 children: entries
                                     .map(

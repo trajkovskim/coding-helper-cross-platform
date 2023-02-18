@@ -43,9 +43,8 @@ class ForumOverviewPage extends StatelessWidget {
             throw ErrorCode.FORUM_OVERVIEW;
           }
           if (!snapshot.hasData) {
-            return Container(
-              alignment: Alignment.center,
-              child: Text(t("posts-not-loaded")),
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
             );
           }
           return PaddedList<ShortPost>(

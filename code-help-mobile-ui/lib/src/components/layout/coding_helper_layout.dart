@@ -1,12 +1,17 @@
-import 'package:coding_helper_cross_platform/src/context/index.dart';
 import 'package:coding_helper_cross_platform/src/pages/error.dart';
 import 'package:coding_helper_cross_platform/src/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'custom_bottom_navigation_bar.dart';
 
-class CodeHelpLayout extends StatelessWidget {
+class CodeHelpLayout extends StatefulWidget {
+  const CodeHelpLayout({super.key});
+
+  @override
+  State<CodeHelpLayout> createState() => _CodeHelpLayoutState();
+}
+
+class _CodeHelpLayoutState extends State<CodeHelpLayout> {
   final navigatorKey = GlobalKey<NavigatorState>();
   final bottomNavigationRoutes = [
     '/',
@@ -15,7 +20,7 @@ class CodeHelpLayout extends StatelessWidget {
     '/profile',
   ];
 
-  CodeHelpLayout({super.key});
+  int pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +44,22 @@ class CodeHelpLayout extends StatelessWidget {
             final builder = routes.entries
                 .firstWhere((element) => element.key == route)
                 .value;
+
+            pageIndex = bottomNavigationRoutes.indexOf(route!);
+
             return MaterialPageRoute(builder: builder);
           },
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(onChange: (value) {
-        navigatorKey.currentState?.popUntil((route) => false);
-        navigatorKey.currentState?.pushNamed(bottomNavigationRoutes[value]);
-      }),
+      bottomNavigationBar: CustomBottomNavigationBar(
+          pageIndex: pageIndex,
+          onChange: (value) {
+            navigatorKey.currentState?.popUntil((route) => false);
+            navigatorKey.currentState?.pushNamed(bottomNavigationRoutes[value]);
+            setState(() {
+              pageIndex = value;
+            });
+          }),
     );
   }
 }

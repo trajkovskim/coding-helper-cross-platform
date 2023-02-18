@@ -1,5 +1,6 @@
 {
-  "coding_helper": {
+  "codehelp": {
+    "error": "Error",
     "colors": {
       "purple": "Purple",
       "green": "Green",
@@ -67,7 +68,7 @@
       "submit": "Submit",
       "submissions": "Submissions"
     },
-    "forum" : {
+    "forum": {
       "title": "Forum",
       "comment": {
         "edited": "edited"
@@ -112,4 +113,3 @@
     }
   }
 }
-
