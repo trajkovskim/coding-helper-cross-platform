@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 enum ErrorCode {
   HOME(0000),
@@ -15,20 +14,6 @@ enum ErrorCode {
   const ErrorCode(this.value);
 }
 
-class UserData {
-  String? username;
-  String? image;
-
-  UserData(this.username, this.image);
-}
-
-class AppSettings {
-  String? locale = 'en';
-  String? defaultLanguage;
-  String? accentColor;
-  String? theme;
-}
-
 enum Language {
   EN('en'),
   DE('de'),
@@ -37,6 +22,25 @@ enum Language {
   final String value;
 
   const Language(this.value);
+}
+
+final ACCENT_COLORS = ['purple', 'blue', 'red'];
+final APPLICATION_LANGUAGES = ['en', 'de', 'mk'];
+final THEMES = ['light', 'dark', 'system'];
+final DEFAULT_LANGUAGES = ['java', 'javascript'];
+
+class UserData {
+  String? username;
+  String? image;
+
+  UserData(this.username, this.image);
+}
+
+class AppSettings {
+  String? locale = APPLICATION_LANGUAGES[0];
+  String? defaultLanguage = DEFAULT_LANGUAGES[0];
+  String? accentColor = ACCENT_COLORS[0];
+  String? theme = THEMES[2];
 }
 
 class SharedContext extends ChangeNotifier {
@@ -55,7 +59,7 @@ class SharedContext extends ChangeNotifier {
 
   AppSettings? get appSettings => _settings;
 
-  String get locale => _settings.locale ?? 'en';
+  String get locale => _settings.locale ?? Language.EN.value;
 
   void setLocale(String? language) {
     _settings.locale = language;
@@ -77,6 +81,20 @@ class SharedContext extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setAppSettings(
+    String? defaultLanguage,
+    String? accentColor,
+    String? theme,
+    String? locale,
+  ) {
+    _settings
+      ..accentColor = accentColor
+      ..defaultLanguage = defaultLanguage
+      ..locale = locale
+      ..theme = theme;
+    notifyListeners();
+  }
+
   void setUserData(String? username, String? image) {
     _userData = UserData(username, image);
     notifyListeners();
@@ -86,5 +104,4 @@ class SharedContext extends ChangeNotifier {
     _jwttoken = jwttoken;
     notifyListeners();
   }
-
 }

@@ -1,6 +1,9 @@
 {
   "codehelp": {
     "error": "Грешка",
+    "camera": "Камера",
+    "gallery": "Галерија",
+    "pick": "Изберете",
     "colors": {
       "purple": "Виолетова",
       "green": "Зелена",
@@ -14,7 +17,8 @@
     },
     "themes": {
       "light": "Светла",
-      "dark": "Темна"
+      "dark": "Темна",
+      "system": "Систем"
     },
     "difficulty": {
       "easy": "Лесно",
@@ -68,9 +72,19 @@
       "submit": "Поднеси",
       "submissions": "Поднесувања"
     },
+    "forum": {
+      "title": "Форум",
+      "comment": {
+        "edited": "Променето"
+      },
+      "community": {
+        "search": "Пребарувај заедници"
+      }
+    },
     "profile": {
       "title": "Профил",
       "notLoggedIn": "Не сте логирани!",
+      "login": "Логирај се",
       "stats": {
         "title": "Статистика",
         "problemsSolved": "Решени проблеми",

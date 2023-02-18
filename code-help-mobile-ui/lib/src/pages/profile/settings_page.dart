@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/common/dropdown.dart';
 import '../../components/common/user_frame.dart';
@@ -7,18 +8,8 @@ import '../../components/common/vertical_list_view.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
-
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final accentColorOptions = ['purple', 'blue', 'red'];
-  final applicationLanguageOptions = ['en', 'de', 'mk'];
-  final themesOptions = ['light', 'dark'];
-  final defaultLanguageOptions = ['java', 'javascript'];
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +37,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: t('accentColor'),
                     trailing: Dropdown(
                       value: settings?.accentColor,
-                      onChange: sharedContext.setAccentColor,
-                      items: accentColorOptions
-                          .map((option) => DropdownItem(tColors(option), option))
+                      onChange: (value) {
+                        SharedPreferences.getInstance().then((storage) =>
+                            storage.setString('accent-color', value!));
+                        sharedContext.setAccentColor(value);
+                      },
+                      items: ACCENT_COLORS
+                          .map(
+                              (option) => DropdownItem(tColors(option), option))
                           .toList(),
                     ),
                   ),
@@ -56,8 +52,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: t('defaultLanguage'),
                     trailing: Dropdown(
                       value: settings?.defaultLanguage,
-                      onChange: sharedContext.setDefaultLanguage,
-                      items: defaultLanguageOptions
+                      onChange: (value) {
+                        SharedPreferences.getInstance().then((storage) =>
+                            storage.setString('default-language', value!));
+                        sharedContext.setDefaultLanguage(value);
+                      },
+                      items: DEFAULT_LANGUAGES
                           .map(
                             (option) => DropdownItem(
                               option[0].toUpperCase() + option.substring(1),
@@ -71,9 +71,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: t('theme'),
                     trailing: Dropdown(
                       value: settings?.theme,
-                      onChange: sharedContext.setTheme,
-                      items: themesOptions
-                          .map((option) => DropdownItem(tThemes(option), option))
+                      onChange: (value) {
+                        SharedPreferences.getInstance().then(
+                            (storage) => storage.setString('theme', value!));
+                        sharedContext.setTheme(value);
+                      },
+                      items: THEMES
+                          .map(
+                              (option) => DropdownItem(tThemes(option), option))
                           .toList(),
                     ),
                   ),
@@ -81,10 +86,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: t('applicationLanguage'),
                     trailing: Dropdown(
                       value: settings?.locale,
-                      onChange: sharedContext.setLocale,
-                      items: applicationLanguageOptions
+                      onChange: (value) {
+                        SharedPreferences.getInstance().then((storage) =>
+                            storage.setString('locale', value!));
+                        sharedContext.setLocale(value);
+                      },
+                      items: APPLICATION_LANGUAGES
                           .map(
-                            (option) => DropdownItem(tLanguages(option), option),
+                            (option) =>
+                                DropdownItem(tLanguages(option), option),
                           )
                           .toList(),
                     ),

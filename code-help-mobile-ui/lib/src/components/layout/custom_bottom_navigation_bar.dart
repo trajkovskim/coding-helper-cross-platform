@@ -10,7 +10,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const navigationBarItemActiveColor = Colors.lightBlue;
     final t = getTranslation(context);
 
     return BottomNavigationBar(
@@ -23,7 +22,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: t('home.title'),
           activeIcon: const Icon(
             Icons.home_rounded,
-            color: navigationBarItemActiveColor,
           ),
         ),
         BottomNavigationBarItem(
@@ -31,7 +29,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: t('problems.title'),
           activeIcon: const Icon(
             Icons.menu_book,
-            color: navigationBarItemActiveColor,
           ),
         ),
         BottomNavigationBarItem(
@@ -39,7 +36,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: t('forum.title'),
           activeIcon: const Icon(
             Icons.forum,
-            color: navigationBarItemActiveColor,
           ),
         ),
         BottomNavigationBarItem(
@@ -47,7 +43,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: t('profile.title'),
           activeIcon: const Icon(
             Icons.person,
-            color: navigationBarItemActiveColor,
           ),
         ),
       ],

@@ -44,9 +44,6 @@ class _CodeHelpLayoutState extends State<CodeHelpLayout> {
             final builder = routes.entries
                 .firstWhere((element) => element.key == route)
                 .value;
-
-            pageIndex = bottomNavigationRoutes.indexOf(route!);
-
             return MaterialPageRoute(builder: builder);
           },
         ),

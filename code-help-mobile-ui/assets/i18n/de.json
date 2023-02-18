@@ -1,6 +1,9 @@
 {
   "codehelp": {
     "error": "Error",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "pick": "Pick",
     "colors": {
       "purple": "Purple",
       "green": "Green",
@@ -14,7 +17,8 @@
     },
     "themes": {
       "light": "Light",
-      "dark": "Dark"
+      "dark": "Dark",
+      "system": "System"
     },
     "difficulty": {
       "easy": "Easy",
@@ -72,9 +76,19 @@
       "submit": "Submit",
       "submissions": "Submissions"
     },
+    "forum": {
+      "title": "Forum",
+      "comment": {
+        "edited": "edited"
+      },
+      "community": {
+        "search": "Search communities"
+      }
+    },
     "profile": {
       "title": "Profile",
       "notLoggedIn": "Not logged in!",
+      "login": "Login",
       "stats": {
         "title": "Stats",
         "problemsSolved": "Problems solved",

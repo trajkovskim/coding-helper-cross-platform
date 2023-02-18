@@ -1,4 +1,3 @@
-import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:dio/dio.dart';
 

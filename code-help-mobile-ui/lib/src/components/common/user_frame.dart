@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coding_helper_cross_platform/src/components/common/circle_avatar_image.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,19 +55,20 @@ class UserFrame extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(
-                  userData?.image ?? DEFAULT_IMAGE_URL,
-                ),
+              CircleAvatarImage(
+                imageUrl: userData?.image ?? DEFAULT_IMAGE_URL,
+                imagePicker: sharedContext.isAuthenticated,
               ),
-              const SizedBox(height: 5),
-              Text(userData?.username ?? t('notLoggedIn')),
               const SizedBox(height: 20),
+              Text(userData?.username ?? t('notLoggedIn')),
               if (!sharedContext.isAuthenticated)
-                ElevatedButton(
-                  onPressed: handleLogin,
-                  child: const Text('Login'),
-                )
+                ...[
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: handleLogin,
+                    child: Text(t('login')),
+                  )
+                ]
             ],
           ),
         ),

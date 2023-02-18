@@ -22,6 +22,18 @@ void main() {
   runApp(const MyApp());
 }
 
+const Map<String, ThemeMode> THEMES_MAP = {
+  'light': ThemeMode.light,
+  'dark': ThemeMode.dark,
+  'system': ThemeMode.system,
+};
+
+const Map<String, MaterialColor> COLORS_MAP = {
+  'purple': Colors.purple,
+  'blue': Colors.blue,
+  'red': Colors.red
+};
+
 class MyApp extends StatelessWidget {
   final authService = const AuthService();
 
@@ -54,6 +66,18 @@ class MyApp extends StatelessWidget {
     }
   }
 
+  Future<void> init(BuildContext context) async {
+    final storage = await SharedPreferences.getInstance();
+    final sharedContext = Provider.of<SharedContext>(context, listen: false);
+
+    sharedContext.setAppSettings(
+      storage.getString('default-language') ?? DEFAULT_LANGUAGES[0],
+      storage.getString('accent-color') ?? ACCENT_COLORS[0],
+      storage.getString('theme') ?? THEMES[0],
+      storage.getString('locale') ?? APPLICATION_LANGUAGES[0],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -61,16 +85,23 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SharedContext()),
       ],
       child: Builder(builder: (context) {
+        init(context);
         tryLogin(context);
         return Consumer<SharedContext>(
           builder: (context, sharedContext, child) {
             final activeLocale = sharedContext.locale;
+            final theme = sharedContext.appSettings?.theme;
+            final accentColor = sharedContext.appSettings?.accentColor;
 
             return MaterialApp(
-              title: 'Code help',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
+              title: 'Codehelp',
+              darkTheme: ThemeData(
+                primarySwatch: COLORS_MAP[accentColor],
               ),
+              theme: ThemeData(
+                primarySwatch: COLORS_MAP[accentColor],
+              ),
+              themeMode: THEMES_MAP[theme],
               localizationsDelegates: [
                 FlutterI18nDelegate(
                   missingTranslationHandler: (key, locale) => key,
@@ -83,7 +114,7 @@ class MyApp extends StatelessWidget {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              home: CodeHelpLayout(),
+              home: const CodeHelpLayout(),
               builder: FlutterI18n.rootAppBuilder(),
             );
           },
