@@ -33,26 +33,31 @@ class InitialPage extends StatelessWidget {
               }
 
               final contests = snapshot.data!;
-              return Column(
-                children: [
-                  if (contests.isNotEmpty)
-                    SizedBox(
-                      height: constraints.maxHeight * 0.20,
-                      child: HorizontalListView(
-                        title: t('activeContests'),
-                        items: contests
-                            .map(
-                              (contest) => Item(
-                                onTap: () => navigator.pushNamed(
-                                  '/contest-overview',
-                                  arguments: {'id': contest.id.toString()},
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    )
-                ],
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    children: [
+                      if (contests.isNotEmpty)
+                        SizedBox(
+                          height: constraints.maxHeight * 0.20,
+                          child: HorizontalListView(
+                            title: t('activeContests'),
+                            items: contests
+                                .map(
+                                  (contest) => Item(
+                                    onTap: () => navigator.pushNamed(
+                                      '/contest-overview',
+                                      arguments: {'id': contest.id.toString()},
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               );
             });
           }),

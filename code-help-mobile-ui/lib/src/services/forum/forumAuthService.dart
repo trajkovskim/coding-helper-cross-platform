@@ -11,7 +11,7 @@ class ForumAuthService {
 
   final _forumAuthApi = getForumAuthApi();
 
-  late String accessToken = "";
+  late String _accessToken = "";
   late String _refreshToken = "";
 
   static ForumAuthService getInstance() {
@@ -76,9 +76,8 @@ class ForumAuthService {
   }
 
   initFromAuthResponse(AuthResponse authResponse) {
-    accessToken = authResponse.accessToken;
+    _accessToken = authResponse.accessToken;
     _refreshToken = authResponse.refreshToken;
-    print(accessToken);
   }
 
   Map<String, dynamic> _getAuthHeaders() {
@@ -86,7 +85,7 @@ class ForumAuthService {
   }
 
   MapEntry<String, dynamic> _getAuthHeader() {
-    return MapEntry(_authorizationHeader, "$_prefix $accessToken");
+    return MapEntry(_authorizationHeader, "$_prefix $_accessToken");
   }
 
   MapEntry<String, dynamic> _getRefreshHeader() {

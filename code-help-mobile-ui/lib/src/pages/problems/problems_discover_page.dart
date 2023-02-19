@@ -33,6 +33,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
 
     String command =
         createCommand(Command.SEARCH, searchController.text.trim());
+    options.removeWhere((element) => element == command);
     setState(() {
       options.add(command);
       showSearch = false;

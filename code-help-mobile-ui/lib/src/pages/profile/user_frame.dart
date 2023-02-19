@@ -61,14 +61,13 @@ class UserFrame extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(userData?.username ?? t('notLoggedIn')),
-              if (!sharedContext.isAuthenticated)
-                ...[
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: handleLogin,
-                    child: Text(t('login')),
-                  )
-                ]
+              if (!sharedContext.isAuthenticated) ...[
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: handleLogin,
+                  child: Text(t('login')),
+                )
+              ]
             ],
           ),
         ),

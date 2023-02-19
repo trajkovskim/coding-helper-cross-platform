@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       final userJson = jsonDecode(storage.getString('user')!);
       final user = Credential.fromJson(userJson);
 
-      user.getTokenResponse().then((response) async {
+      user.getTokenResponse(true).then((response) async {
         storage.setString('jwttoken', response.accessToken!);
         storage.setString('logout-url', user.generateLogoutUrl().toString());
         sharedContext.setToken(response.accessToken);

@@ -23,8 +23,11 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   List<String> options = [];
 
   handleSearch(String term) {
+    final option = createCommand(Command.SEARCH, term);
+    options.removeWhere((element) => element == option);
     setState(() {
       searchTerm = term;
+      options.add(createCommand(Command.SEARCH, term));
     });
   }
 
@@ -66,41 +69,42 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15).copyWith(bottom: 0),
-        child: CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SearchSettingsRow(
-                    handleFilterSubmit: handleFilterSubmit,
-                    handleSortSubmit: handleSortSubmit,
-                    handleViewModeChange: handleViewModeChange,
-                    viewMode: view,
-                  ),
-                  SizedBox.fromSize(size: const Size.fromHeight(15)),
-                  ListOptions(
-                    options: options,
-                    onRemove: handleRemoveOption,
-                  ),
-                  SizedBox.fromSize(size: const Size.fromHeight(15)),
-                  FutureBuilder<ShortCommunities?>(
-                      future: communityService.getAllCommunities(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          throw 'No data';
-                        }
-
-                        return ViewList(
-                          communities: snapshot.data!,
-                          view: view,
-                        );
-                      })
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SearchSettingsRow(
+                handleFilterSubmit: handleFilterSubmit,
+                handleSortSubmit: handleSortSubmit,
+                handleViewModeChange: handleViewModeChange,
+                viewMode: view,
               ),
-            )
-          ],
+              SizedBox.fromSize(size: const Size.fromHeight(15)),
+              ListOptions(
+                options: options,
+                onRemove: handleRemoveOption,
+              ),
+              SizedBox.fromSize(size: const Size.fromHeight(15)),
+              FutureBuilder<ShortCommunities?>(
+                  future: communityService.getAllCommunities(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      throw 'No data';
+                    }
+
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+
+                    return ViewList(
+                      communities: snapshot.data!,
+                      view: view,
+                    );
+                  })
+            ],
+          ),
         ),
       ),
     );
@@ -120,51 +124,47 @@ class ViewList extends StatelessWidget {
       return Container(
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Expanded(
-          child: VerticalListView(
-            children: communities.communities
-                .map(
-                  (entry) => ListItem.withSubContent(
-                    title: entry.name,
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ForumCommunityPage(
-                                  communityName: entry.name,
-                                ))),
-                    subContent: Row(
-                      children: [
-                        const Text("Tags: "),
-                        Wrap(
-                            alignment: WrapAlignment.start,
-                            crossAxisAlignment: WrapCrossAlignment.end,
-                            children: entry.categories
-                                    ?.map((tag) => TagChip(category: tag))
-                                    .toList() ??
-                                []),
-                      ],
-                    ),
+        child: VerticalListView(
+          children: communities.communities
+              .map(
+                (entry) => ListItem.withSubContent(
+                  title: entry.name,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForumCommunityPage(
+                                communityName: entry.name,
+                              ))),
+                  subContent: Row(
+                    children: [
+                      const Text("Tags: "),
+                      Wrap(
+                          alignment: WrapAlignment.start,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          children: entry.categories
+                                  ?.map((tag) => TagChip(category: tag))
+                                  .toList() ??
+                              []),
+                    ],
                   ),
-                )
-                .toList(),
-          ),
+                ),
+              )
+              .toList(),
         ),
       );
     }
 
     if (view == View.GRID) {
-      return Expanded(
-        child: CustomGridView(
-          children: communities.communities
-              .map(
-                (entry) => GridItem(
-                  title: entry.name,
-                  onTap: () => {},
-                  subtitle: entry.description.substring(0, 20),
-                ),
-              )
-              .toList(),
-        ),
+      return CustomGridView(
+        children: communities.communities
+            .map(
+              (entry) => GridItem(
+                title: entry.name,
+                onTap: () => {},
+                subtitle: entry.description,
+              ),
+            )
+            .toList(),
       );
     }
 
