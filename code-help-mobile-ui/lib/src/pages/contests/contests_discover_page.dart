@@ -62,7 +62,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
       context: context,
       builder: (context) => Modal(
         options: const {
-          'language': ['java', 'javascript']
+          'language': ['java', 'javascript'],
+          'status': ['OPEN', 'STARTED', 'CLOSED'],
         },
         submitButton: t('filter'),
       ),
@@ -91,7 +92,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
       context: context,
       builder: (context) => Modal(
         options: const {
-          'difficulty': ['ascending', 'descending']
+          'difficulty': ['ascending', 'descending'],
+          'status': ['ascending', 'descending'],
         },
         submitButton: t('sort'),
       ),

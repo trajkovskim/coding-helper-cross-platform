@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/components/common/text.dart';
 import 'package:flutter/material.dart';
 
 class GridItem {
@@ -44,7 +45,10 @@ class CustomGridView extends StatelessWidget {
                                 children: [
                                   Text(item.title!),
                                   if (item.subtitle != null)
-                                    Text(item.subtitle!)
+                                    CustomText(
+                                      item.subtitle!,
+                                      maxLength: 20,
+                                    )
                                 ],
                               )
                             : null,
