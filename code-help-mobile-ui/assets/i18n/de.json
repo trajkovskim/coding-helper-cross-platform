@@ -90,7 +90,7 @@
     "profile": {
       "title": "Profile",
       "notLoggedIn": "Not logged in!",
-      "login": "Login",
+      "login": "Find me",
       "stats": {
         "title": "Stats",
         "problemsSolved": "Problems solved",

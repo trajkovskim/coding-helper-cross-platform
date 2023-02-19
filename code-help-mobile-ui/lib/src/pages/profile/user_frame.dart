@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:coding_helper_cross_platform/src/components/common/circle_avatar_image.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
+import 'package:coding_helper_cross_platform/src/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,14 @@ class UserFrame extends StatelessWidget {
   final authService = const AuthService();
   const UserFrame({super.key});
 
+  void getLocation() {
+    final locationService = LocationService();
+    locationService.getLocation().then((value) {
+      print(value.latitude);
+      print(value.longitude);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final sharedContext = Provider.of<SharedContext>(context);
@@ -25,23 +34,24 @@ class UserFrame extends StatelessWidget {
     final t = getTranslation(context, 'profile');
 
     Future<void> handleLogin() async {
-      final storage = await SharedPreferences.getInstance();
-      final user = await authService.authenticate();
-      final tokenResponse = await user.getTokenResponse();
-      final token = tokenResponse.accessToken;
+      getLocation();
+      // final storage = await SharedPreferences.getInstance();
+      // final user = await authService.authenticate();
+      // final tokenResponse = await user.getTokenResponse();
+      // final token = tokenResponse.accessToken;
 
-      final userJson = jsonEncode(user);
+      // final userJson = jsonEncode(user);
 
-      storage.setString('user', userJson);
-      storage.setString('jwttoken', token!);
-      storage.setString('logout-url', user.generateLogoutUrl().toString());
-      sharedContext.setToken(token);
+      // storage.setString('user', userJson);
+      // storage.setString('jwttoken', token!);
+      // storage.setString('logout-url', user.generateLogoutUrl().toString());
+      // sharedContext.setToken(token);
 
-      final userInfo = await user.getUserInfo();
-      sharedContext.setUserData(
-        userInfo.preferredUsername,
-        userInfo.picture.toString(),
-      );
+      // final userInfo = await user.getUserInfo();
+      // sharedContext.setUserData(
+      //   userInfo.preferredUsername,
+      //   userInfo.picture.toString(),
+      // );
     }
 
     return SizedBox(
@@ -57,18 +67,16 @@ class UserFrame extends StatelessWidget {
             children: [
               CircleAvatarImage(
                 imageUrl: userData?.image ?? DEFAULT_IMAGE_URL,
-                imagePicker: sharedContext.isAuthenticated,
               ),
               const SizedBox(height: 20),
               Text(userData?.username ?? t('notLoggedIn')),
-              if (!sharedContext.isAuthenticated)
-                ...[
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: handleLogin,
-                    child: Text(t('login')),
-                  )
-                ]
+              if (!sharedContext.isAuthenticated) ...[
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: handleLogin,
+                  child: Text(t('login')),
+                )
+              ]
             ],
           ),
         ),

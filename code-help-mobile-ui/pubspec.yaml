@@ -50,6 +50,7 @@ dependencies:
   url_launcher: ^6.1.9
 
   image_picker: ^0.8.6+2
+  location: ^4.4.0
 
 
 dev_dependencies:
