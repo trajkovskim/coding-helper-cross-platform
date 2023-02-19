@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/pages/contests/contest_overview_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
 import 'package:coding_helper_cross_platform/src/pages/initial_page.dart';
@@ -19,7 +20,7 @@ final routes = {
   '/problems-overview': (context) => const ProblemsOverviewPage(),
   '/problem-overview': (context) => const ProblemOverviewPage(),
   '/problems-discover': (context) => const ProblemsDiscoverPage(),
-  '/contest-overview': (context) => const ContestsDiscoverPage(),
+  '/contest-overview': (context) => const ContestOverviewPage(),
   '/contests-discover': (context) => const ContestsDiscoverPage(),
   '/stats': (context) => const StatsPage(),
   '/saved': (context) => const SavedPage(),

@@ -13,7 +13,7 @@ class CustomText extends StatelessWidget {
     }
 
     return Text(
-      text.length < maxLength! ? text : '${text.substring(0, 100)}...',
+      text.length < maxLength! ? text : '${text.substring(0, maxLength)}...',
     );
   }
 }

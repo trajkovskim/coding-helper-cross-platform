@@ -200,7 +200,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                       arguments: {'id': entry.id.toString()},
                                     ),
                                     subtitle:
-                                        'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
+                                        '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
                                   ),
                                 )
                                 .toList(),
@@ -218,7 +218,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                       arguments: {'id': entry.id.toString()},
                                     ),
                                     subtitle:
-                                        'Duration: ${entry.duration} Starts on: ${entry.startsOn}',
+                                        '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
                                   ),
                                 )
                                 .toList(),

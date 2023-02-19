@@ -48,7 +48,8 @@
       "description": "description",
       "noDescription": "No description!",
       "duration": "Duration",
-      "participants": "Participants"
+      "participants": "Participants",
+      "status": "Status"
     },
     "problems": {
       "title": "Problems",

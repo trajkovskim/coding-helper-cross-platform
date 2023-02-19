@@ -23,16 +23,12 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
 
   void handleTapProblem(ProblemEntry problem) {
     final navigator = Navigator.of(context);
-    navigator.push(
-      MaterialPageRoute(
-        builder: (context) => const ProblemArenaPage(),
-        settings: RouteSettings(
-          arguments: {
-            'problem': problem,
-            'language': selectedLanguage,
-          },
-        ),
-      ),
+    navigator.pushNamed(
+      '/problem-arena',
+      arguments: {
+        'problem': problem,
+        'language': selectedLanguage,
+      },
     );
   }
 
@@ -44,7 +40,7 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = getTranslation(context, 'contest');
+    final t = getTranslation(context, 'contests');
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
     final id = params['id'];
@@ -54,7 +50,7 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
           if (snapshot.hasError) {
             throw ErrorCode.CONTESTS_OVERVIEW;
           }
-          
+
           final entry = snapshot.data;
 
           return Scaffold(
@@ -101,6 +97,8 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                                               '${t('duration')} ${entry?.duration}'),
                                           Text(
                                               '${t('startsOn')} ${entry?.startsOn}'),
+                                          Text(
+                                              '${t('status')} ${entry?.status}')
                                         ],
                                       )
                                     ],
@@ -143,23 +141,29 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                           ),
                         ),
                         Expanded(
-                          child: VerticalListView(
-                            children: entry?.problems
-                                    .map(
-                                      (problem) => ListItem(
-                                        image: CircleAvatar(
-                                            child:
-                                                Text(problem.score.toString())),
-                                        title: problem.problem.title,
-                                        subtitle:
-                                            'Difficulty: ${problem.problem.difficulty}',
-                                        onTap: () =>
-                                            handleTapProblem(problem.problem),
-                                      ),
-                                    )
-                                    .toList() ??
-                                [],
-                          ),
+                          child: entry?.status == ContestStatus.OPEN
+                              ? Center(
+                                  child: Text(
+                                    '${t('status')}: ${entry?.status}',
+                                  ),
+                                )
+                              : VerticalListView(
+                                  children: entry?.problems
+                                          .map(
+                                            (problem) => ListItem(
+                                              image: CircleAvatar(
+                                                  child: Text(problem.score
+                                                      .toString())),
+                                              title: problem.problem.title,
+                                              subtitle:
+                                                  'Difficulty: ${problem.problem.difficulty}',
+                                              onTap: () => handleTapProblem(
+                                                  problem.problem),
+                                            ),
+                                          )
+                                          .toList() ??
+                                      [],
+                                ),
                         ),
                       ],
                     ),

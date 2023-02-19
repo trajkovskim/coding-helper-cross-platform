@@ -44,7 +44,12 @@
     },
     "contests": {
       "title": "Натпревари",
-      "startsOn": "Започнува на"
+      "startsOn": "Започнува на",
+      "description": "Опис",
+      "noDescription": "Нема опис!",
+      "duration": "Времетраење",
+      "participants": "Учесници",
+      "status": "Статус"
     },
     "problems": {
       "title": "Проблеми",

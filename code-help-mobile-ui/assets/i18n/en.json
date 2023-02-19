@@ -44,7 +44,12 @@
     },
     "contests": {
       "title": "Contests",
-      "startsOn": "Starts On"
+      "startsOn": "Starts On",
+      "description": "description",
+      "noDescription": "No description!",
+      "duration": "Duration",
+      "participants": "Participants",
+      "status": "Status"
     },
     "problems": {
       "title": "Problems",

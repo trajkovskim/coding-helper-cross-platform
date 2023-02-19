@@ -30,7 +30,11 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public Contest findById(Long id) {
-    return contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
+    Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
+    if (contest.getStatus() == ContestStatus.OPEN) {
+      contest.setProblems(List.of());
+    }
+    return contest;
   }
 
   @Override
@@ -41,7 +45,7 @@ public class ContestServiceImpl implements ContestService {
       MultipartFile runnerCode,
       List<MultipartFile> testCases
   ) throws IOException {
-    Contest contest = this.findById(id);
+    Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
     if (contest.getStatus() != ContestStatus.OPEN)
       throw new ContestStatusNotOpenException(id);
 
@@ -54,9 +58,12 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public boolean removeProblemFromContest(Long contestId, Long problemId) {
-    Contest contest = this.findById(contestId);
-    if (contest.getStatus() != ContestStatus.OPEN)
+    Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
+
+    if (contest.getStatus() != ContestStatus.OPEN) {
       return false;
+    }
+
     contest.getProblems().removeIf(x -> x.getProblem().getId().equals(problemId));
     problemService.delete(problemId);
     contestRepository.save(contest);
@@ -65,7 +72,8 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public ContestProblem getContestProblem(Long contestId, Long problemId) {
-    var contest = this.findById(contestId);
+    Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
+
     return contest.getProblems().stream()
         .filter(problem -> problem.getProblem().getId().equals(problemId))
         .findFirst().orElseThrow(() -> new ProblemNotFoundException(problemId));
@@ -73,9 +81,11 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public ContestProblem setProblemScore(Long contestId, Long problemId, Long score) {
-    var contest = this.findById(contestId);
-    if (contest.getStatus() != ContestStatus.OPEN)
+    Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
+
+    if (contest.getStatus() != ContestStatus.OPEN) {
       throw new ContestStatusNotOpenException(contestId);
+    }
 
     ContestProblem contestProblem = contest.getProblems().stream()
         .filter(problem -> problem.getProblem().getId().equals(problemId))
@@ -87,8 +97,10 @@ public class ContestServiceImpl implements ContestService {
   }
 
   @Override
-  public boolean startContest(Long contestId) {
-    Contest contest = this.findById(contestId);
+  public boolean startContest(Long id) {
+    Contest contest = contestRepository.findById(id)
+        .orElseThrow(() -> new ContestNotFoundException(id));
+
     if (contest.getStatus() != ContestStatus.OPEN) {
       return false;
     }
@@ -99,7 +111,7 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public boolean closeContest(Long id) {
-    Contest contest = this.findById(id);
+    Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
     if (contest.getStatus() != ContestStatus.STARTED) {
       return false;
     }
@@ -110,6 +122,7 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public Contest createContest(Contest contest) {
+    contest.setStatus(ContestStatus.OPEN);
     return contestRepository.save(contest);
   }
 
