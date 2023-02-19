@@ -1,5 +1,6 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/text.dart';
+import 'package:coding_helper_cross_platform/src/pages/problems/problem_like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -89,6 +90,9 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(entry.problem.title),
+              actions: [
+                ProblemLikeButton(id: id)
+              ],
             ),
             body: LayoutBuilder(builder: (context, constraints) {
               if (!snapshot.hasData) {

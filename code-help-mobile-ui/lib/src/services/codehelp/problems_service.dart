@@ -8,12 +8,22 @@ class ProblemsService {
   Future<List<ProblemEntry>> getProblemEntries() {
     return PROBLEMS_API
         .getProblemEntries()
-        .then((value) => value.data!.problems.toList());
+        .then((response) => response.data!.problems.toList());
   }
 
   Future<ProblemByLikes> getProblemEntry(String id) {
     return PROBLEMS_API
         .getProblemEntry(id: int.parse(id))
-        .then((value) => value.data!);
+        .then((response) => response.data!);
+  }
+
+  Future<bool> isLiked(String id) {
+    return PROBLEMS_API
+        .isProblemEntryLiked(id: int.parse(id))
+        .then((response) => response.data!);
+  }
+
+  Future<void> toggleLike(String id) {
+    return PROBLEMS_API.toggleLikeProblemEntry(id: int.parse(id));
   }
 }

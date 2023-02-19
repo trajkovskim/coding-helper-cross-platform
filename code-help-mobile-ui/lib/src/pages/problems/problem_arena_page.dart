@@ -2,10 +2,10 @@ import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/code_test_input_modal.dart';
 import 'package:coding_helper_cross_platform/src/components/common/vertical_list_view.dart';
 import 'package:coding_helper_cross_platform/src/context/index.dart';
+import 'package:coding_helper_cross_platform/src/pages/problems/problem_like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:provider/provider.dart';
 
 import '../../components/common/code_editor.dart';
 import '../../i18n/i18n.dart';
@@ -75,11 +75,9 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
 
     submissionsService.submit(builder.build()).then<void>((value) {
       showSnackBar(scaffoldMessenger, value);
-      setState(() {
-        init = false;
-      });
+      setState(() {});
     }).onError(
-      (error, stackTrace) => throw ErrorCode.PROBLEMS_ARENA,
+      (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
     );
   }
 
@@ -102,7 +100,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         .runCode(builder.build())
         .then((value) => showSnackBar(scaffoldMessenger, value))
         .onError(
-          (error, stackTrace) => throw ErrorCode.PROBLEMS_ARENA,
+          (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
         );
   }
 
@@ -120,6 +118,10 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params = useParams();
     final t = getTranslation(context, 'problem');
 
+    if (params.entry == null) {
+      throw ErrorCode.PROBLEM_ARENA;
+    }
+
     GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
       ..problemId = params.entry?.id;
 
@@ -129,6 +131,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(params.entry?.title ?? ''),
+          actions: [ProblemLikeButton(id: params.entry!.id.toString())],
           bottom: TabBar(
             tabs: [
               Tab(
@@ -175,7 +178,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
               future: submissionsService.getSubmissionEntries(builder.build()),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  throw ErrorCode.PROBLEMS_ARENA;
+                  throw ErrorCode.PROBLEM_ARENA;
                 }
 
                 if (!snapshot.hasData) {
