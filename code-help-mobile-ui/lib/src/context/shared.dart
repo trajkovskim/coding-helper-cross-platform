@@ -93,7 +93,11 @@ class SharedContext extends ChangeNotifier {
   }
 
   void setUserData(String? username, String? image) {
-    _userData = UserData(username, image);
+    if (username == null && image == null) {
+      _userData = null;
+    } else {
+      _userData = UserData(username, image);
+    }
     notifyListeners();
   }
 }

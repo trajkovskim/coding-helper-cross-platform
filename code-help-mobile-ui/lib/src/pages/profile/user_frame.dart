@@ -21,6 +21,11 @@ class UserFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final sharedContext = Provider.of<SharedContext>(context);
     final userData = sharedContext.userData;
+    SharedPreferences.getInstance().then((storage) {
+      if (!storage.containsKey('user') && userData != null) {
+        sharedContext.setUserData(null, null);
+      }
+    });
 
     final t = getTranslation(context, 'profile');
 
