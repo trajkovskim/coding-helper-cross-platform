@@ -34,3 +34,7 @@ logging:
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
     org.springframework.web: DEBUG
 
+compilers:
+  javascript:
+    ext: .js
+    compiler: node.exe

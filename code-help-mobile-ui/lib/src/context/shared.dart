@@ -44,14 +44,11 @@ class AppSettings {
 }
 
 class SharedContext extends ChangeNotifier {
-  String? _jwttoken;
   int? _errorCode;
   UserData? _userData;
   final AppSettings _settings = AppSettings();
 
-  bool get isAuthenticated => jwttoken != null;
-
-  String? get jwttoken => _jwttoken;
+  bool get isAuthenticated => _userData != null;
 
   int? get errorCode => _errorCode;
 
@@ -97,11 +94,6 @@ class SharedContext extends ChangeNotifier {
 
   void setUserData(String? username, String? image) {
     _userData = UserData(username, image);
-    notifyListeners();
-  }
-
-  void setToken(String? jwttoken) {
-    _jwttoken = jwttoken;
     notifyListeners();
   }
 }

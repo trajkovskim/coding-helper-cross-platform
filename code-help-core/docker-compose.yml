@@ -4,7 +4,6 @@ services:
     image: neo4j:5.2.0
     hostname: neo4j
     container_name: neo4j_codingHelper
-    restart: always
     ports:
       - "7474:7474"
       - "7687:7687"

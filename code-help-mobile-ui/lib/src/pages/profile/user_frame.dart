@@ -34,8 +34,6 @@ class UserFrame extends StatelessWidget {
 
       storage.setString('user', userJson);
       storage.setString('jwttoken', token!);
-      storage.setString('logout-url', user.generateLogoutUrl().toString());
-      sharedContext.setToken(token);
 
       final userInfo = await user.getUserInfo();
       sharedContext.setUserData(

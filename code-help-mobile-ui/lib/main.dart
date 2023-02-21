@@ -50,8 +50,6 @@ class MyApp extends StatelessWidget {
 
       user.getTokenResponse(true).then((response) async {
         storage.setString('jwttoken', response.accessToken!);
-        storage.setString('logout-url', user.generateLogoutUrl().toString());
-        sharedContext.setToken(response.accessToken);
 
         final userInfo = await user.getUserInfo();
         sharedContext.setUserData(
@@ -61,7 +59,6 @@ class MyApp extends StatelessWidget {
       }).onError((error, stackTrace) {
         storage.remove('user');
         storage.remove('jwttoken');
-        storage.remove('logout-url');
       });
     }
   }

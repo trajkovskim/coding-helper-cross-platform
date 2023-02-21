@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:coding_helper_cross_platform/src/context/index.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:openid_client/openid_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,15 +39,14 @@ class ProfilePage extends StatelessWidget {
 
   Future<void> handleLogout(SharedContext sharedContext) async {
     final storage = await SharedPreferences.getInstance();
+    final userJson = jsonDecode(storage.getString('user')!);
+    final user = Credential.fromJson(userJson);
 
-    final logoutUrl = storage.getString('logout-url');
-    authService.logout(logoutUrl!);
+    authService.logout(user.generateLogoutUrl().toString());
 
     storage.remove('jwttoken');
-    storage.remove('logout-url');
     storage.remove('user');
 
-    sharedContext.setToken(null);
     sharedContext.setUserData(null, null);
   }
 
