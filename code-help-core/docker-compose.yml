@@ -3,7 +3,7 @@ services:
   neo4j:
     image: neo4j:5.2.0
     hostname: neo4j
-    container_name: neo4j_codingHelper
+    container_name: code-help_core_neo4j
     ports:
       - "7474:7474"
       - "7687:7687"
