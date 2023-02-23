@@ -20,7 +20,7 @@ spring:
     authentication:
       username: neo4j
       password: password
-
+    uri: bolt://localhost:7687
 
 springdoc:
   swagger-ui:

@@ -1,0 +1,80 @@
+version: '3'
+services:
+  code-help-keycloak-iam:
+    image: quay.io/keycloak/keycloak:20.0.3
+    container_name: code-help-keycloak-iam
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      # - KC_HOSTNAME=10.0.2.2
+    command: start-dev --import-realm
+    volumes:
+      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
+
+  code-help-core:
+    image: code-help-core
+    container_name: code-help-core
+    build:
+      dockerfile: code-help-core\Dockerfile
+      context: .\
+    ports:
+      - 3000:3000
+    environment:
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://code-help-keycloak-iam/realms/code-help
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWK-SET-URI=http://code-help-keycloak-iam:8080/realms/code-help/protocol/openid-connect/certs
+      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
+      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=password
+      - SPRING_NEO4J_URI=bolt://code-help-core-neo4j:7687
+      - SERVER_PORT=3000
+    depends_on:
+      - code-help-core-neo4j
+
+  code-help-forum:
+    image: code-help-forum
+    container_name: code-help-forum
+    build:
+      dockerfile: code-help-forum\Dockerfile
+      context: .\
+    ports:
+      - 3001:3001
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://code-help-forum-postgres:5432/code_help
+      - SPRING_DATASOURCE_USER=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SERVER_PORT=3001
+    depends_on:
+      - code-help-forum-postgres
+
+  code-help-forum-postgres:
+    image: postgres:15.1-alpine
+    container_name: code-help_forum_postgres
+    environment:
+      - POSTGRES_DB=code_help
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    volumes:
+      - code-help-forum-postgres-data:/var/lib/postgresql/data
+
+  code-help-core-neo4j:
+    image: neo4j:5.2.0
+    hostname: neo4j
+    container_name: code-help-core-neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    volumes:
+      - code-help-core-neo4j-data:/data
+      - code-help-core-neo4j-plugins:/plugins
+      - code-help-core-neo4j-logs:/logs
+
+volumes:
+  code-help-forum-postgres-data:
+  code-help-core-neo4j-data:
+  code-help-core-neo4j-logs:
+  code-help-core-neo4j-plugins:
