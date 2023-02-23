@@ -1,0 +1,10 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://code-help-keycloak-iam/realms/code-help
+          jwk-set-uri: http://code-help-keycloak-iam:8080/realms/code-help/protocol/openid-connect/certs
+
+  neo4j:
+    uri: bolt://code-help-core-neo4j:7687

@@ -35,13 +35,6 @@ services:
       context: .\
     ports:
       - 3000:3000
-    environment:
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://code-help-keycloak-iam/realms/code-help
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWK-SET-URI=http://code-help-keycloak-iam:8080/realms/code-help/protocol/openid-connect/certs
-      - SPRING_NEO4J_AUTHENTICATION_USERNAME=neo4j
-      - SPRING_NEO4J_AUTHENTICATION_PASSWORD=password
-      - SPRING_NEO4J_URI=bolt://code-help-core-neo4j:7687
-      - SERVER_PORT=3000
     depends_on:
       - code-help-core-neo4j
 
@@ -53,11 +46,6 @@ services:
       context: .\
     ports:
       - 3001:3001
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://code-help-forum-postgres:5432/code_help
-      - SPRING_DATASOURCE_USER=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SERVER_PORT=3001
     depends_on:
       - code-help-forum-postgres
 
