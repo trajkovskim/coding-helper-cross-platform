@@ -1,5 +1,19 @@
 version: '3'
 services:
+  code-help-ingress:
+    image: nginx
+    container_name: code-help-ingress
+    build:
+      dockerfile: code-help-ingress\Dockerfile
+      context: .\
+    ports:
+      - 80:80
+      - 433:433
+    depends_on:
+      - code-help-core
+      - code-help-forum
+      - code-help-keycloak-iam
+
   code-help-keycloak-iam:
     image: quay.io/keycloak/keycloak:20.0.3
     container_name: code-help-keycloak-iam
@@ -8,7 +22,7 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      # - KC_HOSTNAME=10.0.2.2
+      - KC_HOSTNAME=10.0.2.2
     command: start-dev --import-realm
     volumes:
       - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
@@ -49,7 +63,7 @@ services:
 
   code-help-forum-postgres:
     image: postgres:15.1-alpine
-    container_name: code-help_forum_postgres
+    container_name: code-help-forum-postgres
     environment:
       - POSTGRES_DB=code_help
       - POSTGRES_USER=user
