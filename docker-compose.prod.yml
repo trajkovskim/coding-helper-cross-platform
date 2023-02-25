@@ -4,7 +4,7 @@ services:
     image: legendmt25/code-help:ingress-latest
     container_name: code-help-ingress
     ports:
-      - 80:8080
+      - 80:80
       - 433:433
     depends_on:
       - code-help-core

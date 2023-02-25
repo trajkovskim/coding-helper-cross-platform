@@ -5,13 +5,13 @@ ENV PROFILE docker
 ENV JAVA_OPTIONS ''
 ENV JAVA_PROPERTIES ''
 
-WORKDIR /code-help/code-help-forum
+WORKDIR /code-help
 
 
-COPY $JAR_PATH app.jar
+COPY $JAR_PATH core-app.jar
 
 EXPOSE 3000
 
 ENTRYPOINT exec java $JAVA_OPTIONS -jar \
               -Dspring.profiles.active="$PROFILE" \
-              $JAVA_PROPERTIES app.jar
+              $JAVA_PROPERTIES core-app.jar

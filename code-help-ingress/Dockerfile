@@ -3,10 +3,11 @@ FROM nginx:stable
 WORKDIR /etc/nginx
 
 RUN rm conf.d/*
-# RUN rm nginx.conf
+RUN rm nginx.conf
 
-COPY ./code-help-ingress/nginx.conf conf.d/default.conf
+COPY ./nginx.conf .
 
-EXPOSE 8080
+EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
