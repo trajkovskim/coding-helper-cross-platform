@@ -58,7 +58,7 @@ class PostServiceImpl(
         val post = postRepository.findByUid(UUID.fromString(uid)) ?: throw RuntimeException("not found")
 
 
-        if (isNotAuthorizedToUpdatePost(post)) {
+        if (!isAuthorizedToUpdatePost(post)) {
             throw RuntimeException("Not authorized")
         }
 
@@ -73,17 +73,15 @@ class PostServiceImpl(
     private fun isAuthorizedToUpdatePost(post: Post): Boolean {
         val loggedInUser = userService.getLoggedInUser()
 
-        return loggedInUser.username == post.user.username
+        return loggedInUser.id == post.user.id
     }
-
-    private fun isNotAuthorizedToUpdatePost(post: Post): Boolean = !isAuthorizedToUpdatePost(post)
 
     private fun isAuthorizedToDeletePost(post: Post): Boolean {
         val loggedInUser = userService.getLoggedInUser()
 
-        return loggedInUser.username == post.user.username
+        return loggedInUser.id == post.user.id
                 || loggedInUser.moderating.contains(post.community)
-                || loggedInUser.username == post.community.user.username
+                || loggedInUser.id == post.community.user.id
     }
 
     private fun isNotAuthorizedToDeletePost(post: Post): Boolean = !isAuthorizedToDeletePost(post)

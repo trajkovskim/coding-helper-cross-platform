@@ -86,11 +86,6 @@
                 <optional>true</optional>
             </dependency>
             <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jsr250-api</artifactId>
                 <version>${jsr250-api.version}</version>

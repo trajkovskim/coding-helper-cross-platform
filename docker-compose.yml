@@ -20,8 +20,12 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      # - KC_HOSTNAME=10.0.2.2
-    command: start-dev --import-realm
+    command:
+      - start-dev
+      - --import-realm
+      - --http-relative-path=/iam
+      - --hostname=10.0.2.2
+      - --proxy edge
     volumes:
       - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
 

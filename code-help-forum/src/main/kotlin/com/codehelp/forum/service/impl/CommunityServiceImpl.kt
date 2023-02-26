@@ -142,7 +142,7 @@ class CommunityServiceImpl(
     private fun isAdmin(community: Community): Boolean {
         val loggedInUser = userService.getLoggedInUser()
 
-        return loggedInUser.username == community.user.username
+        return loggedInUser.id == community.user.id
     }
 
     private fun isNotAdmin(community: Community): Boolean = !isAdmin(community)

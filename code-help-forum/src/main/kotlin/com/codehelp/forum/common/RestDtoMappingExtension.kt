@@ -62,8 +62,6 @@ fun Comment.toSubCommentDto(): CommentDto = CommentDto()
 
 fun User.toDto(): UserDto = UserDto()
     .username(this.username)
-    .email(this.email)
-    .image(null)
 
 
 fun Category.toDto(): CategoryDto = CategoryDto()

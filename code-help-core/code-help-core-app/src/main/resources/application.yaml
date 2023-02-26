@@ -13,8 +13,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost/realms/code-help
-          jwk-set-uri: http://localhost/realms/code-help/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8080/realms/code-help
+          jwk-set-uri: http://localhost:8080/realms/code-help/protocol/openid-connect/certs
 
   neo4j:
     authentication:

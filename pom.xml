@@ -24,10 +24,8 @@
 
         <java.version>17</java.version>
         <kotlin.version>1.8.0</kotlin.version>
-        <graphql-kotlin.version>6.3.3</graphql-kotlin.version>
 
         <!-- Dependency versions -->
-        <jjwt.version>0.9.1</jjwt.version>
         <jaxb-api.version>4.0.0</jaxb-api.version>
         <jaxb-inpm.version>4.0.1</jaxb-inpm.version>
         <validation-api.version>3.0.2</validation-api.version>

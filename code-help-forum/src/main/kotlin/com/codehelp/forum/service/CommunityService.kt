@@ -5,7 +5,6 @@ import com.codehelp.forum.generated.rest.model.CommunityDto
 import com.codehelp.forum.generated.rest.model.CommunityRequestDto
 import com.codehelp.forum.generated.rest.model.ModeratorRequestDto
 import com.codehelp.forum.generated.rest.model.UserDto
-import org.springframework.transaction.annotation.Transactional
 
 interface CommunityService {
     fun createCommunity(communityCreateDto: CommunityRequestDto): CommunityDto

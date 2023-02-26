@@ -33,8 +33,6 @@ class AuthService {
     return user;
   }
 
-
-
   Future<void> logout(String logoutUrl) async {
     await _urlLauncher(logoutUrl);
     await closeInAppWebView();

@@ -116,7 +116,7 @@ class CommentServiceImpl(
     private fun isAuthorizedToUpdateComment(comment: Comment): Boolean {
         val loggedInUser = userService.getLoggedInUser()
 
-        return loggedInUser.username == comment.user.username
+        return loggedInUser.id == comment.user.id
     }
 
     private fun isNotAuthorizedToUpdateComment(comment: Comment): Boolean = !isAuthorizedToUpdateComment(comment)
@@ -124,9 +124,9 @@ class CommentServiceImpl(
     private fun isAuthorizedToDeleteComment(comment: Comment): Boolean {
         val loggedInUser = userService.getLoggedInUser()
 
-        return loggedInUser.username == comment.user.username
+        return loggedInUser.id == comment.user.id
                 || loggedInUser.moderating.contains(comment.post.community)
-                || loggedInUser.username == comment.post.community.user.username
+                || loggedInUser.id == comment.post.community.user.id
     }
 
     private fun isNotAuthorizedToDeleteComment(comment: Comment): Boolean = !isAuthorizedToDeleteComment(comment)

@@ -1,3 +1,6 @@
+server:
+  port: 3000
+
 spring:
   security:
     oauth2:
@@ -7,4 +10,7 @@ spring:
           jwk-set-uri: http://code-help-keycloak-iam:8080/realms/code-help/protocol/openid-connect/certs
 
   neo4j:
+    authentication:
+      username: neo4j
+      password: password
     uri: bolt://code-help-core-neo4j:7687
