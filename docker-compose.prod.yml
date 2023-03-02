@@ -24,8 +24,9 @@ services:
       - start-dev
       - --http-relative-path=/iam
       - --proxy=edge
-      - --hostname-url=http://<domain>/iam
-      - --hostname-admin-url=http://<domain>/iam
+      - --hostname-url=<url>/iam
+      - --hostname-admin-url=<url>/iam
+
 
   code-help-core:
     image: legendmt25/code-help:core-latest

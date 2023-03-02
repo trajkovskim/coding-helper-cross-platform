@@ -25,7 +25,7 @@ services:
       - start-dev
       - --http-relative-path=/iam
       - --proxy=edge
-      - --hostname-url=http://localhost/iam
+      - --hostname-url=http://10.0.2.2/iam
       - --hostname-admin-url=http://localhost/iam
 
   code-help-core:

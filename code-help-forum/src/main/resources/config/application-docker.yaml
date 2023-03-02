@@ -6,8 +6,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost/iam/realms/code-help
-          jwk-set-uri: http://localhost/iam/realms/code-help/protocol/openid-connect/certs
+          issuer-uri: http://10.0.2.2/iam/realms/code-help
+          jwk-set-uri: http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
 
   datasource:
     url: jdbc:postgresql://code-help-forum-postgres:5432/code_help
