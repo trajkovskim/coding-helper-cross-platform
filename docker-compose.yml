@@ -13,21 +13,20 @@ services:
       - code-help-keycloak-iam
 
   code-help-keycloak-iam:
-    image: quay.io/keycloak/keycloak:20.0.3
+    image: keycloak/keycloak:21.0
     container_name: code-help-keycloak-iam
     ports:
+      - 8443:8443
       - 8080:8080
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     command:
       - start-dev
-      - --import-realm
       - --http-relative-path=/iam
-      - --hostname=10.0.2.2
-      - --proxy edge
-    volumes:
-      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
+      - --proxy=edge
+      - --hostname-url=http://<domain>/iam
+      - --hostname-admin-url=http://<domain>/iam
 
   code-help-core:
     image: code-help-core
