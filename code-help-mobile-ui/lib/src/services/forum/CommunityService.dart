@@ -54,4 +54,14 @@ class CommunityService {
     _forumAuthService.requestWithAuth(
         (headers) => _communityApi.updateCommunity(name: name, body: communityRequest.build(), headers: headers));
   }
+
+  Future<void> joinCommunity(String community) {
+    return _forumAuthService.requestWithAuth(
+            (headers) => _communityApi.joinCommunity(community: community, headers: headers));
+  }
+
+  Future<void> leaveCommunity(String community) {
+    return _forumAuthService.requestWithAuth(
+            (headers) => _communityApi.leaveCommunity(community: community, headers: headers));
+  }
 }

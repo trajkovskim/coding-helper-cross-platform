@@ -36,4 +36,13 @@ class PostService {
         .requestWithAuth((header) => _postApi.getPost(uid: postUid, headers: header))
         .then((value) => value.data);
   }
+
+  createPost(String communityUid, String postTitle, String postText) {
+    final postRequest = PostRequestBuilder()
+      ..title = postTitle
+      ..content = postText;
+
+    _forumAuthService.requestWithAuth((header) =>
+        _postApi.createCommunityPost(community: communityUid, postRequest: postRequest.build(), headers: header));
+  }
 }

@@ -549,7 +549,7 @@ paths:
 components:
   schemas:
     Community:
-      required: [ admin, categories, created, moderators, posts ]
+      required: [ admin, categories, created, moderators, posts, joined ]
       allOf:
         - $ref: '#/components/schemas/ShortCommunity'
       properties:
@@ -563,6 +563,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShortPost'
+        joined:
+          type: boolean
         moderators:
           type: array
           items:

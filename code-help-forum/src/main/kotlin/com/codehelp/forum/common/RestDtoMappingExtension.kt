@@ -3,12 +3,13 @@ package com.codehelp.forum.common
 import com.codehelp.forum.domain.*
 import com.codehelp.forum.generated.rest.model.*
 
-fun Community.toDto(): CommunityDto = CommunityDto()
+fun Community.toDto(username: String): CommunityDto = CommunityDto()
     .name(this.name)
     .description(this.description)
     .image(null)
     .admin(this.user.toDto())
     .posts(this.posts.map { it.toShortDto() })
+    .joined(this.members.any { it.username == username })
     .categories(this.categories.map { it.toDto() })
     .moderators(this.moderators.map { it.toDto() })
     .created(this.created)

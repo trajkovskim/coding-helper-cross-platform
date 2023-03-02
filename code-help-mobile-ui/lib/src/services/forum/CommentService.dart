@@ -36,4 +36,25 @@ class CommentService {
         .requestWithAuth((header) => _commentApi.getCommentReplies(uid: parentCommentUid, headers: header))
         .then((value) => value.data);
   }
+
+  createComment(String post, String commentContent) {
+    final comment = CommentRequestBuilder()..content = commentContent;
+
+    _forumAuthService
+        .requestWithAuth(
+          (header) => _commentApi.commentOnPost(post: post, commentRequest: comment.build(), headers: header),
+        )
+        .then((value) => value.data);
+  }
+
+  replyToComment(String commentUid, String commentContent) {
+    final comment = CommentRequestBuilder()..content = commentContent;
+
+    _forumAuthService.requestWithAuth(
+        (header) => _commentApi.replyToComment(uid: commentUid, commentRequest: comment.build(), headers: header));
+  }
+
+  deleteComment(String commentUid) {
+    _forumAuthService.requestWithAuth((header) => _commentApi.deleteComment(uid: commentUid, headers: header));
+  }
 }

@@ -196,11 +196,11 @@
     "colId": "043bc884-5094-421b-a71c-eab31efe8984",
     "containerId": "0815c9c5-c54e-4a75-8e39-47f2c4f5f35b",
     "name": "join",
-    "url": "http://localhost:3000/api/v1/community/member?community={{community}}",
+    "url": "/v1/community/member?community={{community}}",
     "method": "PATCH",
     "sortNum": 10000,
     "created": "2023-01-15T18:44:26.531Z",
-    "modified": "2023-01-15T19:03:32.307Z",
+    "modified": "2023-02-23T21:56:58.799Z",
     "headers": [],
     "params": [
       {
@@ -259,11 +259,11 @@
     "colId": "043bc884-5094-421b-a71c-eab31efe8984",
     "containerId": "0815c9c5-c54e-4a75-8e39-47f2c4f5f35b",
     "name": "leave",
-    "url": "/community/member?community={{community}}",
+    "url": "/v1/community/member?community={{community}}",
     "method": "DELETE",
     "sortNum": 20000,
     "created": "2023-01-15T18:44:26.534Z",
-    "modified": "2023-01-15T19:03:41.561Z",
+    "modified": "2023-02-23T21:57:30.101Z",
     "headers": [],
     "params": [
       {
@@ -386,11 +386,11 @@
     "colId": "043bc884-5094-421b-a71c-eab31efe8984",
     "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
     "name": "all",
-    "url": "/post?community={{community}}",
+    "url": "/v1/post?community={{community}}",
     "method": "GET",
     "sortNum": 5000,
     "created": "2023-01-15T18:44:26.544Z",
-    "modified": "2023-01-15T19:08:37.659Z",
+    "modified": "2023-02-23T21:57:36.688Z",
     "headers": [],
     "params": [
       {
@@ -406,12 +406,18 @@
     "colId": "043bc884-5094-421b-a71c-eab31efe8984",
     "containerId": "652caf61-2b07-4645-8682-323c49d8d685",
     "name": "single",
-    "url": "/post/{{postUid}}",
+    "url": "/v1/post/{{postUid}}",
     "method": "GET",
     "sortNum": 7500,
     "created": "2023-01-15T18:44:26.545Z",
-    "modified": "2023-01-15T19:08:45.705Z",
-    "headers": [],
+    "modified": "2023-02-23T21:57:42.011Z",
+    "headers": [
+      {
+        "name": "Accept",
+        "value": "application/json",
+        "isDisabled": true
+      }
+    ],
     "params": [],
     "tests": []
   },

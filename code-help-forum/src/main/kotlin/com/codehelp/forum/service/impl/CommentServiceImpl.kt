@@ -25,38 +25,10 @@ class CommentServiceImpl(
     override fun getPostComments(postUid: String): List<CommentDto> {
         val post = postRepository.findByUid(UUID.fromString(postUid)) ?: throw RuntimeException("not found")
 
-        val coms = post.comments
+        return post.comments
             .filter { it.parent == null }
             .map { it.toDto() }
             .reversed()
-
-        return listOf(
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-            coms.get(0),
-        )
     }
 
     @Transactional(readOnly = true)
