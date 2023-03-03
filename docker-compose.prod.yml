@@ -1,7 +1,7 @@
 version: '3'
 services:
   code-help-ingress:
-    image: legendmt25/code-help:ingress-latest
+    image: legendmt25/code-help:ingress-1.0.0
     container_name: code-help-ingress
     ports:
       - 80:80
@@ -29,7 +29,7 @@ services:
 
 
   code-help-core:
-    image: legendmt25/code-help:core-latest
+    image: legendmt25/code-help:core-1.0.0
     container_name: code-help-core
     ports:
       - 3000:3000
@@ -37,7 +37,7 @@ services:
       - code-help-core-neo4j
 
   code-help-forum:
-    image: legendmt25/code-help:forum-latest
+    image: legendmt25/code-help:forum-1.0.0
     container_name: code-help-forum
     ports:
       - 3001:3001
