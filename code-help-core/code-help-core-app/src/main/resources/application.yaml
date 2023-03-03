@@ -13,8 +13,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/code-help
-          jwk-set-uri: http://localhost:8080/realms/code-help/protocol/openid-connect/certs
+          issuer-uri: http://10.0.2.2/iam/realms/code-help
+          jwk-set-uri: http://localhost/iam/realms/code-help/protocol/openid-connect/certs
 
   neo4j:
     authentication:
@@ -29,10 +29,11 @@ springdoc:
     enabled: true
   show-actuator: true
 
-logging:
-  level:
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
-    org.springframework.web: DEBUG
+#logging:
+#  level:
+#    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.security: DEBUG
 
 compilers:
   javascript:

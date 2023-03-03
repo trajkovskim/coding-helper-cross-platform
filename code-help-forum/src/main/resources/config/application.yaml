@@ -28,3 +28,7 @@ spring:
         jwt:
           issuer-uri: http://10.0.2.2/iam/realms/code-help
           jwk-set-uri: http://localhost/iam/realms/code-help/protocol/openid-connect/certs
+
+#logging:
+#  level:
+#    org.springframework.security: DEBUG

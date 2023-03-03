@@ -8,76 +8,6 @@ servers:
   - url: 'http://localhost:3000/api/v1'
 
 paths:
-  /auth/login:
-    post:
-      tags: [ auth ]
-      operationId: login
-      description: Login and get an access token
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCredentials'
-      responses:
-        200:
-          description: "OK"
-          headers:
-            access_token:
-              description: The jwt access token
-              required: true
-              schema:
-                type: string
-            refresh_token:
-              description: The jwt refresh token
-              required: true
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-  /auth/refresh:
-    get:
-      tags: [ auth ]
-      operationId: refresh
-      description: Refresh the access token
-      parameters:
-        - in: header
-          name: Authorization
-          description: Refresh token header
-          schema:
-            type: string
-      responses:
-        200:
-          description: "OK"
-          headers:
-            access_token:
-              description: The jwt access token
-              required: true
-              schema:
-                type: string
-            refresh_token:
-              description: The jwt refresh token
-              required: true
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-  /auth/register:
-    post:
-      tags: [ auth ]
-      operationId: register
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCreate'
-      responses:
-        200:
-          description: "OK"
-
   /community:
     get:
       tags:
@@ -756,35 +686,7 @@ components:
       properties:
         username:
           type: string
-    UserCredentials:
-      type: object
-      required: [ username, password ]
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-          format: password
-    AuthResponse:
-      type: object
-      required: [ accessToken, refreshToken ]
-      properties:
-        accessToken:
-          type: string
-        refreshToken:
-          type: string
 
-    UserCreate:
-      type: object
-      required: [ email, username, password ]
-      properties:
-        email:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-          format: password
     CategoryCreate:
       type: object
       required: [ name ]

@@ -1,13 +1,10 @@
 import 'package:coding_helper_cross_platform/src/services/forum/api.dart';
-import 'package:coding_helper_cross_platform/src/services/forum/forumAuthService.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 
 class CommunityService {
   static CommunityService? _instance;
 
   final _communityApi = getCommunityApi();
-
-  final ForumAuthService _forumAuthService;
 
   static CommunityService getInstance() {
     if (_instance == null) {
@@ -17,23 +14,21 @@ class CommunityService {
     return _instance!;
   }
 
-  static CommunityService createCommunityService(ForumAuthService forumAuthService) {
-    _instance = CommunityService._construct(forumAuthService);
+  static CommunityService createCommunityService() {
+    _instance = CommunityService._construct();
 
     return getInstance();
   }
 
-  CommunityService._construct(this._forumAuthService);
+  CommunityService._construct();
 
   Future<ShortCommunities?> getAllCommunities() async {
-    return _forumAuthService
-        .requestWithAuth((header) => _communityApi.getAllCommunities(headers: header))
-        .then((value) => value.data);
+    return _communityApi.getAllCommunities().then((value) => value.data);
   }
 
   Future<Community?> getCommunityByName(String name) {
-    return _forumAuthService
-        .requestWithAuth((headers) => _communityApi.getCommunityByUid(name: name, headers: headers))
+    return _communityApi
+        .getCommunityByUid(name: name)
         .then((value) => value.data);
   }
 
@@ -42,8 +37,7 @@ class CommunityService {
       ..name = name
       ..description = description;
 
-    _forumAuthService.requestWithAuth(
-        (headers) => _communityApi.createCommunity(communityRequest: communityRequest.build(), headers: headers));
+    _communityApi.createCommunity(communityRequest: communityRequest.build());
   }
 
   updateCommunity(String name, String newName, String newDescription) {
@@ -51,17 +45,14 @@ class CommunityService {
       ..name = "Hello"
       ..description = "Community desc";
 
-    _forumAuthService.requestWithAuth(
-        (headers) => _communityApi.updateCommunity(name: name, body: communityRequest.build(), headers: headers));
+    _communityApi.updateCommunity(name: name, body: communityRequest.build());
   }
 
   Future<void> joinCommunity(String community) {
-    return _forumAuthService.requestWithAuth(
-            (headers) => _communityApi.joinCommunity(community: community, headers: headers));
+    return _communityApi.joinCommunity(community: community);
   }
 
   Future<void> leaveCommunity(String community) {
-    return _forumAuthService.requestWithAuth(
-            (headers) => _communityApi.leaveCommunity(community: community, headers: headers));
+    return _communityApi.leaveCommunity(community: community);
   }
 }
