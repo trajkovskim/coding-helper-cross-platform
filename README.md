@@ -1,3 +1,6 @@
+# Mobile app install
+[Apk and appbundle](https://drive.google.com/drive/folders/1d7zrgDqzDvvGHYz2a94QZ-8ceIRK_qRB?usp=share_link)
+
 # Build
 
 ## Maven build
