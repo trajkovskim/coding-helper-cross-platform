@@ -38,4 +38,4 @@ springdoc:
 compilers:
   javascript:
     ext: .js
-    compiler: node.exe
+    compiler: node
