@@ -1,11 +1,11 @@
 package mk.com.codehelp.core.api.mappers;
 
+import mk.com.codehelp.core.domain.model.File;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.queries.ProblemByLikesQuery;
 import mk.com.codehelp.core.rest.model.*;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.springframework.boot.web.server.MimeMappings;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -15,16 +15,28 @@ import java.util.List;
 @Mapper(uses = {CategoryMapper.class, DifficultyMapper.class})
 public interface ProblemMapper {
 
-  @Mappings({
-      @Mapping(source = "starterCode", target = ".", qualifiedByName = "convertResource"),
-  })
-  Problem convertProblem(ProblemRequest problem);
+  default File convertResourceToFile(Resource resource) throws IOException {
+    String type = "unknown";
 
+    int index = resource.getFilename().lastIndexOf(".");
+    if (index != -1) {
+      String extension = resource.getFilename().substring(index + 1);
+      type = MimeMappings.DEFAULT.get(extension);
+    }
 
-  default String convertResource(Resource resource) throws IOException {
-    byte[] data = resource.getInputStream().readAllBytes();
-    return new String(data, StandardCharsets.UTF_8);
+    File file = new File();
+    file.setName(resource.getFilename());
+    file.setType(type);
+    file.setData(resource.getInputStream().readAllBytes());
+
+    return file;
   }
+
+  default String convertDomainFileToString(File file) throws IOException {
+    return new String(file.getData(), StandardCharsets.UTF_8);
+  }
+
+  Problem convertProblem(ProblemRequest problem);
 
   ProblemEntry convertProblem(Problem problem);
 

@@ -112,7 +112,7 @@ public class ContestController implements ContestsApi, ContestApi {
     ProblemRequest problemRequest =
         createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
     Problem problem = problemConverter.convertProblem(problemRequest);
-    contestService.addProblemToContest(id, problem, starterCode, runnerCode, testCases);
+    contestService.addProblemToContest(id, problem);
     return ResponseEntity.noContent().build();
   }
 

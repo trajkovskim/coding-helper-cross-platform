@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper
 public interface SubmissionMapper {
 
-  //  SubmissionDto toDto(Submission submission);
   List<SubmissionEntry> convertListOfSubmissionModel(List<SubmissionDto> submissions);
 
   default SubmissionsResponse convertListOfSubmissionToResponse(List<SubmissionDto> submissions) {

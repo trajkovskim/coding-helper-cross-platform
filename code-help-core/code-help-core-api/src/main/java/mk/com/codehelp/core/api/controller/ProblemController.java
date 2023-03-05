@@ -68,7 +68,7 @@ public class ProblemController implements ProblemsApi {
     ProblemRequest problemRequest =
         createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
     Problem problem = problemConverter.convertProblem(problemRequest);
-    problemService.create(problem, starterCode, runnerCode, testCases);
+    problemService.create(problem);
     return ResponseEntity.noContent().build();
   }
 

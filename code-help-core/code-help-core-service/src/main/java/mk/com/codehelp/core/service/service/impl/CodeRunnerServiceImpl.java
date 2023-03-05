@@ -1,19 +1,22 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.service.config.Compilers;
 import mk.com.codehelp.core.service.exceptions.CompilerNotFoundException;
 import mk.com.codehelp.core.service.service.CodeRunnerService;
+import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,23 +24,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CodeRunnerServiceImpl implements CodeRunnerService {
   private final Compilers compilers;
+  private final ProblemService problemService;
 
   @Override
-  public String runTestCases(File[] testCases, String code, String language) throws IOException, InterruptedException {
-    int n = testCases.length;
+  public String runTestCases(List<mk.com.codehelp.core.domain.model.File> testCases, String code, String language)
+      throws IOException, InterruptedException {
+    int n = testCases.size();
     int i = 1;
-    for (File testCase : testCases) {
-      // Read IN file
-      String inFilePath = testCase.getPath();
-      var input = new BufferedReader(new FileReader(inFilePath))
-          .lines().collect(Collectors.joining("\n"));
 
-      var output = this.runCode(input, code, language);
+    Map<String, mk.com.codehelp.core.domain.model.File> testCasesByFileName = testCases.stream()
+        .collect(Collectors.toMap(mk.com.codehelp.core.domain.model.File::getName, file -> file));
 
-      // Read OUT file
-      String outFilePath = testCase.getPath().replace("IN", "OUT");
-      var expectedOutput = new BufferedReader(new FileReader(outFilePath))
-          .lines().collect(Collectors.joining("\n"));
+    for (final mk.com.codehelp.core.domain.model.File inputTestCase : testCasesByFileName.values()) {
+      if (inputTestCase.getName().startsWith("OUT")) {
+        continue;
+      }
+
+      String input = new String(inputTestCase.getData(), StandardCharsets.UTF_8);
+      final String output = this.runCode(input, code, language);
+
+      mk.com.codehelp.core.domain.model.File outputTestCase =
+          testCasesByFileName.get(inputTestCase.getName().replaceFirst("IN", "OUT"));
+      final String expectedOutput = new String(outputTestCase.getData(), StandardCharsets.UTF_8);
 
       if (!output.equals(expectedOutput)) {
         return String.format("Test case %d of %d failed\nOutput: %s\nExpected: %s", i, n, output, expectedOutput);
@@ -78,27 +86,20 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   @Override
   public String runCodeWithTestCases(Long problemId, String language, String code)
       throws IOException, InterruptedException {
-    var mergedCode = this.createCode(problemId, language, code);
-    var testCases =
-        new File("res/problems-starter-code/")
-            .listFiles((dir, name) -> name.startsWith(problemId.toString()) && name.contains("IN"));
+    final String mergedCode = this.createCode(problemId, language, code);
+    final Problem problem = problemService.findById(problemId);
 
-    return runTestCases(testCases, mergedCode, language);
+    return runTestCases(problem.getTestCases(), mergedCode, language);
   }
 
   @Override
-  public String createCode(Long problemId, String language, String code)
-      throws FileNotFoundException {
+  public String createCode(Long problemId, String language, String code) {
     if (!compilers.getCompilers().containsKey(language)) {
       throw new CompilerNotFoundException(language);
     }
 
-    final Compilers.SingleCompiler compiler = compilers.getCompilers().get(language);
-    final String ext = compiler.getExt();
-
-    String runnerCodeFileName = String.format("res\\problems-starter-code\\%d-runner%s", problemId, ext);
-    String runnerCode = new BufferedReader(new FileReader(runnerCodeFileName))
-        .lines().collect(Collectors.joining("\n"));
+    final Problem problem = problemService.findById(problemId);
+    final String runnerCode = new String(problem.getRunnerCode().getData(), StandardCharsets.UTF_8);
 
     return runnerCode + "\n" + code;
   }

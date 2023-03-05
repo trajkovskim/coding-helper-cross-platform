@@ -12,7 +12,6 @@ import mk.com.codehelp.core.domain.model.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.repository.ContestRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,18 +37,12 @@ public class ContestServiceImpl implements ContestService {
   }
 
   @Override
-  public ContestProblem addProblemToContest(
-      Long id,
-      Problem problem,
-      MultipartFile starterCode,
-      MultipartFile runnerCode,
-      List<MultipartFile> testCases
-  ) throws IOException {
+  public ContestProblem addProblemToContest(Long id, Problem problem) throws IOException {
     Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
     if (contest.getStatus() != ContestStatus.OPEN)
       throw new ContestStatusNotOpenException(id);
 
-    Problem createdProblem = problemService.create(problem, starterCode, runnerCode, testCases);
+    Problem createdProblem = problemService.create(problem);
     ContestProblem contestProblem = new ContestProblem(createdProblem, 0L);
     contest.getProblems().add(contestProblem);
     contestRepository.save(contest);

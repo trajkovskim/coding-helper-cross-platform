@@ -9,9 +9,8 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {CategoryMapper.class, DifficultyMapper.class, ProblemMapper.class})
 public interface ContestMapper {
-  //  ContestDto toDto(Contest contest);
   List<ContestEntry> convertListOfContestModel(List<Contest> contests);
 
   ContestEntry convertContest(Contest contest);

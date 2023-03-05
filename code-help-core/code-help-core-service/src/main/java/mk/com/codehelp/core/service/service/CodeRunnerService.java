@@ -1,11 +1,13 @@
 package mk.com.codehelp.core.service.service;
 
-import java.io.File;
+import mk.com.codehelp.core.domain.model.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public interface CodeRunnerService {
-  String runTestCases(File[] testCases, String codeFilePath, String language) throws IOException, InterruptedException;
+  String runTestCases(List<File> testCases, String codeFilePath, String language) throws IOException, InterruptedException;
 
   String runCode(String input, String codeFilePath, String language) throws IOException, InterruptedException;
 
