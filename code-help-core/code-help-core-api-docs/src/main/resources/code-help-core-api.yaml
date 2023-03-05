@@ -68,15 +68,15 @@ components:
     ProblemEntry:
       allOf:
         - $ref: '#/components/schemas/ProblemBaseEntry'
-      type: object
-      required:
-        - starterCode
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        starterCode:
-          type: string
-          example: 'function(...) {...}'
+        - type: object
+          required:
+            - starterCode
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            starterCode:
+              type: string
+              example: 'function(...) {...}'
 
     ProblemReqBody:
       allOf:
@@ -199,44 +199,29 @@ components:
     ContestEntry:
       allOf:
         - $ref: '#/components/schemas/ContestBaseEntry'
-        - type: object
-          required:
-            - problems
-          properties:
-            id:
-              $ref: '#/components/schemas/Id'
-            status:
-              $ref: '#/components/schemas/ContestStatus'
-            problems:
-              type: array
-              items:
-                $ref: '#/components/schemas/ContestProblem'
+      type: object
+      required:
+        - problems
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/ContestStatus'
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestProblem'
 
     ProblemByLikes:
-      type: object
-      required:
-        - problem
-        - likes
-      properties:
-        problem:
-          $ref: '#/components/schemas/ProblemEntry'
-        likes:
-          type: integer
-          example: 23
-
-    UsernameWithTotalSolvedDto:
-      type: object
-      required:
-        - username
-        - solved
-      properties:
-        username:
-          type: string
-          example: legend
-        solved:
-          type: integer
-          format: long
-          example: 433
+      allOf:
+        - $ref: '#/components/schemas/ProblemEntry'
+        - type: object
+          required:
+            - likes
+          properties:
+            likes:
+              type: integer
+              example: 23
 
     ProblemsResponse:
       required:
@@ -283,15 +268,32 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ContestEntry'
-    UsersWithTotalSolvedResponse:
-      required:
-        - usersWithTotalSolved
+
+    UserStatistics:
       type: object
+      required:
+        - solved
+        - easy
+        - medium
+        - hard
       properties:
-        usersWithTotalSolved:
-          type: array
-          items:
-            $ref: '#/components/schemas/UsernameWithTotalSolvedDto'
+        solved:
+          type: integer
+          format: long
+          example: 5
+        easy:
+          type: integer
+          format: long
+          example: 2
+        medium:
+          type: integer
+          format: long
+          example: 2
+        hard:
+          type: integer
+          format: long
+          example: 1
+
 
   parameters:
     id:
@@ -662,32 +664,15 @@ paths:
                 type: string
                 example: '[1, 2, 3]'
 
-  /user/update-avatar:
-    post:
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  $ref: '#/components/schemas/File'
-      tags: [ User ]
-      operationId: updateAvatar
-      description: Updates user avatar image
-      responses:
-        204: # TODO: Update response body
-          description: No content
-
-  /users-with-total-accepted:
+  /statistics:
     get:
       tags: [ User ]
-      operationId: usernameWithTotalSolved
-      description: Returns list of usernames with total problems solved
+      operationId: getStatistics
+      description: Returns problem solving statistics for user
       responses:
-        200: # TODO: Update response body
-          description: List of usernames with total solved problems
+        200:
+          description: Output string
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersWithTotalSolvedResponse'
+                $ref: '#/components/schemas/UserStatistics'

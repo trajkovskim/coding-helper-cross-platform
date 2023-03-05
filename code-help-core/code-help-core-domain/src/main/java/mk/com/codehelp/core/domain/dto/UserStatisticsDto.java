@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernameWithTotalSolvedDto {
-  private String username;
+public class UserStatisticsDto {
   private Long solved;
+  private Long easy;
+  private Long medium;
+  private Long hard;
 }

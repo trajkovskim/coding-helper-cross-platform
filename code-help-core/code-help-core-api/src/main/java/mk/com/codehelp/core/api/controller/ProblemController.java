@@ -3,8 +3,8 @@ package mk.com.codehelp.core.api.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.mappers.ProblemMapper;
+import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.domain.queries.ProblemByLikesQuery;
 import mk.com.codehelp.core.rest.api.ProblemsApi;
 import mk.com.codehelp.core.rest.model.*;
 import mk.com.codehelp.core.service.service.ProblemService;
@@ -30,7 +30,7 @@ public class ProblemController implements ProblemsApi {
 
   @Override
   public ResponseEntity<ProblemsTop10Response> getTop10Problems() {
-    List<ProblemByLikesQuery> problems = problemService.findTop10ByOrderByLikes();
+    List<ProblemByLikesDto> problems = problemService.findTop10ByOrderByLikes();
     ProblemsTop10Response response = problemConverter.convertListOfProblemByLikesToResponse(problems);
     return ResponseEntity.ok(response);
   }
@@ -93,11 +93,8 @@ public class ProblemController implements ProblemsApi {
   @Override
   public ResponseEntity<ProblemByLikes> getProblemEntry(Long id) {
     Problem problem = problemService.findById(id);
-    ProblemEntry entry = problemConverter.convertProblem(problem);
-    ProblemByLikes problemByLikes = new ProblemByLikes()
-        .problem(entry)
-        .likes((long) (problem.getLikedBy().size()));
-    return ResponseEntity.ok(problemByLikes);
+    ProblemByLikes entry = problemConverter.convertProblemByLikes(problem);
+    return ResponseEntity.ok(entry);
   }
 
   @Override

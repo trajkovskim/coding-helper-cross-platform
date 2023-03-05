@@ -38,7 +38,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     init = true;
   }
 
-  void handleTapStart(ProblemEntry entry) {
+  void handleTapStart(ProblemByLikes entry) {
     final navigator = Navigator.of(context);
     navigator.pushNamed('/problem-arena', arguments: {
       'problem': entry,
@@ -89,7 +89,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(entry.problem.title),
+              title: Text(entry.title),
               actions: [
                 ProblemLikeButton(id: id)
               ],
@@ -141,7 +141,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                '${t('difficulty')} ${entry.problem.difficulty.name.toLowerCase()}'),
+                                                '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
                                             Text('${t('duration')} ${'1h30m'}'),
                                             Text('${t('participants')} ${0}'),
                                             Text('${t('reviews')} ${0}'),
@@ -150,7 +150,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                       ],
                                     ),
                                     Text(
-                                      entry.problem.title,
+                                      entry.title,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -175,7 +175,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () =>
-                                              handleTapStart(entry.problem),
+                                              handleTapStart(entry),
                                           style: ElevatedButton.styleFrom(
                                             shadowColor:
                                                 Colors.black.withOpacity(0.25),
@@ -208,7 +208,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                   SizedBox.fromSize(
                                       size: const Size.fromHeight(5)),
                                   CustomText(
-                                    entry.problem.markdown ??
+                                    entry.markdown ??
                                         t('noDescription'),
                                     maxLength: 100,
                                   ),
@@ -230,7 +230,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                             '/problem-arena',
                                             arguments: {
                                               'language': submission.language,
-                                              'problem': entry.problem,
+                                              'problem': entry,
                                               'code': submission.code
                                             },
                                           );

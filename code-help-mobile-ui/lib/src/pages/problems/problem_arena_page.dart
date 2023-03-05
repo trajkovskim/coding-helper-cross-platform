@@ -13,7 +13,7 @@ import '../../services/codehelp/index.dart';
 
 class Params {
   final String? language;
-  final ProblemEntry? entry;
+  final ProblemByLikes? entry;
   final String? code;
 
   const Params({
@@ -42,7 +42,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String?;
-    final entry = params['problem'] as ProblemEntry?;
+    final entry = params['problem'] as ProblemByLikes?;
     final code = params['code'] as String?;
     return Params(language: language, entry: entry, code: code);
   }

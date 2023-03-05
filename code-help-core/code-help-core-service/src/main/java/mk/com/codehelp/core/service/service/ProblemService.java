@@ -1,7 +1,7 @@
 package mk.com.codehelp.core.service.service;
 
+import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.domain.queries.ProblemByLikesQuery;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,7 +20,7 @@ public interface ProblemService {
 
   List<Problem> findAllLByCategories(Collection<String> categories);
 
-  List<ProblemByLikesQuery> findTop10ByOrderByLikes();
+  List<ProblemByLikesDto> findTop10ByOrderByLikes();
 
   boolean likeToggle(Long id, String email);
 

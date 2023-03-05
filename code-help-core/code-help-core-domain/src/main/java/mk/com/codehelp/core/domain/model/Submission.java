@@ -26,7 +26,7 @@ public class Submission {
 
   private String user;
 
-  @Relationship
+  @Relationship(value = "FOR_PROBLEM", direction = Relationship.Direction.OUTGOING)
   private Problem problem;
 
   public Submission(Date timeSubmitted, SubmissionStatus status, String language, String code, String user, Problem problem) {

@@ -1,3 +1,6 @@
+import 'package:coding_helper_api/coding_helper_api.dart';
+import 'package:coding_helper_cross_platform/src/context/index.dart';
+import 'package:coding_helper_cross_platform/src/services/codehelp/index.dart';
 import 'package:flutter/material.dart';
 
 import 'user_frame.dart';
@@ -8,6 +11,7 @@ const avatarUrl =
 const username = 'Username';
 
 class StatsPage extends StatelessWidget {
+  final userService = const UserService();
   static const List<Map<String, String>> data = [
     {
       'problemsSolved': '90',
@@ -37,49 +41,72 @@ class StatsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(t('title')),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            // ignore: prefer_const_constructors
-            children: [
-              const UserFrame(),
-              ...data
-                  .map(
-                    (m) => Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: m.entries
-                              .map(
-                                (entry) => [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(t(entry.key)),
-                                      Text(entry.value),
+      body: FutureBuilder(
+        future: userService.getStatistics(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            throw ErrorCode.PROFILE;
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+
+          final UserStatistics statistics = snapshot.data!;
+          data[0] = {
+            'problemsSolved': statistics.solved.toString(),
+            'easy': statistics.easy.toString(),
+            'medium': statistics.medium.toString(),
+            'hard': statistics.hard.toString(),
+          };
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                // ignore: prefer_const_constructors
+                children: [
+                  const UserFrame(),
+                  ...data
+                      .map(
+                        (m) => Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: m.entries
+                                  .map(
+                                    (entry) => [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(t(entry.key)),
+                                          Text(entry.value),
+                                        ],
+                                      ),
+                                      const Divider()
                                     ],
-                                  ),
-                                  const Divider()
-                                ],
-                              )
-                              .expand((element) => element)
-                              .take(2 * m.length - 1)
-                              .toList(),
+                                  )
+                                  .expand((element) => element)
+                                  .take(2 * m.length - 1)
+                                  .toList(),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                  .toList()
-            ],
-          ),
-        ),
+                      )
+                      .toList()
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

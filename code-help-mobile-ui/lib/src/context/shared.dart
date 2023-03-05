@@ -8,7 +8,8 @@ enum ErrorCode {
   PROBLEM_ARENA(4000),
   CONTESTS_OVERVIEW(5000),
   CONTESTS_DISCOVER(6000),
-  FORUM_OVERVIEW(7000);
+  FORUM_OVERVIEW(7000),
+  PROFILE(8000);
 
   final int value;
   const ErrorCode(this.value);

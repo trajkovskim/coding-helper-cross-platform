@@ -1,9 +1,9 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.domain.queries.ProblemByLikesQuery;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
 import mk.com.codehelp.core.service.service.CategoryService;
@@ -70,7 +70,7 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
-  public List<ProblemByLikesQuery> findTop10ByOrderByLikes() {
+  public List<ProblemByLikesDto> findTop10ByOrderByLikes() {
     return this.problemRepository.findTop10ByOrderByLikes();
   }
 
