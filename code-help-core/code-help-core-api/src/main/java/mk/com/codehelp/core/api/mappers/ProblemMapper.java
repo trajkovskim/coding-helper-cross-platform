@@ -5,6 +5,7 @@ import mk.com.codehelp.core.domain.model.File;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.rest.model.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.boot.web.server.MimeMappings;
 import org.springframework.core.io.Resource;
 
@@ -44,6 +45,7 @@ public interface ProblemMapper {
 
   ProblemByLikes convertProblemByLikes(ProblemByLikesDto problem);
 
+  @Mapping(target = "likes", expression = "java((long) (problem.getLikedBy().size()))")
   ProblemByLikes convertProblemByLikes(Problem problem);
 
   List<ProblemByLikes> convertListOfProblemByLikesToRest(List<ProblemByLikesDto> problems);

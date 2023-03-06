@@ -78,6 +78,18 @@ components:
               type: string
               example: 'function(...) {...}'
 
+    ProblemByLikes:
+      allOf:
+        - $ref: '#/components/schemas/ProblemEntry'
+        - type: object
+          required:
+            - likes
+          properties:
+            likes:
+              type: integer
+              format: long
+              example: 23
+
     ProblemReqBody:
       allOf:
         - $ref: '#/components/schemas/ProblemBaseEntry'
@@ -211,17 +223,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ContestProblem'
-
-    ProblemByLikes:
-      allOf:
-        - $ref: '#/components/schemas/ProblemEntry'
-        - type: object
-          required:
-            - likes
-          properties:
-            likes:
-              type: integer
-              example: 23
 
     ProblemsResponse:
       required:
