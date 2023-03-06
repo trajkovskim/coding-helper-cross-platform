@@ -21,12 +21,18 @@ java -jar code-help-core/code-help-core-app/target/code-help-core-app-0.0.1-SNAP
 
 ## Flutter generate types, run and build:
 ```
+Get dependencies and generate types:
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 
+Run:
 flutter run --dart-define="CODING_HELPER_FORUM_API_URL=http://10.0.2.2/forum" --dart-define="CODING_HELPER_API_URL=http://10.0.2.2/core" --dart-define="AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help"
 
-flutter build appbundle --dart-define="CODING_HELPER_FORUM_API_URL=http://10.0.2.2/forum" --dart-define="CODING_HELPER_API_URL=http://10.0.2.2/core" --dart-define="AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help
+Appbundle build:
+flutter build appbundle --dart-define="CODING_HELPER_FORUM_API_URL=http://10.0.2.2/forum" --dart-define="CODING_HELPER_API_URL=http://10.0.2.2/core" --dart-define="AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help"
+
+Apk build:
+flutter build apk --dart-define="CODING_HELPER_FORUM_API_URL=http://10.0.2.2/forum" --dart-define="CODING_HELPER_API_URL=http://10.0.2.2/core" --dart-define="AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help"
 ```
 
 ## Keycloak run (local):

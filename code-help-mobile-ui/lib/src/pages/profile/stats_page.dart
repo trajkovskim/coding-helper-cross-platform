@@ -12,24 +12,6 @@ const username = 'Username';
 
 class StatsPage extends StatelessWidget {
   final userService = const UserService();
-  static const List<Map<String, String>> data = [
-    {
-      'problemsSolved': '90',
-      'easy': '56',
-      'medium': '23',
-      'hard': '11',
-    },
-    {
-      'coursesFinished': '90',
-      'easy': '56',
-      'medium': '23',
-      'hard': '11',
-    },
-    {
-      'comments': '35',
-      'posts': '12',
-    },
-  ];
 
   const StatsPage({super.key});
 
@@ -55,19 +37,30 @@ class StatsPage extends StatelessWidget {
           }
 
           final UserStatistics statistics = snapshot.data!;
-          data[0] = {
-            'problemsSolved': statistics.solved.toString(),
-            'easy': statistics.easy.toString(),
-            'medium': statistics.medium.toString(),
-            'hard': statistics.hard.toString(),
-          };
+          final List<Map<String, String>> data = [
+            {
+              'problemsSolved': statistics.solved.toString(),
+              'easy': statistics.easy.toString(),
+              'medium': statistics.medium.toString(),
+              'hard': statistics.hard.toString(),
+            },
+            {
+              'coursesFinished': '90',
+              'easy': '56',
+              'medium': '23',
+              'hard': '11',
+            },
+            {
+              'comments': '35',
+              'posts': '12',
+            },
+          ];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: SingleChildScrollView(
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                // ignore: prefer_const_constructors
                 children: [
                   const UserFrame(),
                   ...data
