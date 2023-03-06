@@ -40,7 +40,8 @@
     },
     "home": {
       "title": "Дома",
-      "activeContests": "Започнати натпревари"
+      "activeContests": "Започнати натпревари",
+      "top10Problems": "Топ 10 рангирани проблеми"
     },
     "contests": {
       "title": "Натпревари",

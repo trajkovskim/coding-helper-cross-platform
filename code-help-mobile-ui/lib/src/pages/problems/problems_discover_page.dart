@@ -1,6 +1,5 @@
 import 'package:coding_helper_cross_platform/src/components/common/SearchSettings.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../components/common/grid_view.dart';
 import '../../components/common/list_options.dart';

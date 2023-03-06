@@ -1,4 +1,3 @@
-import 'package:coding_helper_cross_platform/src/services/forum/CommunityService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
@@ -7,7 +6,8 @@ import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 
 class ForumCommunityPage extends StatefulWidget {
-  const ForumCommunityPage({Key? key, required this.communityName}) : super(key: key);
+  const ForumCommunityPage({Key? key, required this.communityName})
+      : super(key: key);
 
   final String communityName;
 
@@ -25,7 +25,8 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
   }
 
   showCommentDialog(BuildContext context) async {
-    return await showDialog(context: context, builder: (context) => createModalDialog(context));
+    return await showDialog(
+        context: context, builder: (context) => createModalDialog(context));
   }
 
   handlePost(BuildContext context) async {
@@ -36,7 +37,8 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
     }
 
     if (postData is PostModalData) {
-      await _postService.createPost(widget.communityName, postData.title, postData.text);
+      await _postService.createPost(
+          widget.communityName, postData.title, postData.text);
       triggerRebuild();
     }
   }
@@ -91,56 +93,76 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                 height: innerConstraints.maxHeight * 0.5,
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withOpacity(0.25),
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                                  borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(10)),
                                 ),
                               ),
                               Container(
                                 height: innerConstraints.maxHeight * 0.5,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(10)),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 15),
+                                            padding: const EdgeInsets.only(
+                                                right: 15),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
                                               children: [
                                                 CommunityJoinButton(
-                                                  communityName: snapshot.data!.name,
-                                                  isJoined: snapshot.data!.joined!,
+                                                  communityName:
+                                                      snapshot.data!.name,
+                                                  isJoined:
+                                                      snapshot.data!.joined!,
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 35).copyWith(bottom: 5),
+                                            padding: const EdgeInsets.symmetric(
+                                                    horizontal: 35)
+                                                .copyWith(bottom: 5),
                                             child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   snapshot.data!.name,
-                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
                                                 )
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 35),
                                             child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   snapshot.data!.description,
-                                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 )
                                               ],
                                             ),
@@ -148,15 +170,22 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 35),
                                         child: Row(
                                           children: [
-                                            const Text("Tags: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                            const Text("Tags: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             Wrap(
                                               alignment: WrapAlignment.start,
-                                              crossAxisAlignment: WrapCrossAlignment.end,
-                                              children: snapshot.data?.categories
-                                                      .map((tag) => TagChip(category: tag))
+                                              crossAxisAlignment:
+                                                  WrapCrossAlignment.end,
+                                              children: snapshot
+                                                      .data?.categories
+                                                      .map((tag) => TagChip(
+                                                          category: tag))
                                                       .toList() ??
                                                   [],
                                             ),
@@ -186,13 +215,15 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                     ),
                   ),
                   ForumCard(
-                      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
                             "Posts",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           IconButton(
                             onPressed: () => handlePost(context),
@@ -207,7 +238,9 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                       )),
                   ...((snapshot.data?.posts
                           .map((e) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20), child: ForumPostCard(post: e)))
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: ForumPostCard(post: e)))
                           .toList()) ??
                       []),
                 ],
@@ -221,7 +254,9 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
 }
 
 class CommunityJoinButton extends StatefulWidget {
-  CommunityJoinButton({Key? key, required this.communityName, this.isJoined = false}) : super(key: key);
+  CommunityJoinButton(
+      {Key? key, required this.communityName, this.isJoined = false})
+      : super(key: key);
 
   final String communityName;
   final bool isJoined;
@@ -299,12 +334,14 @@ createModalDialog(context) {
               SizedBox.fromSize(size: const Size.fromHeight(20)),
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Post title', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                    labelText: 'Post title', border: OutlineInputBorder()),
               ),
               TextFormField(
                 controller: textController,
                 maxLines: 3,
-                decoration: const InputDecoration(labelText: 'Post content', border: UnderlineInputBorder()),
+                decoration: const InputDecoration(
+                    labelText: 'Post content', border: UnderlineInputBorder()),
               ),
             ],
           ),
@@ -323,7 +360,10 @@ createModalDialog(context) {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(
-                      context, PostModalData(text: textController.value.text, title: titleController.value.text));
+                      context,
+                      PostModalData(
+                          text: textController.value.text,
+                          title: titleController.value.text));
                 },
                 child: const Text("Submit"),
               )

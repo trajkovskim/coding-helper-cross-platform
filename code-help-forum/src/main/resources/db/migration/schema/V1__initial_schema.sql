@@ -9,7 +9,7 @@ create table file
 create table "user"
 (
     id       serial primary key,
-    username varchar(32) unique      not null,
+    username varchar(128) unique     not null,
     password varchar(128)            not null,
     email    varchar(128) unique     not null,
     image    integer references file (id),
@@ -19,8 +19,8 @@ create table "user"
 create table community
 (
     id          serial primary key,
-    name        varchar(32)             not null unique,
-    description varchar(128)            not null unique,
+    name        varchar(64)             not null unique,
+    description varchar(128)            not null,
     user_id     integer                 not null references "user" (id),
     image       integer references file (id),
     created     timestamp default now() not null,

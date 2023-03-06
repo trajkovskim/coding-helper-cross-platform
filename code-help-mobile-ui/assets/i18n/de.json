@@ -40,7 +40,8 @@
     },
     "home": {
       "title": "Home",
-      "activeContests": "Active Contests"
+      "activeContests": "Active Contests",
+      "top10Problems": "Top 10 Ranked Problems"
     },
     "contests": {
       "title": "Contests",

@@ -45,7 +45,7 @@ class CommunityService {
       ..name = "Hello"
       ..description = "Community desc";
 
-    _communityApi.updateCommunity(name: name, body: communityRequest.build());
+    _communityApi.updateCommunity(name: name, communityRequest: communityRequest.build());
   }
 
   Future<void> joinCommunity(String community) {

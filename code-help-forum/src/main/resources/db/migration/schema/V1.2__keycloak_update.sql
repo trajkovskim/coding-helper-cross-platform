@@ -13,9 +13,9 @@ alter table community_moderator drop column user_id;
 alter table "user" drop column id;
 
 
-alter table "user" add id varchar(40) primary key;
-alter table post add user_id varchar(40) not null references "user" (id);
-alter table community add user_id varchar(40) not null references "user" (id);
-alter table comment add user_id varchar(40) not null references "user" (id);
-alter table community_user add user_id varchar(40) not null references "user" (id);
-alter table community_moderator add user_id varchar(40) not null references "user" (id);
+alter table "user" add id uuid primary key;
+alter table post add user_id uuid not null references "user" (id);
+alter table community add user_id uuid not null references "user" (id);
+alter table comment add user_id uuid not null references "user" (id);
+alter table community_user add user_id uuid not null references "user" (id);
+alter table community_moderator add user_id uuid not null references "user" (id);

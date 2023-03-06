@@ -9,6 +9,7 @@ class InitialPage extends StatelessWidget {
   const InitialPage({super.key});
 
   final ContestsService contestsService = const ContestsService();
+  final ProblemsService problemsService = const ProblemsService();
 
   @override
   Widget build(BuildContext context) {
@@ -19,48 +20,82 @@ class InitialPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(t('title')),
       ),
-      body: FutureBuilder(
-          future: contestsService.getContestEntries(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              throw ErrorCode.HOME;
-            }
-            return LayoutBuilder(builder: (context, constraints) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
+      body: LayoutBuilder(builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight * 0.20,
+                  child: FutureBuilder(
+                    future: contestsService.getContestEntries(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        throw ErrorCode.HOME;
+                      }
 
-              final contests = snapshot.data!;
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    children: [
-                      if (contests.isNotEmpty)
-                        SizedBox(
-                          height: constraints.maxHeight * 0.20,
-                          child: HorizontalListView(
-                            title: t('activeContests'),
-                            items: contests
-                                .map(
-                                  (contest) => Item(
-                                    onTap: () => navigator.pushNamed(
-                                      '/contest-overview',
-                                      arguments: {'id': contest.id.toString()},
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                    ],
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+                      final entries = snapshot.data!;
+
+                      return HorizontalListView(
+                        title: t('activeContests'),
+                        items: entries
+                            .map(
+                              (entry) => Item(
+                                onTap: () => navigator.pushNamed(
+                                  '/contest-overview',
+                                  arguments: {'id': entry.id.toString()},
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
                   ),
                 ),
-              );
-            });
-          }),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: constraints.maxHeight * 0.20,
+                  child: FutureBuilder(
+                    future: problemsService.getTop10ProblemEntries(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        throw ErrorCode.HOME;
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+                      final entries = snapshot.data!;
+
+                      return HorizontalListView(
+                        title: t('top10Problems'),
+                        items: entries
+                            .map(
+                              (entry) => Item(
+                                onTap: () => navigator.pushNamed(
+                                  '/problem-overview',
+                                  arguments: {'id': entry.id.toString()},
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -5,9 +5,6 @@ import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearc
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import '../../components/common/search_input.dart';
 
 class ForumOverviewPage extends StatelessWidget {
   ForumOverviewPage({Key? key}) : super(key: key);

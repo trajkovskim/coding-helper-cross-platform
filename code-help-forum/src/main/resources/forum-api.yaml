@@ -70,7 +70,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: 'communityRequest'
+              $ref: '#/components/schemas/CommunityRequest'
       parameters:
         - in: path
           name: name
@@ -629,15 +629,11 @@ components:
 
     User:
       type: object
-      required: [ username, email ]
+      required: [ username ]
       properties:
         username:
           type: string
-        email:
-          type: string
-          format: email
-        image:
-          type: string
+
     Users:
       type: object
       required: [ users ]

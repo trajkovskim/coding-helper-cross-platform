@@ -1,7 +1,7 @@
 version: '3'
 services:
   keycloak_iam:
-    image: quay.io/keycloak/keycloak:20.0.3
+    image: keycloak/keycloak:21.0
     container_name: code-help_keycloak_iam
     ports:
       - 8080:8080

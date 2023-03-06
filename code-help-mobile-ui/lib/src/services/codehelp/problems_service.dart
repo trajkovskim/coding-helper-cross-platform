@@ -11,6 +11,12 @@ class ProblemsService {
         .then((response) => response.data!.problems.toList());
   }
 
+  Future<List<ProblemByLikes>> getTop10ProblemEntries() {
+    return PROBLEMS_API
+        .getTop10Problems()
+        .then((response) => response.data!.problems.toList());
+  }
+
   Future<ProblemByLikes> getProblemEntry(String id) {
     return PROBLEMS_API
         .getProblemEntry(id: int.parse(id))
