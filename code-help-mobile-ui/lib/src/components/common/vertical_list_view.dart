@@ -50,45 +50,48 @@ class VerticalListView extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         elevation: 0,
-        child: Column(
-          children: children.isNotEmpty
-              ? children
-                  .map(
-                    (item) => [
-                      InkWell(
-                        onTap: item.onTap,
-                        child: ListTile(
-                          leading: item.image != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: item.image,
-                                )
-                              : null,
-                          title: item.title != null
-                              ? Text(
-                                  item.title!,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : null,
-                          subtitle: item.subtitle != null
-                              ? CustomText(
-                                  item.subtitle!,
-                                  maxLength: 100,
-                                )
-                              : item.subContent,
-                          trailing: item.trailing,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: children.isNotEmpty
+                ? children
+                    .map(
+                      (item) => [
+                        InkWell(
+                          onTap: item.onTap,
+                          child: ListTile(
+                            leading: item.image != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: item.image,
+                                  )
+                                : null,
+                            title: item.title != null
+                                ? Text(
+                                    item.title!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : null,
+                            subtitle: item.subtitle != null
+                                ? CustomText(
+                                    item.subtitle!,
+                                    maxLength: 100,
+                                  )
+                                : item.subContent,
+                            trailing: item.trailing,
+                          ),
                         ),
-                      ),
-                      const Divider(
-                        color: Colors.black,
-                      )
-                    ],
-                  )
-                  .expand((element) => element)
-                  .take(2 * children.length - 1)
-                  .toList()
-              : [],
+                        const Divider(
+                          color: Colors.black,
+                        )
+                      ],
+                    )
+                    .expand((element) => element)
+                    .take(2 * children.length - 1)
+                    .toList()
+                : [],
+          ),
         ),
       ),
     );

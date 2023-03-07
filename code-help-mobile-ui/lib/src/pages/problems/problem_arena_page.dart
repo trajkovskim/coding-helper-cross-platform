@@ -37,6 +37,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   final CodeController codeController = CodeController();
 
   bool init = false;
+  Key submissionsFutureKey = GlobalKey();
 
   Params useParams() {
     final params =
@@ -174,42 +175,51 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                 )
               ],
             ),
-            FutureBuilder(
-              future: submissionsService.getSubmissionEntries(builder.build()),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  throw ErrorCode.PROBLEM_ARENA;
-                }
-
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                }
-
-                final entries = snapshot.data!;
-                return Column(
-                  children: [
-                    Expanded(
-                      child: VerticalListView(
-                        children: entries
-                            .map(
-                              (submission) => ListItem(
-                                title: submission.timeSubmitted.toString(),
-                                subtitle: submission.status.name,
-                                onTap: () {
-                                  codeController.text = submission.code;
-                                  DefaultTabController.of(context)
-                                      ?.animateTo(1);
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                  ],
-                );
+            RefreshIndicator(
+              triggerMode: RefreshIndicatorTriggerMode.anywhere,
+              onRefresh: () async {
+                setState(() {
+                  submissionsFutureKey = GlobalKey();
+                });
               },
+              child: FutureBuilder(
+                future:
+                    submissionsService.getSubmissionEntries(builder.build()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    throw ErrorCode.PROBLEM_ARENA;
+                  }
+
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+
+                  final entries = snapshot.data!;
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: VerticalListView(
+                          children: entries
+                              .map(
+                                (submission) => ListItem(
+                                  title: submission.timeSubmitted.toString(),
+                                  subtitle: submission.status.name,
+                                  onTap: () {
+                                    codeController.text = submission.code;
+                                    DefaultTabController.of(context)
+                                        ?.animateTo(1);
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -220,7 +230,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     codeController.dispose();
+    super.dispose();
   }
 }

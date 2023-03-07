@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'custom_bottom_navigation_bar.dart';
 
-class CodeHelpLayout extends StatefulWidget {
-  const CodeHelpLayout({super.key});
+class CodingHelperLayout extends StatefulWidget {
+  const CodingHelperLayout({super.key});
 
   @override
-  State<CodeHelpLayout> createState() => _CodeHelpLayoutState();
+  State<CodingHelperLayout> createState() => _CodingHelperLayoutState();
 }
 
-class _CodeHelpLayoutState extends State<CodeHelpLayout> {
+class _CodingHelperLayoutState extends State<CodingHelperLayout> {
   final navigatorKey = GlobalKey<NavigatorState>();
   final bottomNavigationRoutes = [
     '/',
@@ -45,7 +45,14 @@ class _CodeHelpLayoutState extends State<CodeHelpLayout> {
                 .firstWhere((element) => element.key == route)
                 .value;
 
-            return MaterialPageRoute(builder: builder, settings: settings);
+            return MaterialPageRoute(
+                builder: (context) {
+                  return RefreshIndicator(
+                    onRefresh: () async {},
+                    child: builder(context),
+                  );
+                },
+                settings: settings);
           },
         ),
       ),

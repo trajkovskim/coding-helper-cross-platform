@@ -1,7 +1,7 @@
 import 'package:coding_helper_cross_platform/src/pages/contests/contest_overview_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
-import 'package:coding_helper_cross_platform/src/pages/initial_page.dart';
+import 'package:coding_helper_cross_platform/src/pages/home_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_arena_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_overview_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problems_discover_page.dart';
@@ -13,7 +13,7 @@ import 'package:coding_helper_cross_platform/src/pages/profile/stats_page.dart';
 
 
 final routes = {
-  '/': (context) => const InitialPage(),
+  '/': (context) => const HomePage(),
   '/profile': (context) => const ProfilePage(),
   '/forum-overview': (context) => ForumOverviewPage(),
   '/problem-arena': (context) => const ProblemArenaPage(),

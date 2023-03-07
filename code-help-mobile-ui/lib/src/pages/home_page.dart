@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../i18n/i18n.dart';
 
-class InitialPage extends StatelessWidget {
-  const InitialPage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   final ContestsService contestsService = const ContestsService();
   final ProblemsService problemsService = const ProblemsService();

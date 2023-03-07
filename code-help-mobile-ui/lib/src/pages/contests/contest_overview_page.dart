@@ -140,31 +140,30 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: entry?.status == ContestStatus.OPEN
-                              ? Center(
-                                  child: Text(
-                                    '${t('status')}: ${entry?.status}',
-                                  ),
-                                )
-                              : VerticalListView(
-                                  children: entry?.problems
-                                          .map(
-                                            (problem) => ListItem(
-                                              image: CircleAvatar(
-                                                  child: Text(problem.score
-                                                      .toString())),
-                                              title: problem.problem.title,
-                                              subtitle:
-                                                  'Difficulty: ${problem.problem.difficulty}',
-                                              onTap: () => handleTapProblem(
-                                                  problem.problem),
-                                            ),
-                                          )
-                                          .toList() ??
-                                      [],
-                                ),
-                        ),
+                        if (entry?.status == ContestStatus.OPEN)
+                          Center(
+                            child: Text(
+                              '${t('status')}: ${entry?.status}',
+                            ),
+                          ),
+                        if (entry?.status != ContestStatus.OPEN)
+                          VerticalListView(
+                            children: entry?.problems
+                                    .map(
+                                      (problem) => ListItem(
+                                        image: CircleAvatar(
+                                            child:
+                                                Text(problem.score.toString())),
+                                        title: problem.problem.title,
+                                        subtitle:
+                                            'Difficulty: ${problem.problem.difficulty}',
+                                        onTap: () =>
+                                            handleTapProblem(problem.problem),
+                                      ),
+                                    )
+                                    .toList() ??
+                                [],
+                          ),
                       ],
                     ),
                   ),

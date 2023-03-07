@@ -103,90 +103,79 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
         ],
       ),
       body: FutureBuilder(
-          future: problemsService.getProblemEntries(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              throw ErrorCode.PROBLEM_DISCOVER;
-            }
+        future: problemsService.getProblemEntries(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            throw ErrorCode.PROBLEM_DISCOVER;
+          }
 
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
 
-            final entries = snapshot.data!;
+          final entries = snapshot.data!;
 
-            return Padding(
-              padding: const EdgeInsets.all(15).copyWith(bottom: 0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SearchSettingsRow(
-                          handleFilterSubmit: handleFilterSubmit,
-                          handleSortSubmit: handleSortSubmit,
-                          handleViewModeChange: handleViewModeChange,
-                          viewMode: view,
-                        ),
-                        SizedBox.fromSize(size: const Size.fromHeight(15)),
-                        ListOptions(
-                          options: options,
-                          onRemove: handleRemoveOption,
-                        ),
-                        SizedBox.fromSize(size: const Size.fromHeight(15)),
-                        if (view == View.LIST)
-                          Expanded(
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SearchSettingsRow(
+                    handleFilterSubmit: handleFilterSubmit,
+                    handleSortSubmit: handleSortSubmit,
+                    handleViewModeChange: handleViewModeChange,
+                    viewMode: view,
+                  ),
+                  SizedBox.fromSize(size: const Size.fromHeight(15)),
+                  ListOptions(
+                    options: options,
+                    onRemove: handleRemoveOption,
+                  ),
+                  SizedBox.fromSize(size: const Size.fromHeight(15)),
+                  if (view == View.LIST)
+                    Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: VerticalListView(
+                        children: entries
+                            .map(
+                              (entry) => ListItem(
+                                title: entry.title,
+                                onTap: () => navigator.pushNamed(
+                                  '/problem-overview',
+                                  arguments: {'id': entry.id.toString()},
+                                ),
+                                subtitle: entry.markdown,
                               ),
-                              child: VerticalListView(
-                                children: entries
-                                    .map(
-                                      (entry) => ListItem(
-                                        title: entry.title,
-                                        onTap: () => navigator.pushNamed(
-                                          '/problem-overview',
-                                          arguments: {
-                                            'id': entry.id.toString()
-                                          },
-                                        ),
-                                        subtitle: entry.markdown,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                          ),
-                        if (view == View.GRID)
-                          Expanded(
-                            child: CustomGridView(
-                              children: entries
-                                  .map(
-                                    (entry) => GridItem(
-                                      title: entry.title,
-                                      onTap: () => navigator.pushNamed(
-                                        '/problem-overview',
-                                        arguments: {'id': entry.id.toString()},
-                                      ),
-                                      subtitle: entry.markdown,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                      ],
+                            )
+                            .toList(),
+                      ),
                     ),
-                  )
+                  if (view == View.GRID)
+                    CustomGridView(
+                      children: entries
+                          .map(
+                            (entry) => GridItem(
+                              title: entry.title,
+                              onTap: () => navigator.pushNamed(
+                                '/problem-overview',
+                                arguments: {'id': entry.id.toString()},
+                              ),
+                              subtitle: entry.markdown,
+                            ),
+                          )
+                          .toList(),
+                    ),
                 ],
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

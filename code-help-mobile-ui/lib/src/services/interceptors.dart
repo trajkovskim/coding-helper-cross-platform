@@ -58,8 +58,8 @@ class BearerInterceptor extends Interceptor {
       final response = await dio.fetch(err.requestOptions);
       handler.resolve(response);
     } catch (ex) {
-      await storage.remove('user');
-      await storage.remove('jwttoken');
+      await storage.remove(userKey);
+      await storage.remove(tokenKey);
 
       handler.next(err);
     }

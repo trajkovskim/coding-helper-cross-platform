@@ -161,12 +161,10 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
             }
 
             final entries = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.all(5).copyWith(bottom: 0),
-              child: CustomScrollView(slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Column(
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
@@ -192,45 +190,40 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                         onRemove: handleRemoveOption,
                       ),
                       if (view == View.LIST)
-                        Expanded(
-                          child: VerticalListView(
-                            children: entries
-                                .map(
-                                  (entry) => ListItem(
-                                    title: entry.name,
-                                    onTap: () => navigator.pushNamed(
-                                      '/contest-overview',
-                                      arguments: {'id': entry.id.toString()},
-                                    ),
-                                    subtitle:
-                                        '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                        VerticalListView(
+                          children: entries
+                              .map(
+                                (entry) => ListItem(
+                                  title: entry.name,
+                                  onTap: () => navigator.pushNamed(
+                                    '/contest-overview',
+                                    arguments: {'id': entry.id.toString()},
                                   ),
-                                )
-                                .toList(),
-                          ),
+                                  subtitle:
+                                      '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                                ),
+                              )
+                              .toList(),
                         ),
                       if (view == View.GRID)
-                        Expanded(
-                          child: CustomGridView(
-                            children: entries
-                                .map(
-                                  (entry) => GridItem(
-                                    title: entry.name,
-                                    onTap: () => navigator.pushNamed(
-                                      '/contest-overview',
-                                      arguments: {'id': entry.id.toString()},
-                                    ),
-                                    subtitle:
-                                        '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                        CustomGridView(
+                          children: entries
+                              .map(
+                                (entry) => GridItem(
+                                  title: entry.name,
+                                  onTap: () => navigator.pushNamed(
+                                    '/contest-overview',
+                                    arguments: {'id': entry.id.toString()},
                                   ),
-                                )
-                                .toList(),
-                          ),
+                                  subtitle:
+                                      '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                                ),
+                              )
+                              .toList(),
                         ),
                     ],
                   ),
-                )
-              ]),
+              ),
             );
           }),
     );

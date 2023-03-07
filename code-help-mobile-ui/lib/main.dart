@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:coding_helper_cross_platform/src/components/layout/coding_helper_layout.dart';
 import 'package:coding_helper_cross_platform/src/pages/error.dart';
+import 'package:coding_helper_cross_platform/src/pages/coding_helper_initial_page.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/ForumServiceInitializer.dart';
 import 'package:flutter/material.dart';
@@ -39,17 +40,17 @@ class MyApp extends StatelessWidget {
 
   const MyApp({super.key});
 
-  Future<void> tryLogin(BuildContext context) async {
+  Future<void> tryLogin(SharedContext sharedContext) async {
     final storage = await SharedPreferences.getInstance();
-    final sharedContext = Provider.of<SharedContext>(context, listen: false);
 
-    const key = 'user';
-    if (storage.containsKey(key)) {
-      final userJson = jsonDecode(storage.getString('user')!);
+    const userKey = 'user';
+    const tokenKey = 'jwttoken';
+    if (storage.containsKey(userKey)) {
+      final userJson = jsonDecode(storage.getString(userKey)!);
       final user = Credential.fromJson(userJson);
 
       user.getTokenResponse(true).then((response) async {
-        storage.setString('jwttoken', response.accessToken!);
+        storage.setString(tokenKey, response.accessToken!);
 
         final userInfo = await user.getUserInfo();
         sharedContext.setUserData(
@@ -57,15 +58,14 @@ class MyApp extends StatelessWidget {
           userInfo.picture.toString(),
         );
       }).onError((error, stackTrace) {
-        storage.remove('user');
-        storage.remove('jwttoken');
+        storage.remove(userKey);
+        storage.remove(tokenKey);
       });
     }
   }
 
-  Future<void> init(BuildContext context) async {
+  Future<void> init(SharedContext sharedContext) async {
     final storage = await SharedPreferences.getInstance();
-    final sharedContext = Provider.of<SharedContext>(context, listen: false);
 
     sharedContext.setAppSettings(
       storage.getString('default-language') ?? DEFAULT_LANGUAGES[0],
@@ -81,42 +81,60 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SharedContext()),
       ],
-      child: Builder(builder: (context) {
-        init(context);
-        tryLogin(context);
-        return Consumer<SharedContext>(
-          builder: (context, sharedContext, child) {
-            final activeLocale = sharedContext.locale;
-            final theme = sharedContext.appSettings?.theme;
-            final accentColor = sharedContext.appSettings?.accentColor;
+      child: Builder(
+        builder: (context) {
+          final sharedContext =
+              Provider.of<SharedContext>(context, listen: false);
 
-            return MaterialApp(
-              title: 'Codehelp',
-              darkTheme: ThemeData(
-                primarySwatch: COLORS_MAP[accentColor],
-              ),
-              theme: ThemeData(
-                primarySwatch: COLORS_MAP[accentColor],
-              ),
-              themeMode: THEMES_MAP[theme],
-              localizationsDelegates: [
-                FlutterI18nDelegate(
-                  missingTranslationHandler: (key, locale) => key,
-                  translationLoader: FileTranslationLoader(
-                    basePath: "assets/i18n",
-                    fallbackFile: activeLocale,
-                    forcedLocale: Locale(activeLocale),
-                  ),
-                ),
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              home: const CodeHelpLayout(),
-              builder: FlutterI18n.rootAppBuilder(),
-            );
-          },
-        );
-      }),
+          return FutureBuilder(
+            future: Future.wait([
+              tryLogin(sharedContext),
+              init(sharedContext),
+              Future.delayed(const Duration(seconds: 2))
+            ]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const MaterialApp(
+                  home: CodingHelperInitialPage(),
+                );
+              }
+
+              return Consumer<SharedContext>(
+                builder: (context, sharedContext, child) {
+                  String activeLocale = sharedContext.locale;
+                  String? theme = sharedContext.appSettings?.theme;
+                  String? accentColor = sharedContext.appSettings?.accentColor;
+
+                  return MaterialApp(
+                    title: 'CodingHelper',
+                    darkTheme: ThemeData(
+                      primarySwatch: COLORS_MAP[accentColor],
+                    ),
+                    theme: ThemeData(
+                      primarySwatch: COLORS_MAP[accentColor],
+                    ),
+                    themeMode: THEMES_MAP[theme],
+                    localizationsDelegates: [
+                      FlutterI18nDelegate(
+                        missingTranslationHandler: (key, locale) => key,
+                        translationLoader: FileTranslationLoader(
+                          basePath: "assets/i18n",
+                          fallbackFile: activeLocale,
+                          forcedLocale: Locale(activeLocale),
+                        ),
+                      ),
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                    ],
+                    home: const CodingHelperLayout(),
+                    builder: FlutterI18n.rootAppBuilder(),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
