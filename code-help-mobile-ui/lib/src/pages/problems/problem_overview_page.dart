@@ -1,6 +1,7 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/text.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_like_button.dart';
+import 'package:coding_helper_cross_platform/src/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -114,130 +115,136 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                         children: [
                           SizedBox(
                             height: constraints.maxHeight * 0.3,
+                            child: ShadowContainer(
+                              radius: 15,
+                              child: Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                shadowColor: Colors.black.withOpacity(0.65),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: const Icon(
+                                              Icons.javascript,
+                                              size: 64,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
+                                              Text('${t('duration')} ${'1h30m'}'),
+                                              Text('${t('participants')} ${0}'),
+                                              Text('${t('reviews')} ${0}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                        entry.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Dropdown(
+                                            value: selectedLanguage,
+                                            items:
+                                                CodeEditor.EDITOR_LANGUAGES.keys
+                                                    .map(
+                                                      (language) => DropdownItem(
+                                                        language,
+                                                        language,
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                            onChange: handleChangeLanguage,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                handleTapStart(entry),
+                                            style: ElevatedButton.styleFrom(
+                                              shadowColor:
+                                                  Colors.black.withOpacity(0.25),
+                                            ),
+                                            child: Text(t('start')),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox.fromSize(size: const Size.fromHeight(10)),
+                          ShadowContainer(
+                            radius: 10,
                             child: Card(
-                              elevation: 2,
-                              shadowColor: Colors.black.withOpacity(0.65),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              shadowColor: Colors.black.withOpacity(0.5),
                               child: Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: const Icon(
-                                            Icons.javascript,
-                                            size: 64,
-                                          ),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
-                                            Text('${t('duration')} ${'1h30m'}'),
-                                            Text('${t('participants')} ${0}'),
-                                            Text('${t('reviews')} ${0}'),
-                                          ],
-                                        )
-                                      ],
-                                    ),
                                     Text(
-                                      entry.title,
+                                      t('description'),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                        fontSize: 14,
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Dropdown(
-                                          value: selectedLanguage,
-                                          items:
-                                              CodeEditor.EDITOR_LANGUAGES.keys
-                                                  .map(
-                                                    (language) => DropdownItem(
-                                                      language,
-                                                      language,
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                          onChange: handleChangeLanguage,
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () =>
-                                              handleTapStart(entry),
-                                          style: ElevatedButton.styleFrom(
-                                            shadowColor:
-                                                Colors.black.withOpacity(0.25),
-                                          ),
-                                          child: Text(t('start')),
-                                        )
-                                      ],
-                                    )
+                                    SizedBox.fromSize(
+                                        size: const Size.fromHeight(5)),
+                                    CustomText(
+                                      entry.markdown ??
+                                          t('noDescription'),
+                                      maxLength: 100,
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                           SizedBox.fromSize(size: const Size.fromHeight(10)),
-                          Card(
-                            elevation: 2,
-                            shadowColor: Colors.black.withOpacity(0.5),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    t('description'),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  SizedBox.fromSize(
-                                      size: const Size.fromHeight(5)),
-                                  CustomText(
-                                    entry.markdown ??
-                                        t('noDescription'),
-                                    maxLength: 100,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox.fromSize(size: const Size.fromHeight(10)),
-                          Expanded(
-                            child: VerticalListView(
-                              children: entries
-                                  .map((submission) => ListItem(
-                                        title:
-                                            '${t('attempt')} ${submission.id}',
-                                        subtitle:
-                                            '${t('status')} ${submission.status.name}',
-                                        onTap: () {
-                                          navigator.pushNamed(
-                                            '/problem-arena',
-                                            arguments: {
-                                              'language': submission.language,
-                                              'problem': entry,
-                                              'code': submission.code
-                                            },
-                                          );
-                                        },
-                                      ))
-                                  .toList(),
-                            ),
+                          VerticalListView(
+                            children: entries
+                                .map((submission) => ListItem(
+                                      title:
+                                          '${t('attempt')} ${submission.id}',
+                                      subtitle:
+                                          '${t('status')} ${submission.status.name}',
+                                      onTap: () {
+                                        navigator.pushNamed(
+                                          '/problem-arena',
+                                          arguments: {
+                                            'language': submission.language,
+                                            'problem': entry,
+                                            'code': submission.code
+                                          },
+                                        );
+                                      },
+                                    ))
+                                .toList(),
                           ),
                         ],
                       ),

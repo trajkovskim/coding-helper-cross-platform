@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'text.dart';
@@ -27,31 +28,25 @@ class ListItem {
 
 class VerticalListView extends StatelessWidget {
   final List<ListItem> children;
+  final EdgeInsets padding;
 
-  const VerticalListView({super.key, required this.children});
+  const VerticalListView({super.key, required this.children, this.padding = const EdgeInsets.symmetric(vertical: 10)});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            spreadRadius: -4,
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
+    if (children.isEmpty) {
+      return Container();
+    }
+
+    return ShadowContainer(
+      radius: 15,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
         ),
         elevation: 0,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: padding,
           child: Column(
             children: children.isNotEmpty
                 ? children
@@ -69,8 +64,7 @@ class VerticalListView extends StatelessWidget {
                             title: item.title != null
                                 ? Text(
                                     item.title!,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   )
                                 : null,
                             subtitle: item.subtitle != null

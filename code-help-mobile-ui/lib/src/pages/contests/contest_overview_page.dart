@@ -1,5 +1,5 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
-import 'package:coding_helper_cross_platform/src/pages/problems/problem_arena_page.dart';
+import 'package:coding_helper_cross_platform/src/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/common/code_editor.dart';
@@ -41,8 +41,7 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'contests');
-    final params =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
+    final params = ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
     final id = params['id'];
     return FutureBuilder(
         future: contestsService.getContestEntry(id!),
@@ -57,119 +56,122 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
             appBar: AppBar(
               title: Text(entry?.name ?? ''),
             ),
-            body: LayoutBuilder(builder: (context, constraints) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
 
-              return CustomScrollView(
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
                           height: constraints.maxHeight * 0.25,
-                          child: Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: const Icon(Icons.abc, size: 64),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              '${t('duration')} ${entry?.duration}'),
-                                          Text(
-                                              '${t('startsOn')} ${entry?.startsOn}'),
-                                          Text(
-                                              '${t('status')} ${entry?.status}')
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Text(entry?.name ?? ''),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Dropdown(
-                                        value: selectedLanguage,
-                                        items: CodeEditor.EDITOR_LANGUAGES.keys
-                                            .map(
-                                              (language) => DropdownItem(
-                                                language,
-                                                language,
-                                              ),
+                          child: ShadowContainer(
+                            radius: 15,
+                            child: Card(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: const Icon(Icons.abc, size: 64),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('${t('duration')} ${entry?.duration}'),
+                                                Text('${t('startsOn')} ${entry?.startsOn}'),
+                                                Text('${t('status')} ${entry?.status}')
+                                              ],
                                             )
-                                            .toList(),
-                                        onChange: handleChangeLanguage,
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                          ],
+                                        ),
+                                        Text(entry?.name ?? ''),
+                                      ],
+                                    ),
+                                    SizedBox.fromSize(size: const Size.fromHeight(10)),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Dropdown(
+                                          value: selectedLanguage,
+                                          items: CodeEditor.EDITOR_LANGUAGES.keys
+                                              .map(
+                                                (language) => DropdownItem(
+                                                  language,
+                                                  language,
+                                                ),
+                                              )
+                                              .toList(),
+                                          onChange: handleChangeLanguage,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Card(
-                          elevation: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(t('description')),
-                                Text(entry?.name ?? t('noDescription'))
-                              ],
+                        SizedBox.fromSize(size: const Size.fromHeight(15)),
+                        ShadowContainer(
+                          radius: 15,
+                          child: Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [Text(t('description')), Text(entry?.name ?? t('noDescription'))],
+                              ),
                             ),
                           ),
                         ),
-                        if (entry?.status == ContestStatus.OPEN)
-                          Center(
-                            child: Text(
-                              '${t('status')}: ${entry?.status}',
-                            ),
-                          ),
-                        if (entry?.status != ContestStatus.OPEN)
-                          VerticalListView(
-                            children: entry?.problems
-                                    .map(
-                                      (problem) => ListItem(
-                                        image: CircleAvatar(
-                                            child:
-                                                Text(problem.score.toString())),
-                                        title: problem.problem.title,
-                                        subtitle:
-                                            'Difficulty: ${problem.problem.difficulty}',
-                                        onTap: () =>
-                                            handleTapProblem(problem.problem),
-                                      ),
-                                    )
-                                    .toList() ??
-                                [],
-                          ),
+                        SizedBox.fromSize(size: const Size.fromHeight(15)),
+                        entry?.status == ContestStatus.OPEN
+                            ? Center(
+                                child: Text(
+                                  '${t('status')}: ${entry?.status}',
+                                ),
+                              )
+                            : VerticalListView(
+                                padding: EdgeInsets.zero,
+                                children: entry?.problems
+                                        .map(
+                                          (problem) => ListItem(
+                                            image: CircleAvatar(child: Text(problem.score.toString())),
+                                            title: problem.problem.title,
+                                            subtitle: 'Difficulty: ${problem.problem.difficulty}',
+                                            onTap: () => handleTapProblem(problem.problem),
+                                          ),
+                                        )
+                                        .toList() ??
+                                    [],
+                              ),
                       ],
                     ),
                   ),
-                ],
-              );
-            }),
+                );
+              },
+            ),
           );
         });
   }

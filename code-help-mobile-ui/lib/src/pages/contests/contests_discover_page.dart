@@ -1,6 +1,5 @@
 import 'package:coding_helper_cross_platform/src/components/common/SearchSettings.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../components/common/grid_view.dart';
 import '../../components/common/list_options.dart';
@@ -168,7 +167,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton.icon(
                             onPressed: () => showSortModal(context),
@@ -189,6 +188,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                         options: options,
                         onRemove: handleRemoveOption,
                       ),
+                      SizedBox.fromSize(size: const Size.fromHeight(15)),
                       if (view == View.LIST)
                         VerticalListView(
                           children: entries
