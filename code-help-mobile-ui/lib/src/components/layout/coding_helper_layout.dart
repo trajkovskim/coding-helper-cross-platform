@@ -12,7 +12,7 @@ class CodingHelperLayout extends StatefulWidget {
 }
 
 class _CodingHelperLayoutState extends State<CodingHelperLayout> {
-  final navigatorKey = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final bottomNavigationRoutes = [
     '/',
     '/problems-overview',
@@ -40,19 +40,25 @@ class _CodingHelperLayoutState extends State<CodingHelperLayout> {
             builder: (context) => const Error(),
           ),
           onGenerateRoute: (settings) {
-            final route = settings.name;
+            final route = settings.name ?? '/';
             final builder = routes.entries
                 .firstWhere((element) => element.key == route)
                 .value;
 
             return MaterialPageRoute(
-                builder: (context) {
-                  return RefreshIndicator(
-                    onRefresh: () async {},
-                    child: builder(context),
-                  );
-                },
-                settings: settings);
+              builder: (context) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    navigatorKey.currentState?.popAndPushNamed(
+                      route,
+                      arguments: settings.arguments,
+                    );
+                  },
+                  child: builder(context),
+                );
+              },
+              settings: settings,
+            );
           },
         ),
       ),

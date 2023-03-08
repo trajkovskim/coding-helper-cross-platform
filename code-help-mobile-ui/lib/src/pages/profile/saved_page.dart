@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'user_frame.dart';
 import '../../components/common/vertical_list_view.dart';
-import '../../context/index.dart';
 import '../../i18n/i18n.dart';
+import 'user_frame.dart';
 
 class SavedPage extends StatelessWidget {
   const SavedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final sharedContext = Provider.of<SharedContext>(context);
-    final userData = sharedContext.userData;
 
     final t = getTranslation(context, 'profile.saved');
 
@@ -20,9 +16,10 @@ class SavedPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(t('title')),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

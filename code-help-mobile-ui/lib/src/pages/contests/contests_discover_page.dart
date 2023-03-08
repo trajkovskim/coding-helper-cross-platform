@@ -161,68 +161,75 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
 
             final entries = snapshot.data!;
             return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () => showSortModal(context),
-                            icon: const Icon(Icons.more_horiz_rounded),
-                            label: Text(tListOptions('sort')),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () => showSortModal(context),
+                          icon: const Icon(Icons.more_horiz_rounded),
+                          label: Text(
+                            tListOptions('sort'),
+                            softWrap: false,
                           ),
-                          const SizedBox(width: 8),
-                          ElevatedButton.icon(
-                            onPressed: () => setState(() {
-                              view = view == View.GRID ? View.LIST : View.GRID;
-                            }),
-                            icon: const Icon(Icons.settings),
-                            label: Text(tListOptions('view')),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton.icon(
+                          onPressed: () => setState(() {
+                            view = view == View.GRID ? View.LIST : View.GRID;
+                          }),
+                          icon: const Icon(Icons.settings),
+                          label: Text(
+                            tListOptions('view'),
+                            softWrap: false,
                           ),
-                        ],
-                      ),
-                      ListOptions(
-                        options: options,
-                        onRemove: handleRemoveOption,
-                      ),
-                      SizedBox.fromSize(size: const Size.fromHeight(15)),
-                      if (view == View.LIST)
-                        VerticalListView(
-                          children: entries
-                              .map(
-                                (entry) => ListItem(
-                                  title: entry.name,
-                                  onTap: () => navigator.pushNamed(
-                                    '/contest-overview',
-                                    arguments: {'id': entry.id.toString()},
-                                  ),
-                                  subtitle:
-                                      '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
-                                ),
-                              )
-                              .toList(),
                         ),
-                      if (view == View.GRID)
-                        CustomGridView(
-                          children: entries
-                              .map(
-                                (entry) => GridItem(
-                                  title: entry.name,
-                                  onTap: () => navigator.pushNamed(
-                                    '/contest-overview',
-                                    arguments: {'id': entry.id.toString()},
-                                  ),
-                                  subtitle:
-                                      '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                      ],
+                    ),
+                    ListOptions(
+                      options: options,
+                      onRemove: handleRemoveOption,
+                    ),
+                    SizedBox.fromSize(size: const Size.fromHeight(15)),
+                    if (view == View.LIST)
+                      VerticalListView(
+                        children: entries
+                            .map(
+                              (entry) => ListItem(
+                                title: entry.name,
+                                onTap: () => navigator.pushNamed(
+                                  '/contest-overview',
+                                  arguments: {'id': entry.id.toString()},
                                 ),
-                              )
-                              .toList(),
-                        ),
-                    ],
-                  ),
+                                subtitle:
+                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    if (view == View.GRID)
+                      CustomGridView(
+                        children: entries
+                            .map(
+                              (entry) => GridItem(
+                                title: entry.name,
+                                onTap: () => navigator.pushNamed(
+                                  '/contest-overview',
+                                  arguments: {'id': entry.id.toString()},
+                                ),
+                                subtitle:
+                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                              ),
+                            )
+                            .toList(),
+                      ),
+                  ],
+                ),
               ),
             );
           }),

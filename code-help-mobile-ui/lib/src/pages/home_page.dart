@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
@@ -36,8 +37,10 @@ class HomePage extends StatelessWidget {
                       }
 
                       if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                        return const Card(
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
                         );
                       }
                       final entries = snapshot.data!;
@@ -69,8 +72,10 @@ class HomePage extends StatelessWidget {
                       }
 
                       if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                        return const Card(
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
                         );
                       }
                       final entries = snapshot.data!;

@@ -28,13 +28,12 @@ class CustomGridView extends StatelessWidget {
       builder: (context, constraints) {
         return GridView(
           shrinkWrap: true,
-           physics: const NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 1,
-            mainAxisSpacing: 1,
-            mainAxisExtent: constraints.maxWidth * 0.5
-          ),
+              crossAxisCount: 2,
+              crossAxisSpacing: 1,
+              mainAxisSpacing: 1,
+              mainAxisExtent: constraints.maxWidth * 0.5),
           children: children.isNotEmpty
               ? children
                   .map(
@@ -68,7 +67,7 @@ class CustomGridView extends StatelessWidget {
                   .toList()
               : [],
         );
-      }
+      },
     );
   }
 }

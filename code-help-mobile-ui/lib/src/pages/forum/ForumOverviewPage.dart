@@ -98,6 +98,7 @@ class PaddedList<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
       controller: controller,
       itemCount: items.length,
       scrollDirection: Axis.vertical,

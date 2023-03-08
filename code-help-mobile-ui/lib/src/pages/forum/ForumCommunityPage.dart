@@ -72,7 +72,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                 padding: const EdgeInsets.all(10),
                 children: [
                   Container(
-                    height: constraints.maxHeight * 0.4,
+                    height: constraints.maxHeight * 0.5,
                     width: constraints.maxWidth,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),

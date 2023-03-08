@@ -43,39 +43,46 @@ class SearchSettingsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton.icon(
-          onPressed: () => createFilterModal(context, handleFilterSubmit),
-          icon: const Icon(Icons.filter_alt),
-          label: Text(
-            tListOptions('filters'),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => createFilterModal(context, handleFilterSubmit),
+            icon: const Icon(Icons.filter_alt),
+            label: Text(tListOptions('filters'),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                softWrap: false,
+                overflow: TextOverflow.ellipsis),
+            style: getSearchSettingsButtonStyle(),
           ),
-          style: getSearchSettingsButtonStyle(),
         ),
-        ElevatedButton.icon(
-          onPressed: () => createSortModal(context, handleSortSubmit),
-          icon: const Icon(Icons.sort),
-          label: Text(
-            tListOptions('sort'),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => createSortModal(context, handleSortSubmit),
+            icon: const Icon(Icons.sort),
+            label: Text(tListOptions('sort'),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                softWrap: false,
+                overflow: TextOverflow.ellipsis),
+            style: getSearchSettingsButtonStyle(),
           ),
-          style: getSearchSettingsButtonStyle(),
         ),
-        ElevatedButton.icon(
-          onPressed: () => handleViewModeChange(changeViewMode()),
-          icon: const Icon(Icons.settings),
-          label: Text(
-            tListOptions('view'),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => handleViewModeChange(changeViewMode()),
+            icon: const Icon(Icons.settings),
+            label: Text(tListOptions('view'),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                softWrap: false,
+                overflow: TextOverflow.ellipsis),
+            style: getSearchSettingsButtonStyle(),
           ),
-          style: getSearchSettingsButtonStyle(),
         ),
       ],
     );
   }
 }
 
-createFilterModal(BuildContext context, Function(List<String>) handleSubmit) async {
+createFilterModal(
+    BuildContext context, Function(List<String>) handleSubmit) async {
   final t = getTranslation(context, 'modal');
   createBottomModal(
     context,
@@ -84,14 +91,17 @@ createFilterModal(BuildContext context, Function(List<String>) handleSubmit) asy
     },
     t('filter'),
     (values) {
-      final commands =
-          values.entries.map((entry) => createCommand(Command.FILTER, '${entry.key}-${entry.value}')).toList();
+      final commands = values.entries
+          .map((entry) =>
+              createCommand(Command.FILTER, '${entry.key}-${entry.value}'))
+          .toList();
       handleSubmit(commands);
     },
   );
 }
 
-createSortModal(BuildContext context, Function(List<String>) handleSubmit) async {
+createSortModal(
+    BuildContext context, Function(List<String>) handleSubmit) async {
   final t = getTranslation(context, 'modal');
   createBottomModal(
     context,
@@ -100,15 +110,17 @@ createSortModal(BuildContext context, Function(List<String>) handleSubmit) async
     },
     t('sort'),
     (values) {
-      final commands =
-          values.entries.map((entry) => createCommand(Command.SORT, '${entry.key}-${entry.value}')).toList();
+      final commands = values.entries
+          .map((entry) =>
+              createCommand(Command.SORT, '${entry.key}-${entry.value}'))
+          .toList();
       handleSubmit(commands);
     },
   );
 }
 
-createBottomModal(BuildContext context, Map<String, List<String>> options, String submitText,
-    Function(Map<String, String?>) handleSubmit) async {
+createBottomModal(BuildContext context, Map<String, List<String>> options,
+    String submitText, Function(Map<String, String?>) handleSubmit) async {
   final t = getTranslation(context, 'modal');
 
   final Map<String, String?>? values = await showModalBottomSheet(

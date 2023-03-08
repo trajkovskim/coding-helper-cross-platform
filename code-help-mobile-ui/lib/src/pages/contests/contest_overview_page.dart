@@ -22,11 +22,21 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
   String selectedLanguage = CodeEditor.EDITOR_LANGUAGES.keys.first;
 
   void handleTapProblem(ProblemEntry problem) {
+    ProblemEntryBuilder problemBuilder = problem.toBuilder();
+    ProblemByLikesBuilder builder = ProblemByLikesBuilder()
+      ..id = problemBuilder.id
+      ..category = problemBuilder.category
+      ..markdown = problemBuilder.markdown
+      ..starterCode = problemBuilder.starterCode
+      ..title = problem.title
+      ..difficulty = problem.difficulty
+      ..likes = 0;
+
     final navigator = Navigator.of(context);
     navigator.pushNamed(
       '/problem-arena',
       arguments: {
-        'problem': problem,
+        'problem': builder.build(),
         'language': selectedLanguage,
       },
     );
@@ -113,13 +123,13 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                                         Dropdown(
                                           value: selectedLanguage,
                                           items: CodeEditor.EDITOR_LANGUAGES.keys
-                                              .map(
-                                                (language) => DropdownItem(
-                                                  language,
-                                                  language,
-                                                ),
-                                              )
-                                              .toList(),
+                                                  .map(
+                                                    (language) => DropdownItem(
+                                                      language,
+                                                      language,
+                                                    ),
+                                                  )
+                                                  .toList(),
                                           onChange: handleChangeLanguage,
                                         ),
                                       ],

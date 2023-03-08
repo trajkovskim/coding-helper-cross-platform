@@ -79,8 +79,13 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
           }
 
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text(''),
+              ),
+              body: const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
             );
           }
 
@@ -91,9 +96,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(entry.title),
-              actions: [
-                ProblemLikeButton(id: id)
-              ],
+              actions: [ProblemLikeButton(id: id)],
             ),
             body: LayoutBuilder(builder: (context, constraints) {
               if (!snapshot.hasData) {
@@ -101,155 +104,149 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                   child: CircularProgressIndicator.adaptive(),
                 );
               }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 20,
-                ),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: constraints.maxHeight * 0.3,
-                            child: ShadowContainer(
-                              radius: 15,
-                              child: Card(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                                shadowColor: Colors.black.withOpacity(0.65),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: constraints.maxHeight * 0.3,
+                        child: ShadowContainer(
+                          radius: 15,
+                          child: Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            shadowColor: Colors.black.withOpacity(0.65),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: const Icon(
-                                              Icons.javascript,
-                                              size: 64,
-                                            ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
-                                              Text('${t('duration')} ${'1h30m'}'),
-                                              Text('${t('participants')} ${0}'),
-                                              Text('${t('reviews')} ${0}'),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      Text(
-                                        entry.title,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: const Icon(
+                                          Icons.javascript,
+                                          size: 64,
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Dropdown(
-                                            value: selectedLanguage,
-                                            items:
-                                                CodeEditor.EDITOR_LANGUAGES.keys
-                                                    .map(
-                                                      (language) => DropdownItem(
-                                                        language,
-                                                        language,
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                            onChange: handleChangeLanguage,
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                handleTapStart(entry),
-                                            style: ElevatedButton.styleFrom(
-                                              shadowColor:
-                                                  Colors.black.withOpacity(0.25),
-                                            ),
-                                            child: Text(t('start')),
-                                          )
+                                          Text(
+                                              '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
+                                          Text('${t('duration')} ${'1h30m'}'),
+                                          Text('${t('participants')} ${0}'),
+                                          Text('${t('reviews')} ${0}'),
                                         ],
                                       )
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox.fromSize(size: const Size.fromHeight(10)),
-                          ShadowContainer(
-                            radius: 10,
-                            child: Card(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                              shadowColor: Colors.black.withOpacity(0.5),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      t('description'),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                  Text(
+                                    entry.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Dropdown(
+                                        value: selectedLanguage,
+                                        items: CodeEditor.EDITOR_LANGUAGES.keys
+                                            .map(
+                                              (language) => DropdownItem(
+                                                language,
+                                                language,
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChange: handleChangeLanguage,
                                       ),
-                                    ),
-                                    SizedBox.fromSize(
-                                        size: const Size.fromHeight(5)),
-                                    CustomText(
-                                      entry.markdown ??
-                                          t('noDescription'),
-                                      maxLength: 100,
-                                    ),
-                                  ],
-                                ),
+                                      ElevatedButton(
+                                        onPressed: () => handleTapStart(entry),
+                                        style: ElevatedButton.styleFrom(
+                                          shadowColor:
+                                              Colors.black.withOpacity(0.25),
+                                        ),
+                                        child: Text(t('start')),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox.fromSize(size: const Size.fromHeight(10)),
-                          VerticalListView(
-                            children: entries
-                                .map((submission) => ListItem(
-                                      title:
-                                          '${t('attempt')} ${submission.id}',
-                                      subtitle:
-                                          '${t('status')} ${submission.status.name}',
-                                      onTap: () {
-                                        navigator.pushNamed(
-                                          '/problem-arena',
-                                          arguments: {
-                                            'language': submission.language,
-                                            'problem': entry,
-                                            'code': submission.code
-                                          },
-                                        );
-                                      },
-                                    ))
-                                .toList(),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox.fromSize(size: const Size.fromHeight(10)),
+                      ShadowContainer(
+                        radius: 10,
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          shadowColor: Colors.black.withOpacity(0.5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  t('description'),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox.fromSize(
+                                    size: const Size.fromHeight(5)),
+                                CustomText(
+                                  entry.markdown ?? t('noDescription'),
+                                  maxLength: 100,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox.fromSize(size: const Size.fromHeight(10)),
+                      VerticalListView(
+                        children: entries
+                            .map((submission) => ListItem(
+                                  title: '${t('attempt')} ${submission.id}',
+                                  subtitle:
+                                      '${t('status')} ${submission.status.name}',
+                                  onTap: () {
+                                    navigator.pushNamed(
+                                      '/problem-arena',
+                                      arguments: {
+                                        'language': submission.language,
+                                        'problem': entry,
+                                        'code': submission.code
+                                      },
+                                    );
+                                  },
+                                ))
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }),

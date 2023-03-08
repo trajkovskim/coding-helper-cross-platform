@@ -149,40 +149,35 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            Card(
-              child: Markdown(data: params.entry?.markdown ?? ''),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: CodeEditor(controller: codeController),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed: handleTest,
-                      child: Text(t('test')),
-                    ),
-                    TextButton(
-                      onPressed: handleSubmit,
-                      child: Text(t('submit')),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            RefreshIndicator(
-              triggerMode: RefreshIndicatorTriggerMode.anywhere,
-              onRefresh: () async {
-                setState(() {
-                  submissionsFutureKey = GlobalKey();
-                });
-              },
-              child: FutureBuilder(
+        body: RefreshIndicator(
+          onRefresh: () async {},
+          child: TabBarView(
+            children: [
+              Card(
+                child: Markdown(data: params.entry?.markdown ?? ''),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: CodeEditor(controller: codeController),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                        onPressed: handleTest,
+                        child: Text(t('test')),
+                      ),
+                      TextButton(
+                        onPressed: handleSubmit,
+                        child: Text(t('submit')),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              FutureBuilder(
                 future:
                     submissionsService.getSubmissionEntries(builder.build()),
                 builder: (context, snapshot) {
@@ -199,29 +194,27 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                   final entries = snapshot.data!;
                   return Column(
                     children: [
-                      Expanded(
-                        child: VerticalListView(
-                          children: entries
-                              .map(
-                                (submission) => ListItem(
-                                  title: submission.timeSubmitted.toString(),
-                                  subtitle: submission.status.name,
-                                  onTap: () {
-                                    codeController.text = submission.code;
-                                    DefaultTabController.of(context)
-                                        ?.animateTo(1);
-                                  },
-                                ),
-                              )
-                              .toList(),
-                        ),
+                      VerticalListView(
+                        children: entries
+                            .map(
+                              (submission) => ListItem(
+                                title: submission.timeSubmitted.toString(),
+                                subtitle: submission.status.name,
+                                onTap: () {
+                                  codeController.text = submission.code;
+                                  DefaultTabController.of(context)
+                                      ?.animateTo(1);
+                                },
+                              ),
+                            )
+                            .toList(),
                       ),
                     ],
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -229,7 +222,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     codeController.dispose();
     super.dispose();
   }

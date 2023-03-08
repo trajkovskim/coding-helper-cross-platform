@@ -61,6 +61,7 @@ class ProfilePage extends StatelessWidget {
         title: Text(t('title')),
       ),
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,15 +85,15 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
             SizedBox.fromSize(size: const Size.fromHeight(10)),
-            VerticalListView(
-              children: [
-                if (sharedContext.isAuthenticated)
+            if (sharedContext.isAuthenticated)
+              VerticalListView(
+                children: [
                   ListItem(
                     title: t('logout'),
                     onTap: () => handleLogout(sharedContext),
                   ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),

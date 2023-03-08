@@ -118,6 +118,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
           final entries = snapshot.data!;
 
           return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               child: Column(
@@ -144,13 +145,16 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                         children: entries
                             .map(
                               (entry) => ListItem(
-                                title: entry.title,
-                                onTap: () => navigator.pushNamed(
-                                  '/problem-overview',
-                                  arguments: {'id': entry.id.toString()},
-                                ),
-                                subtitle: entry.markdown,
-                              ),
+                                  title: entry.title,
+                                  onTap: () => navigator.pushNamed(
+                                        '/problem-overview',
+                                        arguments: {'id': entry.id.toString()},
+                                      ),
+                                  subtitle: entry.markdown,
+                                  image: const CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "https://dotnettutorials.net/wp-content/uploads/2020/10/word-image-4.png"),
+                                  )),
                             )
                             .toList(),
                       ),
@@ -160,13 +164,16 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                       children: entries
                           .map(
                             (entry) => GridItem(
-                              title: entry.title,
-                              onTap: () => navigator.pushNamed(
-                                '/problem-overview',
-                                arguments: {'id': entry.id.toString()},
-                              ),
-                              subtitle: entry.markdown,
-                            ),
+                                title: entry.title,
+                                onTap: () => navigator.pushNamed(
+                                      '/problem-overview',
+                                      arguments: {'id': entry.id.toString()},
+                                    ),
+                                subtitle: entry.markdown,
+                                image: const CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "https://dotnettutorials.net/wp-content/uploads/2020/10/word-image-4.png"),
+                                )),
                           )
                           .toList(),
                     ),
