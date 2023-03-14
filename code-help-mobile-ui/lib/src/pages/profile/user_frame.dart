@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:coding_helper_cross_platform/src/components/common/circle_avatar_image.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,8 @@ class UserFrame extends StatelessWidget {
         userInfo.preferredUsername,
         userInfo.picture.toString(),
       );
+
+      UserToken.initialize();
     }
 
     return SizedBox(

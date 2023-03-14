@@ -4,9 +4,15 @@ import '../../i18n/i18n.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int pageIndex;
+  final bool hasToken;
   final void Function(int value)? onChange;
 
-  const CustomBottomNavigationBar({super.key, required this.pageIndex, this.onChange});
+  const CustomBottomNavigationBar({
+    super.key,
+    required this.pageIndex,
+    this.onChange,
+    this.hasToken = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +37,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
             Icons.menu_book,
           ),
         ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.forum),
-          label: t('forum.title'),
-          activeIcon: const Icon(
-            Icons.forum,
-          ),
-        ),
+        ...(hasToken
+            ? [
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.forum),
+                  label: t('forum.title'),
+                  activeIcon: const Icon(
+                    Icons.forum,
+                  ),
+                )
+              ]
+            : []),
         BottomNavigationBarItem(
           icon: const Icon(Icons.person),
           label: t('profile.title'),

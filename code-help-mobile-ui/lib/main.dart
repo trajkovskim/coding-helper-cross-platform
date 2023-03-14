@@ -5,6 +5,7 @@ import 'package:coding_helper_cross_platform/src/pages/error.dart';
 import 'package:coding_helper_cross_platform/src/pages/coding_helper_initial_page.dart';
 import 'package:coding_helper_cross_platform/src/services/auth_service.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/ForumServiceInitializer.dart';
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,11 +30,7 @@ const Map<String, ThemeMode> THEMES_MAP = {
   'system': ThemeMode.system,
 };
 
-const Map<String, MaterialColor> COLORS_MAP = {
-  'purple': Colors.purple,
-  'blue': Colors.blue,
-  'red': Colors.red
-};
+const Map<String, MaterialColor> COLORS_MAP = {'purple': Colors.purple, 'blue': Colors.blue, 'red': Colors.red};
 
 class MyApp extends StatelessWidget {
   final authService = const AuthService();
@@ -49,18 +46,22 @@ class MyApp extends StatelessWidget {
       final userJson = jsonDecode(storage.getString(userKey)!);
       final user = Credential.fromJson(userJson);
 
-      user.getTokenResponse(true).then((response) async {
-        storage.setString(tokenKey, response.accessToken!);
+      user
+          .getTokenResponse(true)
+          .then((response) async {
+            storage.setString(tokenKey, response.accessToken!);
 
-        final userInfo = await user.getUserInfo();
-        sharedContext.setUserData(
-          userInfo.preferredUsername,
-          userInfo.picture.toString(),
-        );
-      }).onError((error, stackTrace) {
-        storage.remove(userKey);
-        storage.remove(tokenKey);
-      });
+            final userInfo = await user.getUserInfo();
+            sharedContext.setUserData(
+              userInfo.preferredUsername,
+              userInfo.picture.toString(),
+            );
+          })
+          .then((value) => UserToken.initialize())
+          .onError((error, stackTrace) {
+            storage.remove(userKey);
+            storage.remove(tokenKey);
+          });
     }
   }
 
@@ -83,15 +84,11 @@ class MyApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          final sharedContext =
-              Provider.of<SharedContext>(context, listen: false);
+          final sharedContext = Provider.of<SharedContext>(context, listen: false);
 
           return FutureBuilder(
-            future: Future.wait([
-              tryLogin(sharedContext),
-              init(sharedContext),
-              Future.delayed(const Duration(seconds: 2))
-            ]),
+            future:
+                Future.wait([tryLogin(sharedContext), init(sharedContext), Future.delayed(const Duration(seconds: 2))]),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const MaterialApp(

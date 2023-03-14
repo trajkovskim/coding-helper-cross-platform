@@ -33,14 +33,13 @@ class BearerInterceptor extends Interceptor {
     DioError err,
     ErrorInterceptorHandler handler,
   ) async {
-    if (err.type != DioErrorType.response ||
-        err.response?.statusCode != HttpStatus.unauthorized) {
+    if (err.type != DioErrorType.response || err.response?.statusCode != HttpStatus.unauthorized) {
       handler.next(err);
       return;
     }
 
-    const tokenKey = 'jwttoken';
-    const userKey = 'user';
+    const tokenKey = UserToken.tokenKey;
+    const userKey = UserToken.userKey;
     final storage = await SharedPreferences.getInstance();
 
     if (!storage.containsKey(userKey)) {
@@ -63,5 +62,83 @@ class BearerInterceptor extends Interceptor {
 
       handler.next(err);
     }
+  }
+}
+
+class UserTokenData {
+  var _hasToken = false;
+  String? _username;
+
+  UserTokenData(this._username, this._hasToken);
+
+  String? getUsername() {
+    return _username;
+  }
+
+  bool hasToken() {
+    return _hasToken;
+  }
+}
+
+class UserToken {
+  static final _instance = UserToken();
+  static const tokenKey = 'jwttoken';
+  static const userKey = 'user';
+
+  static UserTokenData data = UserTokenData(null, false);
+
+  static final List<Function(UserTokenData)> _subscribers = [];
+
+  getInstance() {
+    return _instance;
+  }
+
+  static initialize() async {
+    final storage = await SharedPreferences.getInstance();
+
+    var userInfo = await getUserInfo(storage);
+
+    _setData(userInfo?.preferredUsername, storage.containsKey(tokenKey));
+  }
+
+  static Future<UserInfo?> getUserInfo(SharedPreferences storage) async {
+    final encodedUser = storage.getString(userKey);
+
+    if (encodedUser == null) {
+      return null;
+    }
+
+    final userJson = jsonDecode(encodedUser);
+    final user = Credential.fromJson(userJson);
+    final userInfo = await user.getUserInfo();
+
+    return userInfo;
+  }
+
+  static _setData(String? username, bool hasToken) {
+    data = UserTokenData(username, hasToken);
+    _notify(data);
+  }
+
+  static subscribe(Function(UserTokenData) handler) {
+    _subscribers.add(handler);
+    return () => _subscribers.remove(handler);
+  }
+
+  static set(UserTokenData newData) {
+    _setData(newData.getUsername(), newData.hasToken());
+  }
+
+  static update(UserTokenData Function(UserTokenData) updater) {
+    data = updater(data);
+    _notify(data);
+  }
+
+  static UserTokenData get() {
+    return data;
+  }
+
+  static _notify(UserTokenData newData) {
+    _subscribers.forEach((handlers) => handlers(newData));
   }
 }

@@ -30,14 +30,18 @@ class PostService {
     return _postApi.getPost(uid: postUid).then((value) => value.data);
   }
 
-  createPost(String communityUid, String postTitle, String postText) {
+  createPost(String communityUid, String postTitle, String postText) async {
     final postRequest = PostRequestBuilder()
       ..title = postTitle
       ..content = postText;
 
-    _postApi.createCommunityPost(
+    return await _postApi.createCommunityPost(
       community: communityUid,
       postRequest: postRequest.build(),
     );
+  }
+
+  deletePost(String postUid) async {
+    return await _postApi.deletePost(uid: postUid);
   }
 }

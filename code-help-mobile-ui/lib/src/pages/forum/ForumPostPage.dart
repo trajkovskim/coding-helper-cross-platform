@@ -2,14 +2,25 @@ import 'package:coding_helper_cross_platform/src/services/forum/CommentService.d
 import 'package:coding_helper_cross_platform/src/services/forum/PostService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class ForumPostPage extends StatefulWidget {
-  const ForumPostPage({Key? key, required this.postUid}) : super(key: key);
-
+class PostPageArguments {
   final String postUid;
+
+  PostPageArguments({required this.postUid});
+}
+
+class ForumPostPage extends StatefulWidget {
+  const ForumPostPage({Key? key}) : super(key: key);
+
+  static const routeName = "/post";
+
+  static navigate(BuildContext context, PostPageArguments args) {
+    Navigator.pushNamed(context, ForumPostPage.routeName, arguments: args);
+  }
 
   @override
   State<ForumPostPage> createState() => _ForumPostPageState();
@@ -24,18 +35,21 @@ class _ForumPostPageState extends State<ForumPostPage> {
     setState(() {});
   }
 
+
   showCommentDialog(BuildContext context) async {
     return await showDialog(context: context, builder: (context) => createModalDialog(context));
   }
 
-  handleCommentCreation(BuildContext context) async {
+  handleCommentCreation(BuildContext context, String postUid) async {
     var data = await showCommentDialog(context);
 
     if (data != null) {
-      await commentService.createComment(widget.postUid, data);
+      await commentService.createComment(postUid, data);
       triggerRebuild();
     }
   }
+
+
 
   handleCommentReply(BuildContext context, String commentUid) async {
     var data = await showCommentDialog(context);
@@ -51,10 +65,16 @@ class _ForumPostPageState extends State<ForumPostPage> {
     triggerRebuild();
   }
 
+  handlePostDelete(BuildContext context, String postUid) async {
+    await postService.deletePost(postUid);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
+    final args = ModalRoute.of(context)!.settings.arguments as PostPageArguments;
 
     ScrollController controller = ScrollController();
     ScrollController commentController = ScrollController();
@@ -64,7 +84,7 @@ class _ForumPostPageState extends State<ForumPostPage> {
         title: Text(ft("title")),
       ),
       body: FutureBuilder<PostWithComments>(
-        future: Future.wait([postService.getPostByUid(widget.postUid), commentService.getPostComments(widget.postUid)])
+        future: Future.wait([postService.getPostByUid(args.postUid), commentService.getPostComments(args.postUid)])
             .then((value) => PostWithComments(value[0] as Post, value[1] as Comments)),
         builder: (BuildContext context, AsyncSnapshot<PostWithComments> snapshot) {
           if (snapshot.hasError) {
@@ -84,21 +104,28 @@ class _ForumPostPageState extends State<ForumPostPage> {
             spacing: 25,
             children: [
               ForumCard(
-                child: ForumCardPostData(title: post.title, content: post.content, username: post.user.username),
+                child: ForumCardPostData(
+                    title: post.title,
+                    content: post.content,
+                    username: post.user.username,
+                    tapDelete: () => handlePostDelete(context, post.uid)),
               ),
               ForumCard(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Comments",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                    IconButton(
-                      onPressed: () => handleCommentCreation(context),
-                      icon: const Icon(Icons.add_comment),
-                    )
-                  ],
+                child: SizedBox(
+                  height: 38,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Comments",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      IconButton(
+                        onPressed: () => handleCommentCreation(context, args.postUid),
+                        icon: const Icon(Icons.add_comment),
+                      )
+                    ],
+                  ),
                 ),
               ),
               NotificationListener<OverscrollNotification>(
@@ -133,6 +160,10 @@ class ForumCardCommentData extends StatelessWidget {
   final Function()? onTap;
   final Function(String commentUid) onReply;
   final Function(String commentUid) onDelete;
+
+  isAuthorizedToDelete(String username) {
+    return username == UserToken.get().getUsername();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,27 +217,36 @@ class ForumCardCommentData extends StatelessWidget {
                       child: Text("Replies ${comment.replies?.count ?? 0}"),
                       // TODO: add translation
                     ),
-                    IconButton(
-                      onPressed: () => onReply(comment.uid),
-                      padding: EdgeInsets.zero,
-                      style: IconButton.styleFrom(
+                    SizedBox(
+                      width: 32,
+                      child: IconButton(
+                        onPressed: () => onReply(comment.uid),
                         padding: EdgeInsets.zero,
-                        minimumSize: const Size(38, 38),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(38, 38),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        icon: const Icon(Icons.comment),
+                        // child: Text("Replies ${comment.replies?.count ?? 0}"),
                       ),
-                      icon: const Icon(Icons.comment),
-                      // child: Text("Replies ${comment.replies?.count ?? 0}"),
                     ),
-                    IconButton(
-                      onPressed: () => onDelete(comment.uid),
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(38, 38),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      icon: const Icon(Icons.delete),
-                      // child: Text("Replies ${comment.replies?.count ?? 0}"),
-                    ),
+                    ...(isAuthorizedToDelete(comment.user.username)
+                        ? [
+                            SizedBox(
+                              width: 32,
+                              child: IconButton(
+                                onPressed: () => onDelete(comment.uid),
+                                style: IconButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                icon: const Icon(Icons.delete),
+                                // child: Text("Replies ${comment.replies?.count ?? 0}"),
+                              ),
+                            )
+                          ]
+                        : []),
                   ],
                 ),
               )

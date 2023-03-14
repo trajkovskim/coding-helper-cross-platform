@@ -12,15 +12,21 @@ import 'package:flutter/material.dart';
 class ForumCommunitySearchPage extends StatefulWidget {
   const ForumCommunitySearchPage({Key? key}) : super(key: key);
 
+  static const String routeName = "/community-search";
+
+  static navigate(BuildContext context) {
+    Navigator.pushNamed(context, routeName);
+  }
+
   @override
-  State<ForumCommunitySearchPage> createState() =>
-      _ForumCommunitySearchPageState();
+  State<ForumCommunitySearchPage> createState() => _ForumCommunitySearchPageState();
 }
 
 class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   String? searchTerm;
   View view = View.LIST;
   List<String> options = [];
+  final _communityService = CommunityService.getInstance();
 
   handleSearch(String term) {
     final option = createCommand(Command.SEARCH, term);
@@ -55,6 +61,27 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
     setState(() {
       view = newViewMode;
     });
+  }
+
+  handleCommunityCreation(BuildContext context) async {
+    final communityData = await showCommentDialog(context);
+
+    if (communityData == null) {
+      return;
+    }
+
+    if (communityData is CommunityModalData) {
+      await _communityService.createCommunity(communityData.name, communityData.description);
+      triggerRebuild();
+    }
+  }
+
+  showCommentDialog(BuildContext context) async {
+    return await showDialog(context: context, builder: (context) => createModalDialog(context));
+  }
+
+  triggerRebuild() {
+    setState(() {});
   }
 
   @override
@@ -107,13 +134,16 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => handleCommunityCreation(context),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
 
 class ViewList extends StatelessWidget {
-  const ViewList({Key? key, required this.view, required this.communities})
-      : super(key: key);
+  const ViewList({Key? key, required this.view, required this.communities}) : super(key: key);
 
   final View view;
   final ShortCommunities communities;
@@ -122,29 +152,20 @@ class ViewList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (view == View.LIST) {
       return Container(
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+        decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
         child: VerticalListView(
           children: communities.communities
               .map(
                 (entry) => ListItem.withSubContent(
                   title: entry.name,
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ForumCommunityPage(
-                                communityName: entry.name,
-                              ))),
+                  onTap: () => ForumCommunityPage.navigate(context, CommunityPageArguments(communityName: entry.name)),
                   subContent: Row(
                     children: [
                       const Text("Tags: "),
                       Wrap(
                           alignment: WrapAlignment.start,
                           crossAxisAlignment: WrapCrossAlignment.end,
-                          children: entry.categories
-                                  ?.map((tag) => TagChip(category: tag))
-                                  .toList() ??
-                              []),
+                          children: entry.categories?.map((tag) => TagChip(category: tag)).toList() ?? []),
                     ],
                   ),
                 ),
@@ -173,8 +194,7 @@ class ViewList extends StatelessWidget {
 }
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
-  SearchAppBar({Key? key, required this.title, this.onSearch})
-      : super(key: key);
+  SearchAppBar({Key? key, required this.title, this.onSearch}) : super(key: key);
   final String title;
   final Function(String term)? onSearch;
 
@@ -224,10 +244,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
     return AppBar(
       title: !showSearch
           ? Text(widget.title)
-          : SearchInput(
-              controller: searchController,
-              onClear: handleClearSearch,
-              onSubmit: handleTapSearch),
+          : SearchInput(controller: searchController, onClear: handleClearSearch, onSubmit: handleTapSearch),
       actions: [
         IconButton(
           onPressed: handleSearch,
@@ -272,13 +289,83 @@ class TagChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(category.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(category.name, style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
         ),
       ),
     );
-    ;
   }
+}
+
+createModalDialog(context) {
+  final textController = TextEditingController();
+  final titleController = TextEditingController();
+
+  return Dialog(
+    child: Container(
+      padding: const EdgeInsets.all(20),
+      height: 300,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  "New community",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox.fromSize(size: const Size.fromHeight(20)),
+              TextFormField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Community name', border: OutlineInputBorder()),
+              ),
+              TextFormField(
+                controller: textController,
+                maxLines: 3,
+                decoration: const InputDecoration(labelText: 'Description', border: UnderlineInputBorder()),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, null);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).errorColor.withAlpha(150),
+                ),
+                child: const Text("cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context,
+                      CommunityModalData(name: titleController.value.text, description: textController.value.text));
+                },
+                child: const Text("Submit"),
+              )
+            ],
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+class CommunityModalData {
+  final String name;
+  final String description;
+
+  const CommunityModalData({
+    required this.name,
+    required this.description,
+  });
 }

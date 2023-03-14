@@ -11,16 +11,23 @@ class ForumOverviewPage extends StatelessWidget {
 
   final postService = PostService.getInstance();
 
+  handlePostDelete(BuildContext context, String postUid) async {
+    await postService.deletePost(postUid);
+    triggerReset(context);
+  }
+
+  triggerReset(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, '/forum-overview');
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
 
     handleSearch() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const ForumCommunitySearchPage()));
+      ForumCommunitySearchPage.navigate(context);
     }
 
     return Scaffold(
@@ -45,8 +52,12 @@ class ForumOverviewPage extends StatelessWidget {
             );
           }
           return PaddedList<ShortPost>(
-              items: snapshot.data?.posts?.toList() ?? [],
-              builder: (context, item) => ForumPostCard(post: item));
+            items: snapshot.data?.posts?.toList() ?? [],
+            builder: (context, item) => ForumPostCard(
+              post: item,
+              tapDelete: () => handlePostDelete(context, item.uid),
+            ),
+          );
         },
       ),
     );
@@ -105,22 +116,21 @@ class PaddedList<T> extends StatelessWidget {
       padding: padding,
       shrinkWrap: true,
       itemBuilder: (context, index) => builder(context, items[index]),
-      separatorBuilder: (BuildContext context, int index) =>
-          SizedBox(height: spacing),
+      separatorBuilder: (BuildContext context, int index) => SizedBox(height: spacing),
     );
   }
 }
 
 class ForumPostCard extends StatelessWidget {
-  const ForumPostCard({Key? key, required this.post}) : super(key: key);
+  const ForumPostCard({Key? key, required this.post, this.tapDelete}) : super(key: key);
 
   final ShortPost post;
+  final Function()? tapDelete;
 
   @override
   Widget build(BuildContext context) {
     handleTap(String uid) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ForumPostPage(postUid: uid)));
+      ForumPostPage.navigate(context, PostPageArguments(postUid: uid));
     }
 
     return ForumCard(
@@ -129,6 +139,7 @@ class ForumPostCard extends StatelessWidget {
         title: post.title,
         content: post.title,
         username: post.user.username,
+        tapDelete: tapDelete,
       ),
     );
   }
@@ -183,40 +194,66 @@ class ForumCard extends StatelessWidget {
 
 class ForumCardPostData extends StatelessWidget {
   const ForumCardPostData(
-      {Key? key,
-      required this.title,
-      required this.content,
-      required this.username})
+      {Key? key, required this.title, required this.content, required this.username, this.tapDelete})
       : super(key: key);
 
   final String title;
   final String content;
   final String username;
 
+  final Function()? tapDelete;
+
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 15,
-      direction: Axis.vertical,
-      children: [
-        Wrap(
-          spacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            const CircleAvatar(
-              backgroundColor: Colors.black12,
-              radius: 15,
+    return LayoutBuilder(
+      builder: (context, constraints) => Wrap(
+        spacing: 15,
+        direction: Axis.vertical,
+        children: [
+          SizedBox(
+            width: constraints.maxWidth,
+            child: Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.spaceBetween,
+              children: [
+                Wrap(
+                  spacing: 10,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: Colors.black12,
+                      radius: 15,
+                    ),
+                    Text(
+                      username,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: PopupMenuButton(
+                    padding: const EdgeInsets.only(left: 15),
+                    icon: const Icon(Icons.more_vert),
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem(
+                        onTap: tapDelete,
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: const Icon(Icons.delete),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-            Text(
-              username,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-        Text(title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-        Text(content),
-      ],
+          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          Text(content),
+        ],
+      ),
     );
   }
 }
