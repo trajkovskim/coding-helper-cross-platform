@@ -1,3 +1,4 @@
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:openid_client/openid_client_io.dart';
 
@@ -35,6 +36,7 @@ class AuthService {
 
   Future<void> logout(String logoutUrl) async {
     await _urlLauncher(logoutUrl);
+    UserToken.initialize();
     await closeInAppWebView();
   }
 }

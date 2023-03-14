@@ -1,3 +1,4 @@
+import 'package:built_collection/src/list.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/api.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 
@@ -23,36 +24,40 @@ class CommunityService {
   CommunityService._construct();
 
   Future<ShortCommunities?> getAllCommunities() async {
-    return _communityApi.getAllCommunities().then((value) => value.data);
+    return await _communityApi.getAllCommunities().then((value) => value.data);
   }
 
-  Future<Community?> getCommunityByName(String name) {
-    return _communityApi
-        .getCommunityByUid(name: name)
-        .then((value) => value.data);
+  Future<Community?> getCommunityByName(String name) async {
+    return await _communityApi.getCommunityByUid(name: name).then((value) => value.data);
   }
 
-  createCommunity(String name, String description) {
+  Future<Community?> createCommunity(String name, String description) async {
+    final ss = CommunityRequestCategoriesBuilder()..uids = ListBuilder<String>();
     final communityRequest = CommunityRequestBuilder()
       ..name = name
-      ..description = description;
+      ..description = description
+      ..categories = ss;
 
-    _communityApi.createCommunity(communityRequest: communityRequest.build());
+    return await _communityApi.createCommunity(communityRequest: communityRequest.build()).then((value) => value.data);
   }
 
-  updateCommunity(String name, String newName, String newDescription) {
+  updateCommunity(String name, String newName, String newDescription) async {
     final communityRequest = CommunityRequestBuilder()
       ..name = "Hello"
       ..description = "Community desc";
 
-    _communityApi.updateCommunity(name: name, communityRequest: communityRequest.build());
+    return _communityApi.updateCommunity(name: name, communityRequest: communityRequest.build());
   }
 
-  Future<void> joinCommunity(String community) {
-    return _communityApi.joinCommunity(community: community);
+  deleteCommunity(String name) async {
+    return await _communityApi.deleteCommunity(name: name);
   }
 
-  Future<void> leaveCommunity(String community) {
-    return _communityApi.leaveCommunity(community: community);
+  joinCommunity(String community) async {
+    return await _communityApi.joinCommunity(community: community);
+  }
+
+  leaveCommunity(String community) async {
+    return await _communityApi.leaveCommunity(community: community);
   }
 }

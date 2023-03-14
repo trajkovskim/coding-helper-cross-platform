@@ -2,14 +2,24 @@ import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/index.dart';
+import 'package:coding_helper_cross_platform/src/services/interceptors.dart';
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 
-class ForumCommunityPage extends StatefulWidget {
-  const ForumCommunityPage({Key? key, required this.communityName})
-      : super(key: key);
-
+class CommunityPageArguments {
   final String communityName;
+
+  CommunityPageArguments({required this.communityName});
+}
+
+class ForumCommunityPage extends StatefulWidget {
+  const ForumCommunityPage({Key? key}) : super(key: key);
+
+  static const String routeName = "/community";
+
+  static navigate(BuildContext context, CommunityPageArguments arguments) {
+    Navigator.pushNamed(context, routeName, arguments: arguments);
+  }
 
   @override
   State<ForumCommunityPage> createState() => _ForumCommunityPageState();
@@ -24,12 +34,20 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
     setState(() {});
   }
 
+  // triggerReset(String name) {
+  //   Navigator.pop(context);
+  //   Navigator.pushNamed(context, ForumCommunityPage.routeName, arguments: CommunityPageArguments(communityName: name));
+  // }
+
   showCommentDialog(BuildContext context) async {
-    return await showDialog(
-        context: context, builder: (context) => createModalDialog(context));
+    return await showDialog(context: context, builder: (context) => createModalDialog(context));
   }
 
-  handlePost(BuildContext context) async {
+  Future<bool> showCommunityDeleteDialog(BuildContext context) async {
+    return await showDialog(context: context, builder: (context) => createConfirmModalDialog(context));
+  }
+
+  handlePost(BuildContext context, String communityName) async {
     final postData = await showCommentDialog(context);
 
     if (postData == null) {
@@ -37,16 +55,39 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
     }
 
     if (postData is PostModalData) {
-      await _postService.createPost(
-          widget.communityName, postData.title, postData.text);
+      await _postService.createPost(communityName, postData.title, postData.text);
       triggerRebuild();
     }
+  }
+
+  handleCommunityDelete(BuildContext context, String communityName) async {
+    final confirmation = await showCommunityDeleteDialog(context);
+
+    if (!confirmation) {
+      return;
+    }
+
+    await _communityService.deleteCommunity(communityName);
+    return goBack(context);
+  }
+
+  handlePostDelete(BuildContext context, String postUid) async {
+    // await _postService.deletePost(postUid);
+    triggerRebuild();
+  }
+
+  goBack(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pushNamed(context, ForumCommunitySearchPage.routeName);
   }
 
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
+
+    final CommunityPageArguments args = ModalRoute.of(context)!.settings.arguments as CommunityPageArguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +97,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
         padding: const EdgeInsets.all(15).copyWith(bottom: 0),
         child: LayoutBuilder(
           builder: (context, constraints) => FutureBuilder<Community?>(
-            future: _communityService.getCommunityByName(widget.communityName),
+            future: _communityService.getCommunityByName(args.communityName),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 throw t("posts-not-loaded");
@@ -93,76 +134,61 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                 height: innerConstraints.maxHeight * 0.5,
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withOpacity(0.25),
-                                  borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(10)),
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                                 ),
                               ),
                               Container(
                                 height: innerConstraints.maxHeight * 0.5,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(10)),
+                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
                                 ),
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
+                                            padding: const EdgeInsets.only(right: 15),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                              mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
                                                 CommunityJoinButton(
-                                                  communityName:
-                                                      snapshot.data!.name,
-                                                  isJoined:
-                                                      snapshot.data!.joined!,
+                                                  communityName: snapshot.data!.name,
+                                                  isJoined: snapshot.data!.joined!,
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                    horizontal: 35)
-                                                .copyWith(bottom: 5),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  snapshot.data!.name,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
+                                                SizedBox.fromSize(size: const Size(2, 0)),
+                                                CommunityDeleteButton(
+                                                  community: snapshot.data!,
+                                                  onTap: () => handleCommunityDelete(context, snapshot.data!.name),
                                                 )
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 35),
+                                            padding: const EdgeInsets.symmetric(horizontal: 35).copyWith(bottom: 5),
                                             child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  snapshot.data!.name,
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   snapshot.data!.description,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                                 )
                                               ],
                                             ),
@@ -170,22 +196,15 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 35),
+                                        padding: const EdgeInsets.symmetric(horizontal: 35),
                                         child: Row(
                                           children: [
-                                            const Text("Tags: ",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                            const Text("Tags: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                             Wrap(
                                               alignment: WrapAlignment.start,
-                                              crossAxisAlignment:
-                                                  WrapCrossAlignment.end,
-                                              children: snapshot
-                                                      .data?.categories
-                                                      .map((tag) => TagChip(
-                                                          category: tag))
+                                              crossAxisAlignment: WrapCrossAlignment.end,
+                                              children: snapshot.data?.categories
+                                                      .map((tag) => TagChip(category: tag))
                                                       .toList() ??
                                                   [],
                                             ),
@@ -215,18 +234,16 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                     ),
                   ),
                   ForumCard(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
                             "Posts",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           IconButton(
-                            onPressed: () => handlePost(context),
+                            onPressed: () => handlePost(context, args.communityName),
                             icon: const Icon(Icons.add),
                             style: IconButton.styleFrom(
                               padding: EdgeInsets.zero,
@@ -238,9 +255,12 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                       )),
                   ...((snapshot.data?.posts
                           .map((e) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: ForumPostCard(post: e)))
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: ForumPostCard(
+                                  post: e,
+                                  tapDelete: () => handlePostDelete(context, e.uid),
+                                ),
+                              ))
                           .toList()) ??
                       []),
                 ],
@@ -254,9 +274,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
 }
 
 class CommunityJoinButton extends StatefulWidget {
-  CommunityJoinButton(
-      {Key? key, required this.communityName, this.isJoined = false})
-      : super(key: key);
+  CommunityJoinButton({Key? key, required this.communityName, this.isJoined = false}) : super(key: key);
 
   final String communityName;
   final bool isJoined;
@@ -264,6 +282,33 @@ class CommunityJoinButton extends StatefulWidget {
 
   @override
   State<CommunityJoinButton> createState() => _CommunityJoinButtonState();
+}
+
+class CommunityDeleteButton extends StatelessWidget {
+  const CommunityDeleteButton({Key? key, this.onTap, required this.community}) : super(key: key);
+
+  final Function()? onTap;
+  final Community community;
+
+  isAdmin(String username) {
+    return username == UserToken.get().getUsername();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isAdmin(community.admin.username)
+        ? SizedBox(
+            width: 32,
+            child: ElevatedButton(
+              onPressed: onTap,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.zero,
+              ),
+              child: const Icon(Icons.delete),
+            ),
+          )
+        : Container();
+  }
 }
 
 class _CommunityJoinButtonState extends State<CommunityJoinButton> {
@@ -334,14 +379,12 @@ createModalDialog(context) {
               SizedBox.fromSize(size: const Size.fromHeight(20)),
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                    labelText: 'Post title', border: OutlineInputBorder()),
+                decoration: const InputDecoration(labelText: 'Post title', border: OutlineInputBorder()),
               ),
               TextFormField(
                 controller: textController,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                    labelText: 'Post content', border: UnderlineInputBorder()),
+                decoration: const InputDecoration(labelText: 'Post content', border: UnderlineInputBorder()),
               ),
             ],
           ),
@@ -360,10 +403,7 @@ createModalDialog(context) {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(
-                      context,
-                      PostModalData(
-                          text: textController.value.text,
-                          title: titleController.value.text));
+                      context, PostModalData(text: textController.value.text, title: titleController.value.text));
                 },
                 child: const Text("Submit"),
               )
@@ -372,6 +412,23 @@ createModalDialog(context) {
         ],
       ),
     ),
+  );
+}
+
+createConfirmModalDialog(context) {
+  return AlertDialog(
+    title: const Text("Confirm Action"),
+    content: const Text("This actions will delete the community forever"),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, false),
+        child: const Text("Cancel"),
+      ),
+      TextButton(
+        onPressed: () => Navigator.pop(context, true),
+        child: const Text("Confirm"),
+      ),
+    ],
   );
 }
 

@@ -1,6 +1,9 @@
 import 'package:coding_helper_cross_platform/src/pages/contests/contest_overview_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/contests/contests_discover_page.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunityPage.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumOverviewPage.dart';
+import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart';
 import 'package:coding_helper_cross_platform/src/pages/home_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_arena_page.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_overview_page.dart';
@@ -25,4 +28,7 @@ final routes = {
   '/stats': (context) => const StatsPage(),
   '/saved': (context) => const SavedPage(),
   '/settings': (context) => const SettingsPage(),
+  ForumPostPage.routeName: (context) => const ForumPostPage(),
+  ForumCommunitySearchPage.routeName: (context) => const ForumCommunitySearchPage(),
+  ForumCommunityPage.routeName: (context) => const ForumCommunityPage()
 };

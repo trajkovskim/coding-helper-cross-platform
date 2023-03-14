@@ -38,24 +38,24 @@ class CommentService {
         .then((value) => value.data);
   }
 
-  createComment(String post, String commentContent) {
+  Future<Comment?> createComment(String post, String commentContent) async {
     final comment = CommentRequestBuilder()..content = commentContent;
 
-    _commentApi
-        .commentOnPost(post: post, commentRequest: comment.build())
+    return await _commentApi.commentOnPost(post: post, commentRequest: comment.build()).then((value) => value.data);
+  }
+
+  Future<Comment?> replyToComment(String commentUid, String commentContent) async {
+    final comment = CommentRequestBuilder()..content = commentContent;
+
+    return await _commentApi
+        .replyToComment(
+          uid: commentUid,
+          commentRequest: comment.build(),
+        )
         .then((value) => value.data);
   }
 
-  replyToComment(String commentUid, String commentContent) {
-    final comment = CommentRequestBuilder()..content = commentContent;
-
-    _commentApi.replyToComment(
-      uid: commentUid,
-      commentRequest: comment.build(),
-    );
-  }
-
-  deleteComment(String commentUid) {
-    _commentApi.deleteComment(uid: commentUid);
+  deleteComment(String commentUid) async {
+    return _commentApi.deleteComment(uid: commentUid);
   }
 }
