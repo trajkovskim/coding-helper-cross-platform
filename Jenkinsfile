@@ -49,7 +49,7 @@ pipeline {
 
           steps {
             script {
-              image = docker.build(registry + tag, './code-help-core')
+              image = docker.build(library + tag, './code-help-core')
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 image.push()
               }
@@ -65,7 +65,7 @@ pipeline {
           
           steps {
             script {
-              image = docker.build(registry + tag, './code-help-forum')
+              image = docker.build(library + tag, './code-help-forum')
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 image.push()
               }
