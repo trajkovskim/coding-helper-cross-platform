@@ -32,7 +32,7 @@ pipeline {
           agent any
 
           environment {
-            tag = 'forum-latest'
+            tag = ':forum-latest'
           }
           
           tools {
@@ -43,7 +43,7 @@ pipeline {
           steps {
             sh 'mvn clean package -pl code-help-forum'
             script {
-              docker.build(registry + tag, './code-help-core')
+              docker.build(registry + tag, './code-help-forum')
             }
           }
         }
