@@ -22,7 +22,7 @@ pipeline {
           }
 
           steps {
-            sh 'mvn clean package -pl code-help-core'
+            sh 'mvn package spring-boot:repackage -pl code-help-core'
             script {
               docker.build(registry + tag, './code-help-core')
             }
@@ -41,7 +41,7 @@ pipeline {
           }
           
           steps {
-            sh 'mvn clean package -pl code-help-forum'
+            sh 'mvn package -pl code-help-forum'
             script {
               docker.build(registry + tag, './code-help-forum')
             }
