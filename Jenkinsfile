@@ -23,7 +23,7 @@ pipeline {
 
           steps {
             script {
-              sh 'mvn clean install -pl code-help-core'
+              sh 'mvn clean package -pl code-help-core'
               docker.build(registry + tag, './code-help-core')
             }
           }
@@ -41,7 +41,7 @@ pipeline {
           }
           
           steps {
-            sh 'mvn clean install -pl code-help-forum'
+            sh 'mvn clean package -pl code-help-forum'
             script {
               docker.build(registry + tag, './code-help-core')
             }
