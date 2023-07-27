@@ -11,10 +11,6 @@ pipeline {
       parallel {
         stage('Core') {
           agent any
-
-          environment {
-            tag = ':core-latest'
-          }
           
           tools {
             maven 'maven-3.8.1'
@@ -23,8 +19,35 @@ pipeline {
 
           steps {
             sh 'mvn clean package -f code-help-core'
+          }
+        }
+        stage('Forum') {
+          agent any
+          
+          tools {
+            maven 'maven-3.8.1'
+            jdk 'jdk-17.0.8'
+          }
+          
+          steps {
+            sh 'mvn clean package -f code-help-forum'
+          }
+        }
+      }
+    }
+    stage('Docker build and push') {
+      parallel {
+        stage('Core') {
+          agent any
+
+          environment {
+            tag = ':core-latest'
+          }
+
+          steps {
             script {
-              docker.build(registry + tag, './code-help-core').push()
+              image = docker.build(registry + tag, './code-help-core')
+              image.push()
             }
           }
         }
@@ -35,15 +58,10 @@ pipeline {
             tag = ':forum-latest'
           }
           
-          tools {
-            maven 'maven-3.8.1'
-            jdk 'jdk-17.0.8'
-          }
-          
           steps {
-            sh 'mvn clean package -f code-help-forum'
             script {
-              docker.build(registry + tag, './code-help-forum').push()
+              image = docker.build(registry + tag, './code-help-forum')
+              image.push()
             }
           }
         }
