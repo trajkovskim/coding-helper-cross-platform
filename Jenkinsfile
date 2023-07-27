@@ -1,5 +1,3 @@
-DOCKER_REGISTRY = 'https://hub.docker.com'
-DOCKER_CREDENTIALS = 'dockerhub'
 
 pipeline {
   agent none
@@ -26,11 +24,7 @@ pipeline {
           steps {
             script {
               sh 'mvn clean install -pl code-help-core'
-              docker.withTool('docker') {
-                docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS) { 
-                  docker.build(registry + tag, './code-help-core')
-                }
-              }
+              docker.build(registry + tag, './code-help-core')
             }
           }
         }
@@ -49,11 +43,7 @@ pipeline {
           steps {
             sh 'mvn clean install -pl code-help-forum'
             script {
-              docker.withTool('docker') {
-                docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS) { 
-                  docker.build(registry + tag, './code-help-core')
-                }
-              }
+              docker.build(registry + tag, './code-help-core')
             }
           }
         }
