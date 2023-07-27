@@ -11,28 +11,29 @@ pipeline {
   stages {
     stage('Build') {
       parallel {
-        // stage('Core') {
-        //   agent any
+        stage('Core') {
+          agent any
 
-        //   environment {
-        //     tag = ':core-latest'
-        //   }
+          environment {
+            tag = ':core-latest'
+          }
           
-        //   tools {
-        //     maven 'maven-3.8.1'
-        //   }
+          tools {
+            maven 'maven-3.8.1'
+            jdk 'jdk-17.0.8'
+          }
 
-        //   steps {
-        //     script {
-        //       sh 'mvn clean install -pl code-help-core'
-        //       docker.withTool('docker') {
-        //         docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS) { 
-        //           docker.build(registry + tag, './code-help-core')
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
+          steps {
+            script {
+              sh 'mvn clean install -pl code-help-core'
+              docker.withTool('docker') {
+                docker.withRegistry(DOCKER_REGISTRY, DOCKER_CREDENTIALS) { 
+                  docker.build(registry + tag, './code-help-core')
+                }
+              }
+            }
+          }
+        }
         stage('Forum') {
           agent any
 
@@ -42,6 +43,7 @@ pipeline {
           
           tools {
             maven 'maven-3.8.1'
+            jdk 'jdk-17.0.8'
           }
           
           steps {
