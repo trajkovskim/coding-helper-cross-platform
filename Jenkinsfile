@@ -5,7 +5,7 @@ pipeline {
   
   environment {
     library = 'legendmt25/code-help'
-    dockerRegistry = 'https://hub.docker.com'
+    dockerRegistry = 'https://registry.hub.docker.com'
     dockerCredentialsId = 'dockerhub'
   }
   
