@@ -22,7 +22,8 @@ pipeline {
           }
 
           steps {
-            sh 'mvn package spring-boot:repackage -pl code-help-core'
+            sh 'mvn package -pl code-help-core'
+            sh 'ls -al'
             script {
               docker.build(registry + tag, './code-help-core')
             }
