@@ -22,10 +22,8 @@ pipeline {
           }
 
           steps {
-            script {
-              sh 'mvn clean package -pl code-help-core'
-              docker.build(registry + tag, './code-help-core')
-            }
+            sh 'mvn clean package -pl code-help-core'
+            docker.build(registry + tag, './code-help-core')
           }
         }
         stage('Forum') {
@@ -42,9 +40,7 @@ pipeline {
           
           steps {
             sh 'mvn clean package -pl code-help-forum'
-            script {
-              docker.build(registry + tag, './code-help-forum')
-            }
+            docker.build(registry + tag, './code-help-forum')
           }
         }
       }
