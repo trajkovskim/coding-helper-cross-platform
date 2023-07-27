@@ -1,9 +1,12 @@
 
+
 pipeline {
   agent none
   
   environment {
-    registry = 'legendmt25/code-help'
+    library = 'legendmt25/code-help'
+    dockerRegistry = 'https://hub.docker.com'
+    dockerCredentialsId = 'dockerhub'
   }
   
   stages {
@@ -47,7 +50,9 @@ pipeline {
           steps {
             script {
               image = docker.build(registry + tag, './code-help-core')
-              image.push()
+              docker.withRegistry(dockerRegistry, dockerCredentialsId) {
+                image.push()
+              }
             }
           }
         }
@@ -61,7 +66,9 @@ pipeline {
           steps {
             script {
               image = docker.build(registry + tag, './code-help-forum')
-              image.push()
+              docker.withRegistry(dockerRegistry, dockerCredentialsId) {
+                image.push()
+              }
             }
           }
         }
