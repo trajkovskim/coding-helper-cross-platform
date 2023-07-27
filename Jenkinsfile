@@ -7,7 +7,7 @@ pipeline {
   }
   
   stages {
-    stage('Build') {
+    stage('Build and push') {
       parallel {
         stage('Core') {
           agent any
@@ -23,9 +23,8 @@ pipeline {
 
           steps {
             sh 'mvn clean package -f code-help-core'
-            sh 'ls -al'
             script {
-              docker.build(registry + tag, './code-help-core')
+              docker.build(registry + tag, './code-help-core').push()
             }
           }
         }
@@ -44,7 +43,7 @@ pipeline {
           steps {
             sh 'mvn clean package -f code-help-forum'
             script {
-              docker.build(registry + tag, './code-help-forum')
+              docker.build(registry + tag, './code-help-forum').push()
             }
           }
         }
