@@ -97,11 +97,10 @@ pipeline {
       }
 
       steps {
-         git(url: gitRepo, credentialsId: gitCredentialsId, branch: 'main')
-
-        sh "ls -al"
+        git(url: gitRepo, credentialsId: gitCredentialsId, branch: 'main')
         
-         dir('kiii-195063') {
+        dir('kiii-195063') {
+          sh "ls -al"
           sh "sed -i 's/legendmt25\\/code-help:core.*/legendmt25\\/code-help:core-${versionCore}/g' ${basepath}/core/deploy.yaml"
           sh "sed -i 's/legendmt25\\/code-help:forum.*/legendmt25\\/code-help:forum-${versionCore}/g' ${basepath}/forum/deploy.yaml"
           sh "git config user.email 195063@ci.com"
