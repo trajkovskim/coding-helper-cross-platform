@@ -49,7 +49,7 @@ pipeline {
 
           steps {
             version = sh (
-              script: 'grep version ./code-help-core/code-help-core-app/target/maven-archiver/pom.properties | cut -d'=' -f 2',
+              script: 'grep version ./code-help-core/code-help-core-app/target/maven-archiver/pom.properties | cut -d"=" -f 2',
               returnStdout: true)
             .trim()
             script {
@@ -69,7 +69,7 @@ pipeline {
           
           steps {
             version = sh (
-              script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d'=' -f 2',
+              script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d"=" -f 2',
               returnStdout: true)
             .trim()
             
