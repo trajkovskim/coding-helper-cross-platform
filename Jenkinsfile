@@ -12,82 +12,82 @@ pipeline {
   }
   
   stages {
-    // stage('mvn clean package') {
-    //   parallel {
-    //     stage('Core') {
-    //       agent any
+    stage('mvn clean package') {
+      parallel {
+        stage('Core') {
+          agent any
           
-    //       tools {
-    //         maven 'maven-3.8.1'
-    //         jdk 'jdk-17.0.8'
-    //       }
+          tools {
+            maven 'maven-3.8.1'
+            jdk 'jdk-17.0.8'
+          }
 
-    //       steps {
-    //         sh 'mvn clean package -f code-help-core'
-    //       }
-    //     }
-    //     stage('Forum') {
-    //       agent any
+          steps {
+            sh 'mvn clean package -f code-help-core'
+          }
+        }
+        stage('Forum') {
+          agent any
           
-    //       tools {
-    //         maven 'maven-3.8.1'
-    //         jdk 'jdk-17.0.8'
-    //       }
+          tools {
+            maven 'maven-3.8.1'
+            jdk 'jdk-17.0.8'
+          }
           
-    //       steps {
-    //         sh 'mvn clean package -f code-help-forum'
-    //       }
-    //     }
-    //   }
-    // }
-    // stage('Docker build and push') {
-    //   parallel {
-    //     stage('Core') {
-    //       agent any
+          steps {
+            sh 'mvn clean package -f code-help-forum'
+          }
+        }
+      }
+    }
+    stage('Docker build and push') {
+      parallel {
+        stage('Core') {
+          agent any
 
-    //       environment {
-    //         tag = 'core-'
-    //         projectPath = './code-help-core'
-    //       }
+          environment {
+            tag = 'core-'
+            projectPath = './code-help-core'
+          }
 
-    //       steps {
-    //         script {
-    //           versionCore = sh (
-    //             script: "grep version ${projectPath}/code-help-core-app/target/maven-archiver/pom.properties | cut -d'=' -f 2",
-    //             returnStdout: true)
-    //           .trim()
-    //           coreImage = docker.build("${library}:${tag}${versionCore}", "--build-arg VERSION=${versionCore} ${projectPath}")
-    //           docker.withRegistry(dockerRegistry, dockerCredentialsId) {
-    //             coreImage.push()
-    //             coreImage.push("${tag}latest")
-    //           }
-    //         }
-    //       }
-    //     }
-    //     stage('Forum') {
-    //       agent any
+          steps {
+            script {
+              versionCore = sh (
+                script: "grep version ${projectPath}/code-help-core-app/target/maven-archiver/pom.properties | cut -d'=' -f 2",
+                returnStdout: true)
+              .trim()
+              coreImage = docker.build("${library}:${tag}${versionCore}", "--build-arg VERSION=${versionCore} ${projectPath}")
+              docker.withRegistry(dockerRegistry, dockerCredentialsId) {
+                coreImage.push()
+                coreImage.push("${tag}latest")
+              }
+            }
+          }
+        }
+        stage('Forum') {
+          agent any
 
-    //       environment {
-    //         tag = 'forum-'
-    //         projectPath = './code-help-forum'
-    //       }
+          environment {
+            tag = 'forum-'
+            projectPath = './code-help-forum'
+          }
           
-    //       steps {
-    //         script {
-    //           versionForum = sh (
-    //             script: "grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d'=' -f 2",
-    //             returnStdout: true)
-    //           .trim()
-    //           forumImage = docker.build("${library}:${tag}${versionForum}", "--build-arg VERSION=${versionForum} ${projectPath}")
-    //           docker.withRegistry(dockerRegistry, dockerCredentialsId) {
-    //             forumImage.push()
-    //             forumImage.push("${tag}latest")
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+          steps {
+            script {
+              versionForum = sh (
+                script: "grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d'=' -f 2",
+                returnStdout: true)
+              .trim()
+              forumImage = docker.build("${library}:${tag}${versionForum}", "--build-arg VERSION=${versionForum} ${projectPath}")
+              docker.withRegistry(dockerRegistry, dockerCredentialsId) {
+                forumImage.push()
+                forumImage.push("${tag}latest")
+              }
+            }
+          }
+        }
+      }
+    }
     stage('GitOps: Update manifests') {
       agent any
 
