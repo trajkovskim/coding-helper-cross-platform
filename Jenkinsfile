@@ -53,9 +53,9 @@ pipeline {
           }
 
           steps {
+            echo "${library}:${tag}${version}"
+            echo "--build-arg VERSION=${version} ${projectPath}"
             script {
-              echo "${library}:${tag}${version}"
-              echo "--build-arg VERSION=${version} ${projectPath}"
               coreImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 coreImage.push()
@@ -76,10 +76,10 @@ pipeline {
             .trim()
           }
           
-          steps {    
+          steps {
+            echo "${library}:${tag}${version}"
+            echo "--build-arg VERSION=${version} ${projectPath}"
             script {
-              echo "${library}:${tag}${version}"
-              echo "--build-arg VERSION=${version} ${projectPath}"
               forumImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 forumImage.push()
