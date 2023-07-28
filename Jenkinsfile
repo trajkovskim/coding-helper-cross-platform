@@ -70,13 +70,13 @@ pipeline {
 
           environment {
             tag = 'forum-'
-            projectPath = './code-help-core'
+            projectPath = './code-help-forum'
           }
           
           steps {    
             script {
               version = sh (
-                script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d"=" -f 2',
+                script: 'grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d"=" -f 2',
                 returnStdout: true)
               .trim()
               dockerBuildArgs = '--build-arg VERSION=${version}'
