@@ -31,7 +31,10 @@ services:
   code-help-core:
     image: code-help-core
     container_name: code-help-core
-    build: code-help-core
+    build: 
+      context: code-help-core
+      args:
+        - VERSION=0.0.1-SNAPSHOT
     ports:
       - 3000:3000
     depends_on:
@@ -40,7 +43,10 @@ services:
   code-help-forum:
     image: code-help-forum
     container_name: code-help-forum
-    build: code-help-forum
+    build: 
+      context: code-help-core
+      args:
+        - VERSION=0.0.1-SNAPSHOT
     ports:
       - 3001:3001
     depends_on:

@@ -1,6 +1,7 @@
 FROM openjdk:17-slim
 
-ENV JAR_PATH code-help-core-app/target/code-help-core-app-0.0.1-SNAPSHOT.jar
+ARG VERSION='0.0.1-SNAPSHOT'
+ENV JAR_PATH code-help-core-app/target/code-help-core-app-$VERSION.jar
 ENV PROFILE docker
 ENV JAVA_OPTIONS ''
 ENV JAVA_PROPERTIES ''
