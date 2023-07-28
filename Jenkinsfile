@@ -97,7 +97,7 @@ pipeline {
       }
 
       steps {
-         git(url: gitUrl, credentialsId: gitCredentialId, branch: 'main)
+         git(url: gitUrl, credentialsId: gitCredentialId, branch: 'main')
          dir('kiii-195063') {
           sh "sed -i 's/legendmt25\/code-help:core.*/legendmt25\/code-help:core-${versionCore}/g' ${basepath}/core/deploy.yaml"
           sh "sed -i 's/legendmt25\/code-help:forum.*/legendmt25\/code-help:forum-${versionCore}/g' ${basepath}/forum/deploy.yaml"
