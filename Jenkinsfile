@@ -10,7 +10,7 @@ pipeline {
   }
   
   stages {
-    stage('Build and push') {
+    stage('Package') {
       parallel {
         stage('Core') {
           agent any
