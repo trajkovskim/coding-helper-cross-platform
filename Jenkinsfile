@@ -98,6 +98,9 @@ pipeline {
 
       steps {
          git(url: gitRepo, credentialsId: gitCredentialsId, branch: 'main')
+
+        sh "ls -al"
+        
          dir('kiii-195063') {
           sh "sed -i 's/legendmt25\\/code-help:core.*/legendmt25\\/code-help:core-${versionCore}/g' ${basepath}/core/deploy.yaml"
           sh "sed -i 's/legendmt25\\/code-help:forum.*/legendmt25\\/code-help:forum-${versionCore}/g' ${basepath}/forum/deploy.yaml"
