@@ -74,7 +74,7 @@ pipeline {
           
           steps {
             script {
-              version = sh (
+              versionForum = sh (
                 script: "grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d'=' -f 2",
                 returnStdout: true)
               .trim()
