@@ -46,16 +46,14 @@ pipeline {
           environment {
             tag = 'core-'
             projectPath = './code-help-core'
-            version = sh (
-              script: 'grep version ./code-help-core/code-help-core-app/target/maven-archiver/pom.properties | cut -d"=" -f 2',
-              returnStdout: true)
-            .trim()
           }
 
           steps {
-            echo "${library}:${tag}${version}"
-            echo "--build-arg VERSION=${version} ${projectPath}"
             script {
+              version = sh (
+                script: "grep version ${projectPath}/code-help-core-app/target/maven-archiver/pom.properties | cut -d'=' -f 2",
+                returnStdout: true)
+              .trim()
               coreImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 coreImage.push()
@@ -70,16 +68,14 @@ pipeline {
           environment {
             tag = 'forum-'
             projectPath = './code-help-forum'
-            version = sh (
-              script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d"=" -f 2',
-              returnStdout: true)
-            .trim()
           }
           
           steps {
-            echo "${library}:${tag}${version}"
-            echo "--build-arg VERSION=${version} ${projectPath}"
             script {
+              version = sh (
+                script: "grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d'=' -f 2",
+                returnStdout: true)
+              .trim()
               forumImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 forumImage.push()
