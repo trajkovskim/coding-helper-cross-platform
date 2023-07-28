@@ -44,7 +44,7 @@ pipeline {
           agent any
 
           environment {
-            tag = ':core-latest'
+            tag = ':core-' + env.BUILD_NUMBER
           }
 
           steps {
@@ -60,7 +60,7 @@ pipeline {
           agent any
 
           environment {
-            tag = ':forum-latest'
+            tag = ':forum-' + env.BUILD_NUMBER
           }
           
           steps {
