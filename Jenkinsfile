@@ -99,13 +99,15 @@ pipeline {
       steps {
         dir('kiii-195063') {
           git(url: gitRepo, credentialsId: gitCredentialsId, branch: 'main')
-          sh "sed -i 's/legendmt25\\/code-help:core.*/legendmt25\\/code-help:core-${versionCore}/g' ${basepath}/core/deploy.yaml"
-          sh "sed -i 's/legendmt25\\/code-help:forum.*/legendmt25\\/code-help:forum-${versionCore}/g' ${basepath}/forum/deploy.yaml"
+          sh "sed -i 's/legendmt25\\/code-help:core.*/legendmt25\\/code-help:core-${versionCore}/g' ${basePath}/core/deploy.yaml"
+          sh "sed -i 's/legendmt25\\/code-help:forum.*/legendmt25\\/code-help:forum-${versionCore}/g' ${basePath}/forum/deploy.yaml"
           sh "git config user.email 195063@ci.com"
           sh "git config user.name 195063-ci"
           sh "git add ."
-          sh "git commit -m '[195063-ci] Update image version to: ${versionCore}'"
-          sh "git push"
+          sh "git commit -m '[195063-ci] Update core image version to: ${versionCore} and forum image version to ${versionForum}'"
+          sh "cat ${basePath}/core/deploy.yaml"
+          sh "cat ${basePath}/forum/deploy.yaml"
+          sh "git push -uf origin main"
         }
       }
     }
