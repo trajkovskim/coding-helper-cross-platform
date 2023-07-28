@@ -44,18 +44,23 @@ pipeline {
           agent any
 
           environment {
-            tag = ':core-'
-            version = sh (
-              script: 'grep version ./code-help-core/code-help-core-app/target/maven-archiver/pom.properties | cut -d"=" -f 2',
-              returnStdout: true)
-            .trim()
+            tag = 'core-'
+            projectPath = './code-help-core'
           }
 
           steps {
             script {
-              image = docker.build(library + tag + version, '--build-arg VERSION=' + version + ' ./code-help-core')
+              version = sh (
+                script: 'grep version ${projectPath}/code-help-core-app/target/maven-archiver/pom.properties | cut -d"=" -f 2',
+                returnStdout: true)
+              .trim()
+              dockerBuildArgs = '--build-arg VERSION=${version}'
+              dockerImageNameTag = '${library}:${tag}${version}'
+              
+              coreImage = docker.build(dockerImageNameTag, '${dockerBuildArgs} ${projectPath}')
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
-                image.push()
+                coreImage.push()
+                coreImage.push('${tag}latest')
               }
             }
           }
@@ -64,18 +69,23 @@ pipeline {
           agent any
 
           environment {
-            tag = ':forum-'
-            version = sh (
-              script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d"=" -f 2',
-              returnStdout: true)
-            .trim()
+            tag = 'forum-'
+            projectPath = './code-help-core'
           }
           
           steps {    
             script {
-              image = docker.build(library + tag + version, '--build-arg VERSION=' + version + ' ./code-help-forum')
+              version = sh (
+                script: 'grep version ./code-help-forum/target/maven-archiver/pom.properties | cut -d"=" -f 2',
+                returnStdout: true)
+              .trim()
+              dockerBuildArgs = '--build-arg VERSION=${version}'
+              dockerImageNameTag = '${library}:${tag}${version}'
+              
+              forumImage = docker.build(dockerImageNameTag, '${dockerBuildArgs} ${projectPath}')
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
-                image.push()
+                forumImage.push()
+                forumImage.push('${tag}latest')
               }
             }
           }
