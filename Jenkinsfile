@@ -54,10 +54,10 @@ pipeline {
 
           steps {
             script {
-              coreImage = docker.build('${library}:${tag}${version}', '--build-arg VERSION=${version} ${projectPath}')
+              coreImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 coreImage.push()
-                coreImage.push('${tag}latest')
+                coreImage.push("${tag}latest")
               }
             }
           }
@@ -76,10 +76,10 @@ pipeline {
           
           steps {    
             script {
-              forumImage = docker.build('${library}:${tag}${version}', '--build-arg VERSION=${version} ${projectPath}')
+              forumImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 forumImage.push()
-                forumImage.push('${tag}latest')
+                forumImage.push("${tag}latest")
               }
             }
           }
