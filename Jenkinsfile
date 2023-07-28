@@ -1,4 +1,5 @@
-
+def versionCore
+def versionForum
 
 pipeline {
   agent none
@@ -7,6 +8,7 @@ pipeline {
     library = 'legendmt25/code-help'
     dockerRegistry = 'https://registry.hub.docker.com'
     dockerCredentialsId = 'dockerhub'
+    gitCredentialsId = 'github'
   }
   
   stages {
@@ -50,11 +52,11 @@ pipeline {
 
           steps {
             script {
-              version = sh (
+              versionCore = sh (
                 script: "grep version ${projectPath}/code-help-core-app/target/maven-archiver/pom.properties | cut -d'=' -f 2",
                 returnStdout: true)
               .trim()
-              coreImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
+              coreImage = docker.build("${library}:${tag}${versionCore}", "--build-arg VERSION=${versionCore} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 coreImage.push()
                 coreImage.push("${tag}latest")
@@ -76,13 +78,34 @@ pipeline {
                 script: "grep version ${projectPath}/target/maven-archiver/pom.properties | cut -d'=' -f 2",
                 returnStdout: true)
               .trim()
-              forumImage = docker.build("${library}:${tag}${version}", "--build-arg VERSION=${version} ${projectPath}")
+              forumImage = docker.build("${library}:${tag}${versionForum}", "--build-arg VERSION=${versionForum} ${projectPath}")
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
                 forumImage.push()
                 forumImage.push("${tag}latest")
               }
             }
           }
+        }
+      }
+    }
+    stage('GitOps: Update manifests') {
+      agent any
+
+      environment {
+        gitRepo = 'https://github.com/legendmt25/kiii-195063.git'
+        basePath = 'app'
+      }
+
+      steps {
+         git(url: gitUrl, credentialsId: gitCredentialId, branch: 'main)
+         dir('kiii-195063') {
+          sh "sed -i 's/legendmt25\/code-help:core.*/legendmt25\/code-help:core-${versionCore}/g' ${basepath}/core/deploy.yaml"
+          sh "sed -i 's/legendmt25\/code-help:forum.*/legendmt25\/code-help:forum-${versionCore}/g' ${basepath}/forum/deploy.yaml"
+          sh "git config user.email 195063@ci.com"
+          sh "git config user.name 195063-ci"
+          sh "git add ."
+          sh "git commit -m '[195063-ci] Update image version to: ${versionCore}'"
+          sh "git push"
         }
       }
     }
