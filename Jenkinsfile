@@ -93,7 +93,7 @@ pipeline {
 
       environment {
         gitRepo = 'https://github.com/legendmt25/kiii-195063.git'
-        basePath = 'app'
+        basePath = './app'
       }
 
       steps {
