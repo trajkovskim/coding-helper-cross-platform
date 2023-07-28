@@ -56,6 +56,9 @@ pipeline {
               .trim()
               dockerBuildArgs = '--build-arg VERSION=${version}'
               dockerImageNameTag = '${library}:${tag}${version}'
+              sh 'echo ${version}'
+              sh 'echo ${dockerBuildArgs}'
+              sh 'echo ${dockerImageNameTag}'
               
               coreImage = docker.build(dockerImageNameTag, '${dockerBuildArgs} ${projectPath}')
               docker.withRegistry(dockerRegistry, dockerCredentialsId) {
