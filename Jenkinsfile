@@ -107,9 +107,9 @@ pipeline {
           sh "git commit -m '[195063-ci] Update core image version to: ${versionCore} and forum image version to ${versionForum}'"
           sh "cat ${basePath}/core/deploy.yaml"
           sh "cat ${basePath}/forum/deploy.yaml"
-
-          withCredentials([[credentialsId: gitCredentialsId, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PW']]) {
-            sh('git push https://${GIT_USERNAME}:${GIT_PW}@github.com/legendmt25/kiii-195063.git HEAD:master -f')
+          
+          withCredentials([usernamePassword(credentialsId: gitCredentialsId, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+            sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/legendmt25/kiii-195063.git HEAD:master -f')
           }
         }
       }
