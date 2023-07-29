@@ -12,7 +12,7 @@ pipeline {
   }
   
   stages {
-    stage('mvn clean package') {
+    stage('Mvn clean package') {
       parallel {
         stage('Core') {
           agent any
