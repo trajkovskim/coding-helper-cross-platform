@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: localhost:3000/api
+  - url: http://localhost:3000/api
     description: Open API specification
 
 security:
@@ -109,22 +109,23 @@ components:
                 $ref: '#/components/schemas/File'
 
     ProblemRequest:
+      type: object
       allOf:
         - $ref: '#/components/schemas/ProblemBaseEntry'
-      type: object
-      required:
-        - starterCode
-        - runnerCode
-        - testCases
-      properties:
-        starterCode:
-          $ref: '#/components/schemas/File'
-        runnerCode:
-          $ref: '#/components/schemas/File'
-        testCases:
-          type: array
-          items:
-            $ref: '#/components/schemas/File'
+        - type: object
+          required:
+            - starterCode
+            - runnerCode
+            - testCases
+          properties:
+            starterCode:
+              $ref: '#/components/schemas/File'
+            runnerCode:
+              $ref: '#/components/schemas/File'
+            testCases:
+              type: array
+              items:
+                $ref: '#/components/schemas/File'
 
     SubmissionStatus:
       type: string
@@ -146,27 +147,28 @@ components:
     SubmissionEntry:
       allOf:
         - $ref: '#/components/schemas/SubmissionBaseEntry'
-      type: object
-      required:
-        - status
-        - timeSubmitted
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        timeSubmitted:
-          $ref: '#/components/schemas/Date'
-        status:
-          $ref: '#/components/schemas/SubmissionStatus'
+        - type: object
+          required:
+            - status
+            - timeSubmitted
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            timeSubmitted:
+              $ref: '#/components/schemas/Date'
+            status:
+              $ref: '#/components/schemas/SubmissionStatus'
 
     SubmissionReqBody:
+      type: object
       allOf:
         - $ref: '#/components/schemas/SubmissionBaseEntry'
-      type: object
-      required:
-        - problemId
-      properties:
-        problemId:
-          $ref: '#/components/schemas/Id'
+        - type: object
+          required:
+            - problemId
+          properties:
+            problemId:
+              $ref: '#/components/schemas/Id'
 
     SubmissionRequest:
       allOf:
@@ -209,20 +211,21 @@ components:
           $ref: '#/components/schemas/Date'
 
     ContestEntry:
+      type: object
       allOf:
         - $ref: '#/components/schemas/ContestBaseEntry'
-      type: object
-      required:
-        - problems
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        status:
-          $ref: '#/components/schemas/ContestStatus'
-        problems:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContestProblem'
+        - type: object
+          required:
+            - problems
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            status:
+              $ref: '#/components/schemas/ContestStatus'
+            problems:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContestProblem'
 
     ProblemsResponse:
       required:
@@ -313,6 +316,18 @@ paths:
       responses:
         200:
           description: A list of problems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsResponse'
+  /problems/liked:
+    get:
+      operationId: getLikedProblems
+      tags: [ Problem ]
+      description: Return all problems the user likes
+      responses:
+        200:
+          description: A list of liked problems
           content:
             application/json:
               schema:

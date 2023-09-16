@@ -26,5 +26,7 @@ public interface ProblemService {
 
   boolean isLikedBy(Long problemId, String email);
 
+  List<Problem> findAllLikedBy(String email);
+
   boolean delete(Long id);
 }

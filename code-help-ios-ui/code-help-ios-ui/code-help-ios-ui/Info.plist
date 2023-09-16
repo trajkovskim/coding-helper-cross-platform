@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mk.com.code-help.code-help-ios-ui</string>
+			</array>
+		</dict>
+	</array>
+	<key>ISSUER_URL</key>
+	<string>${ISSUER_URL}</string>
+	<key>REDIRECT_URL</key>
+	<string>$(REDIRECT_URL)</string>
+	<key>CLIENT_ID</key>
+	<string>$(CLIENT_ID)</string>
+</dict>
+</plist>

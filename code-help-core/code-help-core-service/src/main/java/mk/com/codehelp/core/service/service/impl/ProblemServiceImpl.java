@@ -89,10 +89,19 @@ public class ProblemServiceImpl implements ProblemService {
 
   @Override
   public boolean isLikedBy(Long problemId, String email) {
-    return findById(problemId)
-        .getLikedBy()
-        .stream()
-        .anyMatch(x -> x.equals(email));
+    final var problem = findById(problemId);
+    return isLikedBy(problem, email);
+  }
+
+  @Override
+  public List<Problem> findAllLikedBy(String email) {
+    return this.problemRepository.findAll().stream()
+        .filter(problem -> isLikedBy(problem, email))
+        .toList();
+  }
+
+  private boolean isLikedBy(Problem problem, String email) {
+    return problem.getLikedBy().stream().anyMatch(x -> x.equals(email));
   }
 
   @Override

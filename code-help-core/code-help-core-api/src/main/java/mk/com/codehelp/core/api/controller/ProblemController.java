@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CodingHelperController
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class ProblemController implements ProblemsApi {
         .markdown(markdown)
         .starterCode(starterCode.getResource())
         .runnerCode(runnerCode.getResource())
-        .testCases(testCases.stream().map(MultipartFile::getResource).collect(Collectors.toList()));
+        .testCases(testCases.stream().map(MultipartFile::getResource).toList());
   }
 
   @Override
@@ -115,5 +114,13 @@ public class ProblemController implements ProblemsApi {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     Boolean isLiked = problemService.isLikedBy(id, user);
     return ResponseEntity.ok(isLiked);
+  }
+
+  @Override
+  public ResponseEntity<ProblemsResponse> getLikedProblems() {
+    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+    List<Problem> problems = problemService.findAllLikedBy(user);
+    final var response = problemConverter.convertListOfProblemToResponse(problems);
+    return ResponseEntity.ok(response);
   }
 }
