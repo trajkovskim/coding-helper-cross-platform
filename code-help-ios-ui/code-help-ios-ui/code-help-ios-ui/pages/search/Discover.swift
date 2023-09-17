@@ -31,6 +31,7 @@ struct Discover<Content :View, Data>: View {
     @State private var data: Data? = nil
     
     let sortCriteria: [CriteriaPropertyOption]
+    let filterCriteria: [any FilterOptionProtocol]
 
     @ViewBuilder var content: (Data?, TilingOption) -> Content
     let suplier: ContentFetch?
@@ -56,6 +57,14 @@ struct Discover<Content :View, Data>: View {
         StyledNavigationBar {
             VStack {
                 TopActions {
+                    FilterSelectButton(options: filterCriteria,excluded: getCriterias(ofType: .filter)) { items in
+                        let newCriterias = items.map { item in
+                            Criteria(name: item.name, value: item.selected, type: .filter)
+                        }
+                        criterias.append(contentsOf: newCriterias)
+                        suply(with: criterias)
+                    }
+                    .buttonStyle(.invertedBordered)
                     SortSelectButton(options: sortCriteria, excluded: getCriterias(ofType: .sort)) { items in
                         let newCriterias = items.map { item in
                             Criteria(name: item.name, value: item.selectedOption.rawValue, type: .sort)
@@ -135,6 +144,36 @@ struct SortSelectButton: View {
     }
 }
 
+
+struct FilterSelectButton: View {
+    @State private var showingSheet = false
+
+    let options: [any FilterOptionProtocol]
+    var excluded: (() -> [String])?
+    var selectOptions: (([AnyFilterOptionProtocol]) -> Void)?
+
+    var body: some View {
+        Button {
+            showingSheet.toggle()
+        } label: {
+            HStack {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .aspectRatio(1, contentMode: .fit)
+                    .scaledToFit()
+                    .foregroundColor(.primary)
+                Text("Filter")
+            }
+            .frame(maxWidth: .infinity)
+        }.sheet(isPresented: $showingSheet) {
+            FilterSelect(exclude: excluded?() ?? [], propertyOptions: options) { options in
+                selectOptions?(options)
+            }
+        }
+    }
+}
+
 private struct DiscoverData: Identifiable {
     let id = UUID()
     let image = "csharp"
@@ -144,6 +183,10 @@ private struct DiscoverData: Identifiable {
 
 struct Discover_Previews: PreviewProvider {
     static var previews: some View {
+        let filterCriteria: [any FilterOptionProtocol] = [
+            LanguageFilter(name: "language", label: "Language:", selected: .Java),
+            DificultyFilter(name: "dificulty", label: "Dificulty:", selected: .Easy)
+        ]
         let sortCriteria: [CriteriaPropertyOption] = [
             CriteriaPropertyOption(id: "name", label: "Name: "),
             CriteriaPropertyOption(id: "id", label: "Id: "),
@@ -151,7 +194,7 @@ struct Discover_Previews: PreviewProvider {
         ]
         
         NavigationStack {
-            Discover(sortCriteria: sortCriteria) { t, _ in
+            Discover(sortCriteria: sortCriteria, filterCriteria: filterCriteria) { t, _ in
                 if let t = t {
                     List {
                         ForEach(t) { t in

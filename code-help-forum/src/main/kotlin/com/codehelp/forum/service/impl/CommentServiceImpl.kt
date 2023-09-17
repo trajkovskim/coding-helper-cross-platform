@@ -3,6 +3,8 @@ package com.codehelp.forum.service.impl
 import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Comment
+import com.codehelp.forum.exception.ForbiddenException
+import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.CommentDto
 import com.codehelp.forum.generated.rest.model.CommentRequestDto
 import com.codehelp.forum.repository.CommentRepository
@@ -41,7 +43,7 @@ class CommentServiceImpl(
     @Transactional
     override fun create(postUid: String, commentRequestDto: CommentRequestDto): CommentDto {
         val post = postRepository.findByUid(UUID.fromString(postUid)) ?: throw RuntimeException("not found")
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         val comment = commentRequestDto.mapToEntity(post, loggedInUser)
 
@@ -53,7 +55,7 @@ class CommentServiceImpl(
         val comment = commentRepository.findByUid(UUID.fromString(commentUid)) ?: throw RuntimeException("not found")
 
         if (isNotAuthorizedToUpdateComment(comment)) {
-            throw RuntimeException("Not authorized")
+            throw ForbiddenException()
         }
 
         val newComment = comment.copy(
@@ -68,7 +70,7 @@ class CommentServiceImpl(
         val comment = commentRepository.findByUid(UUID.fromString(commentUid)) ?: throw RuntimeException("not found")
 
         if (isNotAuthorizedToDeleteComment(comment)) {
-            throw RuntimeException("Not authorized to delete comment")
+            throw ForbiddenException()
         }
 
 
@@ -78,7 +80,7 @@ class CommentServiceImpl(
     @Transactional
     override fun reply(commentUid: String, commentRequestDto: CommentRequestDto): CommentDto? {
         val comment = commentRepository.findByUid(UUID.fromString(commentUid)) ?: throw RuntimeException("not found")
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         val newComment = commentRequestDto.mapToEntity(comment, loggedInUser)
 
@@ -86,7 +88,7 @@ class CommentServiceImpl(
     }
 
     private fun isAuthorizedToUpdateComment(comment: Comment): Boolean {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         return loggedInUser.id == comment.user.id
     }
@@ -94,7 +96,7 @@ class CommentServiceImpl(
     private fun isNotAuthorizedToUpdateComment(comment: Comment): Boolean = !isAuthorizedToUpdateComment(comment)
 
     private fun isAuthorizedToDeleteComment(comment: Comment): Boolean {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         return loggedInUser.id == comment.user.id
                 || loggedInUser.moderating.contains(comment.post.community)

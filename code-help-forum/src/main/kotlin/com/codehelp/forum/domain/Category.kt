@@ -3,6 +3,7 @@ package com.codehelp.forum.domain
 import jakarta.persistence.*
 import org.hibernate.annotations.NaturalId
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Entity
@@ -25,7 +26,7 @@ class Category(
     val communities: List<Community> = listOf(),
 
     @Column(name = "created")
-    val created: Instant = Instant.now()
+    val created: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS)
 ) {
 
     override fun equals(other: Any?): Boolean {

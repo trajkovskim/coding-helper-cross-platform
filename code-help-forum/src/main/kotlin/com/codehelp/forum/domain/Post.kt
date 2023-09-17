@@ -1,10 +1,10 @@
 package com.codehelp.forum.domain
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import org.hibernate.annotations.NaturalId
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Entity
@@ -35,15 +35,15 @@ data class Post(
     val comments: List<Comment> = listOf(),
 
     @Column(name = "created", nullable = false)
-    val created: Instant = Instant.now(),
+    val created: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS),
 
     @Column(name = "modified", nullable = false)
-    var modified: Instant = Instant.now(),
+    var modified: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS),
 ) {
 
     @PreUpdate
     fun onUpdate() {
-        modified = Instant.now()
+        modified = Instant.now().truncatedTo(ChronoUnit.SECONDS)
     }
 
     override fun equals(other: Any?): Boolean {

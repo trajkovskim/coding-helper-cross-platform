@@ -12,7 +12,12 @@ struct ContentView: View {
             ProblemView().tabItem {
                 Label("Problems", systemImage: "list.bullet.rectangle.portrait.fill")
             }
-           
+            ForumView().tabItem {
+                Label("Forum", systemImage: "bubble.left.and.bubble.right.fill")
+            }
+            ProfileView().tabItem {
+                Label("Profile", systemImage: "person.fill")
+            }
         }
     }
 }

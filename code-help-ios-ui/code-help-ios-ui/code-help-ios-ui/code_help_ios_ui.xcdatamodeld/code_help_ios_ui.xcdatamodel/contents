@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="HistoryProblem" representedClassName="HistoryProblem" syncable="YES" codeGenerationType="class">
+        <attribute name="contestId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+    </entity>
+    <entity name="SavedProblem" representedClassName="SavedProblem" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+    </entity>
+    <entity name="UserSetting" representedClassName="UserSetting" syncable="YES" codeGenerationType="class">
+        <attribute name="accentColor" optional="YES" attributeType="String"/>
+        <attribute name="editorTheme" attributeType="String" defaultValueString="agate"/>
+        <attribute name="language" attributeType="String" defaultValueString="javascript"/>
+    </entity>
+</model>

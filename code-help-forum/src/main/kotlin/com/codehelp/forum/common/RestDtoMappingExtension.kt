@@ -2,8 +2,9 @@ package com.codehelp.forum.common
 
 import com.codehelp.forum.domain.*
 import com.codehelp.forum.generated.rest.model.*
+import java.time.temporal.ChronoUnit
 
-fun Community.toDto(username: String): CommunityDto = CommunityDto()
+fun Community.toDto(username: String?): CommunityDto = CommunityDto()
     .name(this.name)
     .description(this.description)
     .image(null)
@@ -12,7 +13,7 @@ fun Community.toDto(username: String): CommunityDto = CommunityDto()
     .joined(this.members.any { it.username == username })
     .categories(this.categories.map { it.toDto() })
     .moderators(this.moderators.map { it.toDto() })
-    .created(this.created)
+    .created(this.created.truncatedTo(ChronoUnit.SECONDS))
 
 
 fun Community.toShortDto(): ShortCommunityDto = ShortCommunityDto()
@@ -26,7 +27,7 @@ fun Post.toShortDto(): ShortPostDto = ShortPostDto()
     .uid(this.uid.toString())
     .title(this.title)
     .user(this.user.toDto())
-    .created(this.created)
+    .created(this.created.truncatedTo(ChronoUnit.SECONDS))
 
 
 fun Post.toDto(): PostDto = PostDto()
@@ -34,17 +35,17 @@ fun Post.toDto(): PostDto = PostDto()
     .title(this.title)
     .user(this.user.toDto())
     .content(this.content)
-    .created(this.created)
-    .modified(this.modified)
-    .comments(this.comments.map { it.toSubCommentDto() })
+    .created(this.created.truncatedTo(ChronoUnit.SECONDS))
+    .modified(this.modified.truncatedTo(ChronoUnit.SECONDS))
+    .comments(this.comments.filter { it.parent == null }.map { it.toSubCommentDto() })
 
 
 fun Comment.toDto(): CommentDto = CommentDto()
     .uid(this.uid.toString())
     .content(this.content)
     .user(this.user.toDto())
-    .created(this.created)
-    .modified(this.modified)
+    .created(this.created.truncatedTo(ChronoUnit.SECONDS))
+    .modified(this.modified.truncatedTo(ChronoUnit.SECONDS))
     .replies(
         CommentRepliesDto()
             .count(this.children.count())
@@ -56,8 +57,8 @@ fun Comment.toSubCommentDto(): CommentDto = CommentDto()
     .uid(this.uid.toString())
     .content(this.content)
     .user(this.user.toDto())
-    .created(this.created)
-    .modified(this.modified)
+    .created(this.created.truncatedTo(ChronoUnit.SECONDS))
+    .modified(this.modified.truncatedTo(ChronoUnit.SECONDS))
     .replies(CommentRepliesDto().count(this.children.count()))
 
 

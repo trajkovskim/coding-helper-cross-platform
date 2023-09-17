@@ -4,6 +4,7 @@ import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.common.toShortDto
 import com.codehelp.forum.domain.Post
+import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.PostDto
 import com.codehelp.forum.generated.rest.model.PostRequestDto
 import com.codehelp.forum.generated.rest.model.ShortPostDto
@@ -22,7 +23,7 @@ class PostServiceImpl(
 ) : PostService {
     override fun create(community: String, postRequestDto: PostRequestDto): PostDto {
         val loadedCommunity = communityRepository.findByName(community) ?: throw RuntimeException("not found")
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         val post = postRequestDto.mapToEntity(loadedCommunity, loggedInUser)
 
@@ -71,13 +72,13 @@ class PostServiceImpl(
     }
 
     private fun isAuthorizedToUpdatePost(post: Post): Boolean {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         return loggedInUser.id == post.user.id
     }
 
     private fun isAuthorizedToDeletePost(post: Post): Boolean {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         return loggedInUser.id == post.user.id
                 || loggedInUser.moderating.contains(post.community)

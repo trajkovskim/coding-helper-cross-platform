@@ -26,8 +26,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://10.0.2.2/iam/realms/code-help
-          jwk-set-uri: http://localhost/iam/realms/code-help/protocol/openid-connect/certs
+          issuer-uri: http://localhost/iam/realms/code-help
+          jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
 
 #logging:
 #  level:

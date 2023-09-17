@@ -5,7 +5,7 @@ info:
   version: 0.1.0
 
 servers:
-  - url: 'http://localhost:3000/api/v1'
+  - url: http://localhost:3001/api/v1
 
 paths:
   /community:
@@ -152,12 +152,12 @@ paths:
           schema:
             type: string
         - in: query
-          name: moderatorRequest
-          description: moderators to remove
+          name: username
+          description: moderator to remove
           required: true
           explode: true
           schema:
-            $ref: '#/components/schemas/ModeratorRequest'
+            type: string
       responses:
         200:
           description: OK
@@ -479,29 +479,30 @@ paths:
 components:
   schemas:
     Community:
-      required: [ admin, categories, created, moderators, posts, joined ]
       allOf:
         - $ref: '#/components/schemas/ShortCommunity'
-      properties:
-        admin:
-          $ref: '#/components/schemas/User'
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/Category'
-        posts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ShortPost'
-        joined:
-          type: boolean
-        moderators:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-        created:
-          type: string
-          format: date-time
+        - type: object
+          required: [ admin, categories, created, moderators, posts, joined ]
+          properties:
+            admin:
+              $ref: '#/components/schemas/User'
+            categories:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+            posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShortPost'
+            joined:
+              type: boolean
+            moderators:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+            created:
+              type: string
+              format: date-time
     Communities:
       type: object
       required: [ communities ]
@@ -512,7 +513,7 @@ components:
             $ref: '#/components/schemas/Community'
     ShortCommunity:
       type: object
-      required: [ uid, name, description ]
+      required: [ name, description ]
       properties:
         name:
           type: string
@@ -574,17 +575,18 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/ShortPost'
-      required: [ content, modified, comments ]
-      properties:
-        content:
-          type: string
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
-        modified:
-          type: string
-          format: date-time
+        - type: object
+          required: [ content, modified, comments ]
+          properties:
+            content:
+              type: string
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+            modified:
+              type: string
+              format: date-time
     Posts:
       type: object
       properties:

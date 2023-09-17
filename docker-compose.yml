@@ -25,13 +25,13 @@ services:
       - start-dev
       - --http-relative-path=/iam
       - --proxy=edge
-      - --hostname-url=http://10.0.2.2/iam
+      - --hostname-url=http://localhost/iam
       - --hostname-admin-url=http://localhost/iam
 
   code-help-core:
     image: code-help-core
     container_name: code-help-core
-    build: 
+    build:
       context: code-help-core
       args:
         - VERSION=0.0.1-SNAPSHOT
@@ -43,8 +43,8 @@ services:
   code-help-forum:
     image: code-help-forum
     container_name: code-help-forum
-    build: 
-      context: code-help-core
+    build:
+      context: code-help-forum
       args:
         - VERSION=0.0.1-SNAPSHOT
     ports:

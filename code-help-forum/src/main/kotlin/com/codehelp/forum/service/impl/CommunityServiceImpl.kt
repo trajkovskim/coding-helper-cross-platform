@@ -3,6 +3,9 @@ package com.codehelp.forum.service.impl
 import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Community
+import com.codehelp.forum.domain.User
+import com.codehelp.forum.exception.ForbiddenException
+import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.CommunityDto
 import com.codehelp.forum.generated.rest.model.CommunityRequestDto
 import com.codehelp.forum.generated.rest.model.ModeratorRequestDto
@@ -11,9 +14,13 @@ import com.codehelp.forum.repository.CategoryRepository
 import com.codehelp.forum.repository.CommunityRepository
 import com.codehelp.forum.service.CommunityService
 import com.codehelp.forum.service.UserService
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpClientErrorException.Unauthorized
+import java.net.http.HttpHeaders
 import java.util.*
 
 @Service
@@ -25,9 +32,9 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun createCommunity(communityCreateDto: CommunityRequestDto): CommunityDto {
-        val user = userService.getLoggedInUser()
+        val user = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val newCommunity = communityCreateDto.mapToEntity(
-            userService.getLoggedInUser(),
+            user,
             categoryRepository.findAllByUidIn(communityCreateDto.categories.uids.map { s -> UUID.fromString(s) })
         )
 
@@ -38,7 +45,7 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun updateCommunity(name: String, communityCreateDto: CommunityRequestDto): CommunityDto {
-        val user = userService.getLoggedInUser()
+        val user = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException()
         val categories =
             categoryRepository.findAllByUidIn(communityCreateDto.categories.uids.map { s -> UUID.fromString(s) })
@@ -63,7 +70,7 @@ class CommunityServiceImpl(
         val community = communityRepository.findByName(name) ?: throw RuntimeException()
 
         if (isNotAdmin(community)) {
-            throw RuntimeException()
+            throw ForbiddenException()
         }
 
         communityRepository.delete(community)
@@ -76,7 +83,7 @@ class CommunityServiceImpl(
     override fun getByName(name: String): CommunityDto {
         val user = userService.getLoggedInUser()
 
-        return communityRepository.findByName(name)?.toDto(user.username) ?: throw RuntimeException()
+        return communityRepository.findByName(name)?.toDto(user?.username) ?: throw RuntimeException()
     }
 
 
@@ -89,7 +96,7 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun addModerator(name: String, moderatorRequestDto: ModeratorRequestDto): CommunityDto {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException("")
         val user = userService.getUser(moderatorRequestDto.username) ?: throw UsernameNotFoundException("")
 
@@ -106,7 +113,7 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun removeModerator(name: String, moderatorRequestDto: ModeratorRequestDto): CommunityDto {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException("")
         val user = community.moderators.find { user -> user.username == moderatorRequestDto.username }
             ?: throw UsernameNotFoundException("")
@@ -124,12 +131,13 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun join(name: String): CommunityDto {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException("")
         val user = userService.getLoggedInUser()
 
+        val newMembers = user?.let { community.members - it } ?: community.members
         val newCommunity = community.copy(
-            members = community.members + user
+            members = newMembers
         )
 
         return communityRepository.save(newCommunity).toDto(loggedInUser.username)
@@ -137,19 +145,20 @@ class CommunityServiceImpl(
 
     @Transactional
     override fun leave(name: String): CommunityDto {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException("")
         val user = userService.getLoggedInUser()
 
+        val newMembers = user?.let { community.members - it } ?: community.members
         val newCommunity = community.copy(
-                members = community.members - user
+                members = newMembers
         )
 
         return communityRepository.save(newCommunity).toDto(loggedInUser.username)
     }
 
     private fun isAdmin(community: Community): Boolean {
-        val loggedInUser = userService.getLoggedInUser()
+        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
         return loggedInUser.id == community.user.id
     }

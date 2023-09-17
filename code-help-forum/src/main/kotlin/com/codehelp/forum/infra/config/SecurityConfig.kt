@@ -21,7 +21,7 @@ class SecurityConfig {
         .and().sessionManagement().sessionCreationPolicy(STATELESS)
         .and().authorizeHttpRequests { authorize ->
           authorize
-              .anyRequest().fullyAuthenticated()
+              .anyRequest().permitAll()
         }
         .oauth2ResourceServer().jwt()
 

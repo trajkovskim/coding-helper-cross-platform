@@ -60,8 +60,8 @@ class CommunityController(
         return ResponseEntity.ok().build()
     }
 
-    override fun removeModerator(name: String, moderatorRequestDto: ModeratorRequestDto): ResponseEntity<Void> {
-        communityService.removeModerator(name, moderatorRequestDto)
+    override fun removeModerator(name: String, moderator: String): ResponseEntity<Void> {
+        communityService.removeModerator(name, ModeratorRequestDto().username(moderator))
 
         return ResponseEntity.ok().build()
     }

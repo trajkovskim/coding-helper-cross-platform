@@ -13,7 +13,7 @@ class CommentController(private val commentService: CommentService) : CommentApi
         val comment = commentService.create(post, commentRequestDto)
 
         return ResponseEntity.ok(comment)
-    }
+    } 
 
     override fun getCommentReplies(uid: String): ResponseEntity<CommentsDto> {
         val replies = commentService.getReplies(uid)
