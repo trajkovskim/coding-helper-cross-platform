@@ -33,6 +33,7 @@ struct ProfileView: View {
     @EnvironmentObject var authenticationService: AuthenticationService
     @EnvironmentObject private var webClient: ClientContainer
 
+    
     @State private var stats: [Stat] = [
         .init(name: "Solved", value: "0"),
         .init(name: "Easy", value: "0"),
@@ -47,6 +48,8 @@ struct ProfileView: View {
         .init(name: "Settings", type: .settings)
     ]
     
+    @State private var image = ProfileImageStorage.shared.get()
+    
     @State var isDone = false
     var body: some View {
         NavigationTitleView(title: "Profile") {
@@ -54,11 +57,24 @@ struct ProfileView: View {
                 ScrollView {
                     VStack {
                         VStack {
-                            Image(systemName: "person.crop.circle.fill")
-                                .resizable()
-                                .padding()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            if let image = image {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .clipShape(Circle())
+                                    .padding()
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            } else {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .padding()
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    .onTapGesture {
+                                        ProfileImageStorage.shared.clear()
+                                        self.image = nil
+                                    }
+                            }
                             if authenticationService.state.isAuthorized() {
                                 Text(authenticationService.tokenState?.username ?? "")
                                     .bold()
@@ -129,6 +145,38 @@ struct ProfileView: View {
                         .scrollDisabled(true)
                         .scrollContentBackground(.hidden)
                     }
+                    
+                    List {
+                        NavigationLink {
+                            CameraView() { image in
+                                self.image = image
+                            }
+                        } label: {
+                                Text("Take picture")
+                        }
+                        NavigationLink {
+                            ImageSelectView() { image in
+                                self.image = image
+                            }
+                        } label: {
+                            Text("Select picture")
+                        }
+                        Button {
+                            ProfileImageStorage.shared.clear()
+                            self.image = nil
+                        } label: {
+                            HStack {
+                                Text("Clear picture")
+                                Spacer()
+                                Image(systemName: "chevron.forward")
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .frame(height: 20  + (48 * 3) + 20)
+                    .scrollDisabled(true)
+                    .scrollContentBackground(.hidden)
                 }
             }
             .background(Color.primaryBackground)
@@ -145,6 +193,7 @@ struct ProfileView: View {
         }
     }
 }
+
 
 struct UserStatsView: View {
     let stats: [Stat]
@@ -165,7 +214,7 @@ struct UserStatsView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        AttachEnvironmentObjects {
+        AttachStubEnvironmentObjects {
             ProfileView()
         }
     }

@@ -18,6 +18,12 @@
 		31220F9C2AA1F18A009F460D /* ForumClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31220F9B2AA1F18A009F460D /* ForumClient.swift */; };
 		31220FA82AA23248009F460D /* TimeoutFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31220FA72AA23248009F460D /* TimeoutFallback.swift */; };
 		31220FAF2AA35DFC009F460D /* Authentication in Frameworks */ = {isa = PBXBuildFile; productRef = 31220FAE2AA35DFC009F460D /* Authentication */; };
+		3136BFE32ABB734A00B3E7E3 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136BFE22ABB734A00B3E7E3 /* CameraView.swift */; };
+		3136BFE72ABB73D500B3E7E3 /* ProfileImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136BFE62ABB73D500B3E7E3 /* ProfileImageStorage.swift */; };
+		3136BFE92ABB742300B3E7E3 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136BFE82ABB742300B3E7E3 /* StorageService.swift */; };
+		3136BFF12ABB7B8600B3E7E3 /* ImageSelect.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3136BFF02ABB7B8600B3E7E3 /* ImageSelect.storyboard */; };
+		3136BFF52ABB7BB500B3E7E3 /* ImageSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136BFF42ABB7BB500B3E7E3 /* ImageSelectViewController.swift */; };
+		3136BFF72ABB7D7900B3E7E3 /* ImageSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3136BFF62ABB7D7900B3E7E3 /* ImageSelectView.swift */; };
 		313981602A9E055A00E6642A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3139815F2A9E055A00E6642A /* ProfileView.swift */; };
 		3144BC392AA5244D0023289B /* ForumClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144BC382AA5244D0023289B /* ForumClientStub.swift */; };
 		31560A482A9E2EDB00FEC441 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31560A472A9E2EDB00FEC441 /* Color.swift */; };
@@ -58,9 +64,8 @@
 		3156E8462A924FD000C2F112 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8232A924FD000C2F112 /* Filter.swift */; };
 		3156E8472A924FD000C2F112 /* FilterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8242A924FD000C2F112 /* FilterProtocol.swift */; };
 		3156E8482A924FD000C2F112 /* FilterCriteria.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8252A924FD000C2F112 /* FilterCriteria.swift */; };
-		3156E84A2A924FD000C2F112 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8282A924FD000C2F112 /* MainViewController.swift */; };
-		3156E84B2A924FD000C2F112 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3156E8292A924FD000C2F112 /* Storyboard.storyboard */; };
-		3156E84C2A924FD000C2F112 /* StoryboardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E82A2A924FD000C2F112 /* StoryboardAdapter.swift */; };
+		3156E84A2A924FD000C2F112 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8282A924FD000C2F112 /* CameraViewController.swift */; };
+		3156E84B2A924FD000C2F112 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3156E8292A924FD000C2F112 /* Camera.storyboard */; };
 		3156E8522A92514000C2F112 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3156E8512A92514000C2F112 /* ContentView.swift */; };
 		316CC54B2AAA625100A679E4 /* Int+Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316CC54A2AAA625100A679E4 /* Int+Converter.swift */; };
 		316CC5532AAA69EB00A679E4 /* UserSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316CC5522AAA69EB00A679E4 /* UserSettingsView.swift */; };
@@ -137,6 +142,12 @@
 		31220F982AA1F134009F460D /* openapi.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = openapi.yaml; sourceTree = "<group>"; };
 		31220F9B2AA1F18A009F460D /* ForumClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumClient.swift; sourceTree = "<group>"; };
 		31220FA72AA23248009F460D /* TimeoutFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutFallback.swift; sourceTree = "<group>"; };
+		3136BFE22ABB734A00B3E7E3 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		3136BFE62ABB73D500B3E7E3 /* ProfileImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageStorage.swift; sourceTree = "<group>"; };
+		3136BFE82ABB742300B3E7E3 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
+		3136BFF02ABB7B8600B3E7E3 /* ImageSelect.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageSelect.storyboard; sourceTree = "<group>"; };
+		3136BFF42ABB7BB500B3E7E3 /* ImageSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectViewController.swift; sourceTree = "<group>"; };
+		3136BFF62ABB7D7900B3E7E3 /* ImageSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectView.swift; sourceTree = "<group>"; };
 		3139815F2A9E055A00E6642A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		3144BC382AA5244D0023289B /* ForumClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumClientStub.swift; sourceTree = "<group>"; };
 		31560A472A9E2EDB00FEC441 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
@@ -177,9 +188,8 @@
 		3156E8232A924FD000C2F112 /* Filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		3156E8242A924FD000C2F112 /* FilterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterProtocol.swift; sourceTree = "<group>"; };
 		3156E8252A924FD000C2F112 /* FilterCriteria.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCriteria.swift; sourceTree = "<group>"; };
-		3156E8282A924FD000C2F112 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		3156E8292A924FD000C2F112 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
-		3156E82A2A924FD000C2F112 /* StoryboardAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardAdapter.swift; sourceTree = "<group>"; };
+		3156E8282A924FD000C2F112 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		3156E8292A924FD000C2F112 /* Camera.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		3156E8512A92514000C2F112 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		316CC54A2AAA625100A679E4 /* Int+Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Converter.swift"; sourceTree = "<group>"; };
 		316CC5522AAA69EB00A679E4 /* UserSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsView.swift; sourceTree = "<group>"; };
@@ -260,6 +270,27 @@
 				3144BC382AA5244D0023289B /* ForumClientStub.swift */,
 			);
 			path = ForumApi;
+			sourceTree = "<group>";
+		};
+		3136BFEA2ABB793C00B3E7E3 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				3156E8282A924FD000C2F112 /* CameraViewController.swift */,
+				3136BFE22ABB734A00B3E7E3 /* CameraView.swift */,
+				3136BFE62ABB73D500B3E7E3 /* ProfileImageStorage.swift */,
+				3156E8292A924FD000C2F112 /* Camera.storyboard */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		3136BFEF2ABB7B6E00B3E7E3 /* ImageSelect */ = {
+			isa = PBXGroup;
+			children = (
+				3136BFF42ABB7BB500B3E7E3 /* ImageSelectViewController.swift */,
+				3136BFF62ABB7D7900B3E7E3 /* ImageSelectView.swift */,
+				3136BFF02ABB7B8600B3E7E3 /* ImageSelect.storyboard */,
+			);
+			path = ImageSelect;
 			sourceTree = "<group>";
 		};
 		3139815E2A9E051D00E6642A /* profile */ = {
@@ -437,9 +468,9 @@
 		3156E8262A924FD000C2F112 /* storyboard */ = {
 			isa = PBXGroup;
 			children = (
-				3156E8282A924FD000C2F112 /* MainViewController.swift */,
-				3156E8292A924FD000C2F112 /* Storyboard.storyboard */,
-				3156E82A2A924FD000C2F112 /* StoryboardAdapter.swift */,
+				3136BFEF2ABB7B6E00B3E7E3 /* ImageSelect */,
+				3136BFEA2ABB793C00B3E7E3 /* Camera */,
+				3136BFE82ABB742300B3E7E3 /* StorageService.swift */,
 			);
 			path = storyboard;
 			sourceTree = "<group>";
@@ -643,9 +674,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3136BFF12ABB7B8600B3E7E3 /* ImageSelect.storyboard in Resources */,
 				3156E7722A9247FD00C2F112 /* Preview Assets.xcassets in Resources */,
 				3156E76F2A9247FD00C2F112 /* Assets.xcassets in Resources */,
-				3156E84B2A924FD000C2F112 /* Storyboard.storyboard in Resources */,
+				3156E84B2A924FD000C2F112 /* Camera.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,11 +721,12 @@
 				3156E83F2A924FD000C2F112 /* Editor.swift in Sources */,
 				3156E7742A9247FD00C2F112 /* Persistence.swift in Sources */,
 				31560A482A9E2EDB00FEC441 /* Color.swift in Sources */,
-				3156E84C2A924FD000C2F112 /* StoryboardAdapter.swift in Sources */,
+				3136BFE32ABB734A00B3E7E3 /* CameraView.swift in Sources */,
 				31DCE3DB2AA4C4F4000242DD /* CommentDialog.swift in Sources */,
 				319144F92AA8E2140080631D /* ContestDiscover.swift in Sources */,
 				31560A572A9F2A2B00FEC441 /* Config+Authentication.swift in Sources */,
 				31220FA82AA23248009F460D /* TimeoutFallback.swift in Sources */,
+				3136BFE92ABB742300B3E7E3 /* StorageService.swift in Sources */,
 				31DCE3D92AA4C463000242DD /* CommentReplies.swift in Sources */,
 				3156E8352A924FD000C2F112 /* HomeView.swift in Sources */,
 				319662392A9FD36A006DEAD2 /* AnimatedImagePlaceholder.swift in Sources */,
@@ -703,12 +736,13 @@
 				31DCE3E52AA4DD62000242DD /* PostModalDialog.swift in Sources */,
 				3196623C2A9FD7FF006DEAD2 /* Date.swift in Sources */,
 				316CC54B2AAA625100A679E4 /* Int+Converter.swift in Sources */,
-				3156E84A2A924FD000C2F112 /* MainViewController.swift in Sources */,
+				3156E84A2A924FD000C2F112 /* CameraViewController.swift in Sources */,
 				3156E83D2A924FD000C2F112 /* RecomendedProblems.swift in Sources */,
 				31DCE3CA2AA38A5B000242DD /* RequestDataFallback.swift in Sources */,
 				319145212AAA52F70080631D /* Environment.swift in Sources */,
 				31DCE3D52AA4C44A000242DD /* Comment.swift in Sources */,
 				3156E76B2A9247FC00C2F112 /* CodeHelpApp.swift in Sources */,
+				3136BFF52ABB7BB500B3E7E3 /* ImageSelectViewController.swift in Sources */,
 				3156E8422A924FD000C2F112 /* ProblemViewActions.swift in Sources */,
 				3156E8322A924FD000C2F112 /* HTile.swift in Sources */,
 				319662362A9FD2DE006DEAD2 /* ForumPostCard.swift in Sources */,
@@ -732,9 +766,11 @@
 				3156E8302A924FD000C2F112 /* StyledNavigationBar.swift in Sources */,
 				3156E8472A924FD000C2F112 /* FilterProtocol.swift in Sources */,
 				3156E83C2A924FD000C2F112 /* ActiveContests.swift in Sources */,
+				3136BFF72ABB7D7900B3E7E3 /* ImageSelectView.swift in Sources */,
 				3196623F2AA0C3E7006DEAD2 /* CommunityDiscover.swift in Sources */,
 				3156E83A2A924FD000C2F112 /* Discover.swift in Sources */,
 				3156E8312A924FD000C2F112 /* SearchBar.swift in Sources */,
+				3136BFE72ABB73D500B3E7E3 /* ProfileImageStorage.swift in Sources */,
 				3156E8372A924FD000C2F112 /* TopProblems.swift in Sources */,
 				3156E7772A9247FD00C2F112 /* code_help_ios_ui.xcdatamodeld in Sources */,
 			);
@@ -971,6 +1007,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "code-help-ios-ui/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) uses the camera to take profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1002,6 +1039,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "code-help-ios-ui/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(PRODUCT_NAME) uses the camera to take profile picture";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

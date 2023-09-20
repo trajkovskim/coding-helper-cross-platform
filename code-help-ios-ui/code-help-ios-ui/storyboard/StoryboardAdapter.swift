@@ -1,12 +1,12 @@
 import UIKit
 import SwiftUI
 
-struct StoryboardView: UIViewControllerRepresentable {
+struct StoryboardView<Content: UIViewController>: UIViewControllerRepresentable {
     let fileName: String
     
-    func makeUIViewController(context: Context) -> some UIViewController {
+    func makeUIViewController(context: Context) -> Content {
         let storyboard = UIStoryboard(name: fileName, bundle: Bundle.main)
-        let controller = storyboard.instantiateInitialViewController()!
+        let controller = storyboard.instantiateInitialViewController()! as! Content
         return controller
     }
     

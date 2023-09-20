@@ -25,7 +25,8 @@ struct MockClient: APIProtocol {
     
     public func getAllCommunities(_ input: Operations.getAllCommunities.Input) async throws -> Operations.getAllCommunities.Output {
         return .ok(.init(body: .json(
-            .init(communities: data.communities.values.map { c in c.toShortResponse() }))))
+            .init(communities: data.communities.values.map { c in c.toShortResponse() })
+        )))
     }
     
     public func createCommunity(_ input: Operations.createCommunity.Input) async throws -> Operations.createCommunity.Output {
@@ -36,8 +37,6 @@ struct MockClient: APIProtocol {
                 data.communityPosts[newCommunity.name] = []
                 return .ok(.init(body: .json(newCommunity.toResponse(data.communityPosts))))
         }
-        
-//        return .undocumented(statusCode: 400, .init())
     }
     
     public func getCommunityByUid(_ input: Operations.getCommunityByUid.Input) async throws -> Operations.getCommunityByUid.Output {
@@ -94,8 +93,6 @@ struct MockClient: APIProtocol {
                 data.postComments[createdPost.uid.uuidString] = [:]
                 return .ok(.init(body: .json(createdPost.toResponse(data.postComments, data.commentReplies))))
         }
-        
-//        return .undocumented(statusCode: 400, .init())
     }
     
     public func getPost(_ input: Operations.getPost.Input) async throws -> Operations.getPost.Output {

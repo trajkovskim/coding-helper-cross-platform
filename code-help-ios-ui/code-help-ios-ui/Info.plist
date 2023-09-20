@@ -11,11 +11,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>CLIENT_ID</key>
+	<string>$(CLIENT_ID)</string>
 	<key>ISSUER_URL</key>
 	<string>${ISSUER_URL}</string>
 	<key>REDIRECT_URL</key>
 	<string>$(REDIRECT_URL)</string>
-	<key>CLIENT_ID</key>
-	<string>$(CLIENT_ID)</string>
 </dict>
 </plist>
