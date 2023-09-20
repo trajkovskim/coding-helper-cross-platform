@@ -1,0 +1,10 @@
+PROTOCOL = http:/
+
+ORIGIN = $(PROTOCOL)/192.168.100.71
+
+ISSUER_URL = $(ORIGIN)/iam/realms/code-help
+REDIRECT_URL = mk.com.code-help.code-help-ios-ui:/callback
+CLIENT_ID = code-help-ios
+
+AUTHORIZATION_ENDPOINT = $(ORIGIN)/iam/realms/code-help/protocol/openid-connect/auth
+TOKEN_ENDPOINT = $(ORIGIN)/iam/realms/code-help/protocol/openid-connect/token
