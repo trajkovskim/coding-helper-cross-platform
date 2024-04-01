@@ -17,7 +17,7 @@ public class UserController implements StatisticsApi {
   private final UserMapper userConverter;
 
   @Override
-  public ResponseEntity<UserStatistics> getStatistics() {
+  public ResponseEntity<UserStatistics> getStatistics(String authorization) {
     String name = SecurityContextHolder.getContext().getAuthentication().getName();
     UserStatisticsDto userStatistics = userService.getStatistics(name);
     UserStatistics entry = userConverter.convertUserStatistics(userStatistics);

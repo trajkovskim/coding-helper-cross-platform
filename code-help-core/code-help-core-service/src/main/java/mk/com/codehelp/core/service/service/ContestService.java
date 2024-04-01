@@ -14,13 +14,9 @@ public interface ContestService {
 
   Contest createContest(Contest contest);
 
-  Contest edit(Long id, Contest contest);
+  Contest update(Long id, Contest contest);
 
   ContestProblem addProblemToContest(Long id, Problem problem) throws IOException;
-
-  boolean removeProblemFromContest(Long contestId, Long problemId);
-
-  ContestProblem setProblemScore(Long contestId, Long problemId, Long score);
 
   ContestProblem getContestProblem(Long contestId, Long problemId);
 

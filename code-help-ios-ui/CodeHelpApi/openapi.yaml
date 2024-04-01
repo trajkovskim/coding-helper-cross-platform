@@ -22,7 +22,7 @@ components:
   schemas:
     Id:
       type: integer
-      format: long
+      format: int64
       example: 23
 
     Difficulty:
@@ -89,7 +89,7 @@ components:
           properties:
             likes:
               type: integer
-              format: long
+              format: int64
               example: 23
 
     ProblemReqBody:
@@ -192,7 +192,7 @@ components:
           $ref: '#/components/schemas/ProblemEntry'
         score:
           type: integer
-          format: long
+          format: int64
           example: 53
 
     ContestBaseEntry:
@@ -285,19 +285,19 @@ components:
       properties:
         solved:
           type: integer
-          format: long
+          format: int64
           example: 5
         easy:
           type: integer
-          format: long
+          format: int64
           example: 2
         medium:
           type: integer
-          format: long
+          format: int64
           example: 2
         hard:
           type: integer
-          format: long
+          format: int64
           example: 1
 
 

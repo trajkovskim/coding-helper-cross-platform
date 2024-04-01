@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,43 +53,12 @@ public class ContestServiceImpl implements ContestService {
   }
 
   @Override
-  public boolean removeProblemFromContest(Long contestId, Long problemId) {
-    Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
-
-    if (contest.getStatus() != ContestStatus.OPEN) {
-      return false;
-    }
-
-    contest.getProblems().removeIf(x -> x.getProblem().getId().equals(problemId));
-    problemService.delete(problemId);
-    contestRepository.save(contest);
-    return true;
-  }
-
-  @Override
   public ContestProblem getContestProblem(Long contestId, Long problemId) {
     Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
 
     return contest.getProblems().stream()
         .filter(problem -> problem.getProblem().getId().equals(problemId))
         .findFirst().orElseThrow(() -> new ProblemNotFoundException(problemId));
-  }
-
-  @Override
-  public ContestProblem setProblemScore(Long contestId, Long problemId, Long score) {
-    Contest contest = contestRepository.findById(contestId).orElseThrow(() -> new ContestNotFoundException(contestId));
-
-    if (contest.getStatus() != ContestStatus.OPEN) {
-      throw new ContestStatusNotOpenException(contestId);
-    }
-
-    ContestProblem contestProblem = contest.getProblems().stream()
-        .filter(problem -> problem.getProblem().getId().equals(problemId))
-        .findFirst()
-        .orElseThrow(() -> new ProblemNotFoundException(problemId));
-    contestProblem.setScore(score);
-    contestRepository.save(contest);
-    return contestProblem;
   }
 
   @Override
@@ -115,16 +87,38 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public Contest createContest(Contest contest) {
-    contest.setStatus(ContestStatus.OPEN);
+//    contest.setStatus(ContestStatus.OPEN);
     return contestRepository.save(contest);
   }
 
   @Override
-  public Contest edit(Long id, Contest contest) {
+  public Contest update(Long id, Contest contest) {
+    if (contest.getStatus() != ContestStatus.OPEN) {
+      return null;
+    }
+
     Contest old = this.findById(id);
     old.setDuration(contest.getDuration());
     old.setName(contest.getName());
     old.setStartsOn(contest.getStartsOn());
+    old.setStatus(contest.getStatus());
+
+    Map<Long, ContestProblem> problemsById =
+        contest.getProblems()
+            .stream()
+            .collect(Collectors.toMap(ContestProblem::getId, problem -> problem));
+
+    List<ContestProblem> updatedContestProblems = old.getProblems().stream()
+        .filter(problem -> problemsById.containsKey(problem.getId()))
+        .peek(x -> x.setScore(problemsById.get(x.getId()).getScore()))
+        .toList();
+
+    old.getProblems().stream().map(ContestProblem::getId)
+        .filter(Predicate.not(problemsById::containsKey))
+        .forEach(problemService::deleteById);
+
+    old.setProblems(updatedContestProblems);
+
     return contestRepository.save(old);
   }
 

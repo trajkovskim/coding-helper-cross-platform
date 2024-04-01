@@ -47,6 +47,7 @@
         <version>6.2.0</version>
         <executions>
           <execution>
+            <id>generate-code-help-core-api</id>
             <goals>
               <goal>generate</goal>
             </goals>
@@ -57,7 +58,26 @@
               <modelPackage>mk.com.codehelp.core.rest.model</modelPackage>
               <typeMappings>
                 <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-                <typeMapping>Integer=java.lang.Long</typeMapping>
+              </typeMappings>
+              <configOptions>
+                <interfaceOnly>true</interfaceOnly>
+                <generateSupportingFiles>false</generateSupportingFiles>
+                <useSpringBoot3>true</useSpringBoot3>
+              </configOptions>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-code-help-admin-core-api</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/src/main/resources/code-help-admin-core-api.yaml</inputSpec>
+              <generatorName>spring</generatorName>
+              <apiPackage>mk.com.codehelp.core.rest.admin.api</apiPackage>
+              <modelPackage>mk.com.codehelp.core.rest.admin.model</modelPackage>
+              <typeMappings>
+                <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
               </typeMappings>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>

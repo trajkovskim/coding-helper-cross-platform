@@ -49,16 +49,16 @@ public class ProblemServiceImpl implements ProblemService {
   public Problem update(Long id, Problem problemInput) {
     Category category = this.categoryService.findById(problemInput.getCategory().getName());
 
-    Problem problem = this.findById(id);
-    problem.setDifficulty(problemInput.getDifficulty());
-    problem.setCategory(category);
-    problem.setMarkdown(problemInput.getMarkdown());
-    problem.setTitle(problemInput.getTitle());
-    problem.setStarterCode(problemInput.getStarterCode());
-    problem.setRunnerCode(problemInput.getRunnerCode());
-    problem.setTestCases(problem.getTestCases());
+    Problem oldProblem = this.findById(id);
+    oldProblem.setDifficulty(problemInput.getDifficulty());
+    oldProblem.setCategory(category);
+    oldProblem.setMarkdown(problemInput.getMarkdown());
+    oldProblem.setTitle(problemInput.getTitle());
+    oldProblem.setStarterCode(problemInput.getStarterCode());
+    oldProblem.setRunnerCode(problemInput.getRunnerCode());
+    oldProblem.setTestCases(oldProblem.getTestCases());
 
-    return problemRepository.save(problem);
+    return problemRepository.save(oldProblem);
   }
 
   @Override
@@ -102,11 +102,5 @@ public class ProblemServiceImpl implements ProblemService {
 
   private boolean isLikedBy(Problem problem, String email) {
     return problem.getLikedBy().stream().anyMatch(x -> x.equals(email));
-  }
-
-  @Override
-  public boolean delete(Long id) {
-    this.deleteById(id);
-    return true;
   }
 }

@@ -30,14 +30,14 @@ public class SubmissionController implements SubmissionsApi, SubmitApi {
 
   @Override
   @SneakyThrows
-  public ResponseEntity<String> createSubmissionsEntry(SubmissionReqBody body) {
+  public ResponseEntity<String> createSubmissionsEntry(String authorization, SubmissionReqBody body) {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     String output = submissionService.create(user, body.getProblemId(), body.getCode(), body.getLanguage());
     return ResponseEntity.ok(output);
   }
 
   @Override
-  public ResponseEntity<SubmissionsResponse> getSubmissions(GetSubmissionsRequest body) {
+  public ResponseEntity<SubmissionsResponse> getSubmissions(String authorization, GetSubmissionsRequest body) {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     List<SubmissionDto> entries;
     if (body.getProblemId() == null) {

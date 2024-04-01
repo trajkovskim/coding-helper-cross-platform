@@ -1,0 +1,548 @@
+openapi: 3.0.1
+info:
+  title: 'Code Help Admin'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+    description: Open API specification
+
+security:
+  - Authorization_JWT: [ ]
+
+paths:
+  /admin/categories:
+    get:
+      tags: [ category ]
+      operationId: getAllCategories
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+    post:
+      tags: [ category ]
+      operationId: createCategory
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        201:
+          description: Created.
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+  /admin/categories/{name}:
+    put:
+      tags: [ category ]
+      operationId: updateCategory
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/CategoryName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    delete:
+      tags: [ category ]
+      operationId: deleteCategory
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/CategoryName'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+  /admin/problems:
+    get:
+      tags: [ problem ]
+      operationId: getAllProblems
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+    post:
+      tags: [ problem ]
+      operationId: createProblem
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - in: query
+          name: contestId
+          required: false
+          schema:
+            type: integer
+            format: int64
+            example: 2
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemRequest'
+      description: Create a problem in the backend
+      responses:
+        201:
+          description: Created.
+          content:
+            application/json:
+              schema:
+                type: string
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+  /admin/problems/{id}:
+    get:
+      tags: [ problem ]
+      operationId: getProblem
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ProblemId'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    put:
+      tags: [ problem ]
+      operationId: updateProblem
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ProblemId'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProblemRequest'
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    delete:
+      tags: [ problem ]
+      operationId: deleteProblem
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ProblemId'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+  /admin/contests:
+    get:
+      tags: [ contest ]
+      operationId: getAllContests
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        200:
+          description: OK. All contests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+    post:
+      tags: [ contest ]
+      operationId: createContest
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestRequest'
+      responses:
+        201:
+          description: Created.
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+  /admin/contests/{id}:
+    get:
+      tags: [ contest ]
+      operationId: getContest
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ContestId'
+      responses:
+        200:
+          description: OK. Contest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestDetail'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    put:
+      tags: [ contest ]
+      operationId: updateContest
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ContestId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestEditRequest'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+    delete:
+      tags: [ contest ]
+      operationId: deleteContest
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ContestId'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+  /admin/contests/{id}/start:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ContestId'
+      operationId: startContest
+      tags: [ contest ]
+      description: Starts contest happening in coding helper
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+  /admin/contests/{id}/close:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ContestId'
+      operationId: closeContest
+      tags: [ contest ]
+      description: Closes contest happening in coding helper
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+components:
+  securitySchemes:
+    Authorization_JWT: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    CategoryName:
+      in: path
+      name: name
+      required: true
+      schema:
+        type: string
+    ProblemId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ContestId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    Authorization:
+      description: Authorization header
+      name: Authorization
+      in: header
+      schema:
+        type: string
+        example: "Bearer {token}"
+  schemas:
+    ProblemResponse:
+      type: object
+      required: [ problems ]
+      properties:
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Problem'
+    Problem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        difficulty:
+          $ref: '#/components/schemas/Difficulty'
+        category:
+          $ref: '#/components/schemas/Category'
+    ProblemDetail:
+      allOf:
+        - $ref: '#/components/schemas/Problem'
+        - type: object
+          required: [ markdown, starterCode, runnerCode, testCases ]
+          properties:
+            markdown:
+              type: string
+              example: '## Two Sum... problem description'
+            starterCode:
+              $ref: '#/components/schemas/Code'
+            runnerCode:
+              $ref: '#/components/schemas/Code'
+            testCases:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  in:
+                    $ref: '#/components/schemas/TestCase'
+                  out:
+                    $ref: '#/components/schemas/TestCase'
+    TestCase:
+      type: string
+      example: |
+        ABCD FIND GO
+        CCBD FIND GO
+    Code:
+      type: string
+      example: |
+        function (arg1) {
+          // code goes here
+        }
+    ProblemRequest:
+      type: object
+      required: [ title, difficulty, markdown, starterCode, runnerCode, testCases ]
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        title:
+          type: string
+          example: 'Two sum'
+        difficulty:
+          $ref: '#/components/schemas/Difficulty'
+        markdown:
+          type: string
+          example: '## Two Sum... problem description'
+        starterCode:
+          $ref: '#/components/schemas/File'
+        runnerCode:
+          $ref: '#/components/schemas/File'
+        testCases:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+    ContestResponse:
+      type: object
+      required: [ contests ]
+      properties:
+        contests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contest'
+    ContestRequest:
+      type: object
+      required: [ name, duration, startsOn ]
+      properties:
+        name:
+          type: string
+          example: 'Contest name'
+        status:
+          $ref: '#/components/schemas/ContestStatus'
+        duration:
+          type: string
+          format: duration
+          example: 1h30m
+        startsOn:
+          $ref: '#/components/schemas/Date'
+    ContestEditRequest:
+      allOf:
+        - $ref: '#/components/schemas/ContestRequest'
+        - type: object
+          properties:
+            problems:
+              type: array
+              items:
+                type: object
+                properties:
+                  contestProblemId:
+                    type: integer
+                    format: int64
+                  score:
+                    type: integer
+    Contest:
+      type: object
+      required: [ id, name, status, duration, startsOn ]
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: 'Contest name'
+        status:
+          $ref: '#/components/schemas/ContestStatus'
+        duration:
+          type: string
+          format: duration
+          example: 1h30m
+        startsOn:
+          $ref: '#/components/schemas/Date'
+    ContestDetail:
+      allOf:
+        - $ref: '#/components/schemas/Contest'
+        - type: object
+          required: [ problems ]
+          properties:
+            problems:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContestProblem'
+    ContestProblem:
+      allOf:
+        - $ref: '#/components/schemas/Problem'
+        - type: object
+          required: [ contestProblemId, score ]
+          properties:
+            contestProblemId:
+              type: integer
+              format: int64
+            score:
+              type: integer
+    CategoryResponse:
+      type: object
+      required: [ categories ]
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    Category:
+      type: object
+      required: [ name ]
+      properties:
+        name:
+          type: string
+          example: 'Binary trees'
+
+    ContestStatus:
+      type: string
+      enum: [ OPEN, STARTED, CLOSED ]
+    Difficulty:
+      type: string
+      enum: [ EASY, MEDIUM, HARD ]
+      example: 'EASY'
+
+    File:
+      type: string
+      format: binary
+    Date:
+      type: string
+      format: date
+      example: '2022-05-16'
+
+  responses:
+    NotFoundResponse:
+      description: Not found.
+    BadRequestResponse:
+      description: Bad request.
+    ForbiddenResponse:
+      description: Forbidden.
+    UnauthorizedResponse:
+      description: Unauthorized.
+    NoContentResponse:
+      description: No content.

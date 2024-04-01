@@ -1,7 +1,6 @@
 package mk.com.codehelp.core.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.mappers.ProblemMapper;
 import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
@@ -10,8 +9,6 @@ import mk.com.codehelp.core.rest.model.*;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @CodingHelperController
@@ -34,61 +31,6 @@ public class ProblemController implements ProblemsApi {
     return ResponseEntity.ok(response);
   }
 
-  private ProblemRequest createProblemRequest(
-      Category category,
-      String title,
-      Difficulty difficulty,
-      String markdown,
-      MultipartFile starterCode,
-      MultipartFile runnerCode,
-      List<MultipartFile> testCases
-  ) {
-    return new ProblemRequest()
-        .category(category)
-        .title(title)
-        .difficulty(difficulty)
-        .markdown(markdown)
-        .starterCode(starterCode.getResource())
-        .runnerCode(runnerCode.getResource())
-        .testCases(testCases.stream().map(MultipartFile::getResource).toList());
-  }
-
-  @Override
-  @SneakyThrows
-  public ResponseEntity<Void> createProblemEntry(
-      Category category,
-      String title,
-      Difficulty difficulty,
-      String markdown,
-      MultipartFile starterCode,
-      MultipartFile runnerCode,
-      List<MultipartFile> testCases
-  ) {
-    ProblemRequest problemRequest =
-        createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
-    Problem problem = problemConverter.convertProblem(problemRequest);
-    problemService.create(problem);
-    return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  public ResponseEntity<Void> editProblemEntry(
-      Long id,
-      Category category,
-      String title,
-      Difficulty difficulty,
-      String markdown,
-      MultipartFile starterCode,
-      MultipartFile runnerCode,
-      List<MultipartFile> testCases
-  ) {
-    ProblemRequest problemRequest =
-        createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
-    Problem problem = problemConverter.convertProblem(problemRequest);
-    problemService.update(id, problem);
-    return ResponseEntity.noContent().build();
-  }
-
   @Override
   public ResponseEntity<ProblemByLikes> getProblemEntry(Long id) {
     Problem problem = problemService.findById(id);
@@ -100,12 +42,6 @@ public class ProblemController implements ProblemsApi {
   public ResponseEntity<Void> toggleLikeProblemEntry(Long id) {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     problemService.likeToggle(id, user);
-    return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  public ResponseEntity<Void> deleteProblemEntry(Long id) {
-    problemService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 

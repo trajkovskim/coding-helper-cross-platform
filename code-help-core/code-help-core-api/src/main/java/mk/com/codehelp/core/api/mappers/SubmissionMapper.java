@@ -16,5 +16,4 @@ public interface SubmissionMapper {
     List<SubmissionEntry> entries = convertListOfSubmissionModel(submissions);
     return new SubmissionsResponse().submissions(entries);
   }
-
 }
