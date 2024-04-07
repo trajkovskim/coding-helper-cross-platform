@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(uses = {FileMapper.class})
-public interface ProblemMapper {
+public interface AdminProblemMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "likedBy", ignore = true)

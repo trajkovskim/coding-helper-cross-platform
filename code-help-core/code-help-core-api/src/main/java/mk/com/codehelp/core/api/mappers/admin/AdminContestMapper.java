@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper
-public interface ContestMapper {
+public interface AdminContestMapper {
 
   mk.com.codehelp.core.rest.admin.model.Contest convertPrivate(Contest contest);
 

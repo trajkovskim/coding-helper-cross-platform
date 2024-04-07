@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.api.mappers.ProblemMapper;
 import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.rest.api.ProblemsApi;
+import mk.com.codehelp.core.rest.api.ProblemApi;
 import mk.com.codehelp.core.rest.model.*;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
-public class ProblemController implements ProblemsApi {
+public class ProblemController implements ProblemApi {
   private final ProblemService problemService;
   private final ProblemMapper problemConverter;
 

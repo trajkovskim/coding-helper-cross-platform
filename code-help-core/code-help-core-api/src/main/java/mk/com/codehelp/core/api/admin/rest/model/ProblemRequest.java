@@ -1,5 +1,6 @@
 package mk.com.codehelp.core.api.admin.rest.model;
 
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 import mk.com.codehelp.core.rest.admin.model.Category;

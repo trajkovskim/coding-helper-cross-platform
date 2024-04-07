@@ -3,10 +3,10 @@ package mk.com.codehelp.core.api.controller.admin;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.admin.rest.model.ProblemRequest;
-import mk.com.codehelp.core.api.controller.CodingHelperController;
-import mk.com.codehelp.core.api.mappers.admin.ProblemMapper;
+import mk.com.codehelp.core.rest.admin.api.ProblemApi;
+import org.springframework.web.bind.annotation.RestController;
+import mk.com.codehelp.core.api.mappers.admin.AdminProblemMapper;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.rest.admin.api.AdminApi;
 import mk.com.codehelp.core.rest.admin.model.Category;
 import mk.com.codehelp.core.rest.admin.model.Difficulty;
 import mk.com.codehelp.core.rest.admin.model.ProblemDetail;
@@ -18,14 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
-public class ProblemController implements AdminApi {
+public class ProblemAdminController implements ProblemApi {
 
   private final ProblemService problemService;
 
   private final ContestService contestService;
-  private final ProblemMapper problemMapper;
+  private final AdminProblemMapper problemMapper;
 
   private ProblemRequest createProblemRequest(
       Category category,

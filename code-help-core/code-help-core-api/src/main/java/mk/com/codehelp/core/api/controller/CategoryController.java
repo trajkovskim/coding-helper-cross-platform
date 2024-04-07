@@ -2,16 +2,17 @@ package mk.com.codehelp.core.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.api.mappers.CategoryMapper;
-import mk.com.codehelp.core.rest.api.CategoriesApi;
+import mk.com.codehelp.core.rest.api.CategoryApi;
 import mk.com.codehelp.core.rest.model.CategoriesResponse;
 import mk.com.codehelp.core.service.service.CategoryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
-public class CategoryController implements CategoriesApi {
+public class CategoryController implements CategoryApi {
 
   private final CategoryService categoryService;
   private final CategoryMapper categoryConverter;

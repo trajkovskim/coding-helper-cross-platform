@@ -61,8 +61,10 @@
               </typeMappings>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>
+                <skipDefaultInterface>true</skipDefaultInterface>
                 <generateSupportingFiles>false</generateSupportingFiles>
                 <useSpringBoot3>true</useSpringBoot3>
+                <useTags>true</useTags>
               </configOptions>
             </configuration>
           </execution>
@@ -81,8 +83,10 @@
               </typeMappings>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>
+                <skipDefaultInterface>true</skipDefaultInterface>
                 <generateSupportingFiles>false</generateSupportingFiles>
                 <useSpringBoot3>true</useSpringBoot3>
+                <useTags>true</useTags>
               </configOptions>
             </configuration>
           </execution>

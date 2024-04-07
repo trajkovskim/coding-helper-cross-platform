@@ -1,10 +1,10 @@
 package mk.com.codehelp.core.api.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import mk.com.codehelp.core.api.controller.CodingHelperController;
-import mk.com.codehelp.core.api.mappers.admin.ContestMapper;
+import mk.com.codehelp.core.rest.admin.api.ContestApi;
+import org.springframework.web.bind.annotation.RestController;
+import mk.com.codehelp.core.api.mappers.admin.AdminContestMapper;
 import mk.com.codehelp.core.domain.model.Contest;
-import mk.com.codehelp.core.rest.admin.api.AdminApi;
 import mk.com.codehelp.core.rest.admin.model.ContestDetail;
 import mk.com.codehelp.core.rest.admin.model.ContestEditRequest;
 import mk.com.codehelp.core.rest.admin.model.ContestRequest;
@@ -15,12 +15,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
-public class ContestController implements AdminApi {
+public class ContestAdminController implements ContestApi {
 
   private final ContestService contestService;
-  private final ContestMapper contestMapper;
+  private final AdminContestMapper contestMapper;
 
   @Override
   public ResponseEntity<ContestResponse> getAllContests(String authorization) {

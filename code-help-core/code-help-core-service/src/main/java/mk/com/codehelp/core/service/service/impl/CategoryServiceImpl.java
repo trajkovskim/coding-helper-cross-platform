@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
   private final CategoryRepository categoryRepository;
 
   @Override
@@ -38,4 +39,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     categoryRepository.save(oldCategory);
   }
+
+  @Override
+  public void delete(String name) {
+      final var category = this.findById(name);
+      categoryRepository.delete(category);
+  }
+
+
 }

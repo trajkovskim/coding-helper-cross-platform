@@ -12,4 +12,6 @@ public interface CategoryService {
   void create(Category category);
 
   void update(String name, Category category);
+
+  void delete(String name);
 }

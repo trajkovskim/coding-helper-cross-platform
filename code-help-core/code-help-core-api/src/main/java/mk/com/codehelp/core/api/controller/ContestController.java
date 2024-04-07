@@ -9,10 +9,11 @@ import mk.com.codehelp.core.rest.model.ContestProblem;
 import mk.com.codehelp.core.rest.model.ContestsResponse;
 import mk.com.codehelp.core.service.service.ContestService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
 public class ContestController implements ContestsApi {
   private final ContestService contestService;

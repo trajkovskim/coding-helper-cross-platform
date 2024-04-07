@@ -2,14 +2,15 @@ package mk.com.codehelp.core.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import mk.com.codehelp.core.rest.api.RunCodeApi;
+import mk.com.codehelp.core.rest.api.CodeRunnerApi;
 import mk.com.codehelp.core.rest.model.RunCodeRequest;
 import mk.com.codehelp.core.service.service.CodeRunnerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
-@CodingHelperController
+@RestController
 @RequiredArgsConstructor
-public class CodeRunnerController implements RunCodeApi {
+public class CodeRunnerController implements CodeRunnerApi {
   private final CodeRunnerService codeRunnerService;
 
   @Override

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper
-public interface CategoryMapper {
+public interface AdminCategoryMapper {
 
   default CategoryResponse convert(List<mk.com.codehelp.core.domain.model.Category> problems) {
 

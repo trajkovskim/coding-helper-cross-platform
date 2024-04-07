@@ -13,7 +13,7 @@ security:
 paths:
   /admin/categories:
     get:
-      tags: [ category ]
+      tags: [ category, admin ]
       operationId: getAllCategories
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -29,7 +29,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenResponse'
     post:
-      tags: [ category ]
+      tags: [ category, admin ]
       operationId: createCategory
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -47,7 +47,7 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
   /admin/categories/{name}:
     put:
-      tags: [ category ]
+      tags: [ category, admin ]
       operationId: updateCategory
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -67,7 +67,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundResponse'
     delete:
-      tags: [ category ]
+      tags: [ category, admin ]
       operationId: deleteCategory
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -83,7 +83,7 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
   /admin/problems:
     get:
-      tags: [ problem ]
+      tags: [ problem, admin ]
       operationId: getAllProblems
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -99,7 +99,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenResponse'
     post:
-      tags: [ problem ]
+      tags: [ problem, admin ]
       operationId: createProblem
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -129,7 +129,7 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
   /admin/problems/{id}:
     get:
-      tags: [ problem ]
+      tags: [ problem, admin ]
       operationId: getProblem
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -150,7 +150,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundResponse'
     put:
-      tags: [ problem ]
+      tags: [ problem, admin ]
       operationId: updateProblem
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -176,7 +176,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundResponse'
     delete:
-      tags: [ problem ]
+      tags: [ problem, admin ]
       operationId: deleteProblem
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -192,7 +192,7 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
   /admin/contests:
     get:
-      tags: [ contest ]
+      tags: [ contest, admin ]
       operationId: getAllContests
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -208,7 +208,7 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenResponse'
     post:
-      tags: [ contest ]
+      tags: [ contest, admin ]
       operationId: createContest
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -226,7 +226,7 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
   /admin/contests/{id}:
     get:
-      tags: [ contest ]
+      tags: [ contest, admin ]
       operationId: getContest
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -245,7 +245,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundResponse'
     put:
-      tags: [ contest ]
+      tags: [ contest, admin ]
       operationId: updateContest
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -265,7 +265,7 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundResponse'
     delete:
-      tags: [ contest ]
+      tags: [ contest, admin ]
       operationId: deleteContest
       parameters:
         - $ref: '#/components/parameters/Authorization'
@@ -285,7 +285,7 @@ paths:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ContestId'
       operationId: startContest
-      tags: [ contest ]
+      tags: [ contest, admin ]
       description: Starts contest happening in coding helper
       responses:
         204:
@@ -302,7 +302,7 @@ paths:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ContestId'
       operationId: closeContest
-      tags: [ contest ]
+      tags: [ contest, admin ]
       description: Closes contest happening in coding helper
       responses:
         204:
