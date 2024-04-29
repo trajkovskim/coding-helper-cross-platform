@@ -8,6 +8,8 @@ services:
       - 80:80
       - 433:433
     depends_on:
+      - code-help-admin-backend
+      - code-help-admin-ui
       - code-help-core
       - code-help-forum
       - code-help-keycloak-iam
@@ -27,6 +29,37 @@ services:
       - --proxy=edge
       - --hostname-url=http://localhost/iam
       - --hostname-admin-url=http://localhost/iam
+      - --import-realm
+    volumes:
+      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
+
+  code-help-admin-backend:
+    image: code-help-admin-backend
+    container_name: code-help-admin-backend
+    build:
+      context: code-help-admin/code-help-admin-backend
+      dockerfile: /@global/deploy/Dockerfile
+    environment:
+      - CORE_ADMIN_API_SERVER_URL=http://code-help-core:3000/api
+      - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
+      - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+    ports:
+      - 4000:4000
+    depends_on:
+      - code-help-keycloak-iam
+
+  code-help-admin-ui:
+    image: code-help-admin-ui
+    container_name: code-help-admin-ui
+    build:
+      context: code-help-admin/code-help-admin-ui
+      dockerfile: Dockerfile
+      args:
+        - VITE_ADMIN_API_URL=http://localhost/admin/api/v1
+        - VITE_KEYCLOAK_URL=http://localhost/iam
+        - VITE_KEYCLOAK_REALM=code-help
+        - VITE_KEYCLOAK_CLIENTID=code-help-flutter
+        - VITE_BASE_ROUTE=/admin-ui
 
   code-help-core:
     image: code-help-core

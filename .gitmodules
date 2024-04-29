@@ -1,0 +1,3 @@
+[submodule "code-help-admin"]
+	path = code-help-admin
+	url = https://github.com/vrtexe/code-help-admin
