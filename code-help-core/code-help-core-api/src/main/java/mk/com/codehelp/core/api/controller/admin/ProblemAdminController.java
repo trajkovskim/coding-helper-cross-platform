@@ -3,10 +3,9 @@ package mk.com.codehelp.core.api.controller.admin;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.admin.rest.model.ProblemRequest;
-import mk.com.codehelp.core.rest.admin.api.ProblemApi;
-import org.springframework.web.bind.annotation.RestController;
 import mk.com.codehelp.core.api.mappers.admin.AdminProblemMapper;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.rest.admin.api.ProblemApi;
 import mk.com.codehelp.core.rest.admin.model.Category;
 import mk.com.codehelp.core.rest.admin.model.Difficulty;
 import mk.com.codehelp.core.rest.admin.model.ProblemDetail;
@@ -14,6 +13,7 @@ import mk.com.codehelp.core.rest.admin.model.ProblemResponse;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,82 +22,82 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemAdminController implements ProblemApi {
 
-  private final ProblemService problemService;
+    private final ProblemService problemService;
 
-  private final ContestService contestService;
-  private final AdminProblemMapper problemMapper;
+    private final ContestService contestService;
+    private final AdminProblemMapper problemMapper;
 
-  private ProblemRequest createProblemRequest(
-      Category category,
-      String title,
-      Difficulty difficulty,
-      String markdown,
-      MultipartFile starterCode,
-      MultipartFile runnerCode,
-      List<MultipartFile> testCases
-  ) {
-    return ProblemRequest.builder()
-        .category(category)
-        .title(title)
-        .difficulty(difficulty)
-        .markdown(markdown)
-        .starterCode(starterCode.getResource())
-        .runnerCode(runnerCode.getResource())
-        .testCases(testCases.stream().map(MultipartFile::getResource).toList())
-        .build();
-  }
-
-  @Override
-  @SneakyThrows
-  public ResponseEntity<String> createProblem(String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, String authorization, Long contestId, Category category) {
-    ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
-
-    Problem problem = problemMapper.convert(problemRequest);
-
-    if(contestId == null) {
-      problemService.create(problem);
-    } else {
-      contestService.addProblemToContest(contestId, problem);
+    private ProblemRequest createProblemRequest(
+            Category category,
+            String title,
+            Difficulty difficulty,
+            String markdown,
+            MultipartFile starterCode,
+            MultipartFile runnerCode,
+            List<MultipartFile> testCases
+    ) {
+        return ProblemRequest.builder()
+                .category(category)
+                .title(title)
+                .difficulty(difficulty)
+                .markdown(markdown)
+                .starterCode(starterCode.getResource())
+                .runnerCode(runnerCode.getResource())
+                .testCases(testCases.stream().map(MultipartFile::getResource).toList())
+                .build();
     }
 
-    return ResponseEntity.noContent().build();
-  }
+    @Override
+    @SneakyThrows
+    public ResponseEntity<String> createProblem(String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, Long contestId, Category category) {
+        ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
 
-  @Override
-  public ResponseEntity<ProblemResponse> getAllProblems(String authorization) {
+        Problem problem = problemMapper.convert(problemRequest);
 
-    List<Problem> problems = problemService.findAll();
+        if (contestId == null) {
+            problemService.create(problem);
+        } else {
+            contestService.addProblemToContest(contestId, problem);
+        }
 
-    return ResponseEntity.ok(problemMapper.convert(problems));
-  }
+        return ResponseEntity.noContent().build();
+    }
 
-  @Override
-  public ResponseEntity<ProblemDetail> getProblem(Long id, String authorization) {
+    @Override
+    public ResponseEntity<ProblemResponse> getAllProblems() {
 
-    ProblemDetail problemDetail = problemMapper.convert(problemService.findById(id));
+        List<Problem> problems = problemService.findAll();
 
-    return ResponseEntity.ok(problemDetail);
-  }
+        return ResponseEntity.ok(problemMapper.convert(problems));
+    }
 
-  @SneakyThrows
-  @Override
-  public ResponseEntity<ProblemDetail> updateProblem(Long id, String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, String authorization, Category category) {
-    ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
+    @Override
+    public ResponseEntity<ProblemDetail> getProblem(Long id) {
 
-    Problem problem = problemMapper.convert(id, problemRequest);
+        ProblemDetail problemDetail = problemMapper.convert(problemService.findById(id));
 
-    Problem updated = problemService.update(id, problem);
+        return ResponseEntity.ok(problemDetail);
+    }
 
-    ProblemDetail problemDetail = problemMapper.convert(updated);
+    @SneakyThrows
+    @Override
+    public ResponseEntity<ProblemDetail> updateProblem(Long id, String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, Category category) {
+        ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
 
-    return ResponseEntity.ok(problemDetail);
-  }
+        Problem problem = problemMapper.convert(id, problemRequest);
 
-  @Override
-  public ResponseEntity<Void> deleteProblem(Long id, String authorization) {
+        Problem updated = problemService.update(id, problem);
 
-    problemService.deleteById(id);
+        ProblemDetail problemDetail = problemMapper.convert(updated);
 
-    return ResponseEntity.noContent().build();
-  }
+        return ResponseEntity.ok(problemDetail);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteProblem(Long id) {
+
+        problemService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
