@@ -21,9 +21,15 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public Category findById(String id) {
+  public Category findById(Long id) {
     return categoryRepository.findById(id)
         .orElseThrow(() -> new CategoryNotFoundException(id));
+  }
+
+  @Override
+  public Category findByName(String name) {
+    return categoryRepository.findByName(name)
+        .orElseThrow(() -> new CategoryNotFoundException(name));
   }
 
   @Override
@@ -32,19 +38,17 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public void update(String name, Category category) {
+  public void update(Long id, Category category) {
 
-    Category oldCategory = this.findById(name);
+    Category oldCategory = this.findById(id);
     oldCategory.setName(category.getName());
 
     categoryRepository.save(oldCategory);
   }
 
   @Override
-  public void delete(String name) {
-      final var category = this.findById(name);
+  public void delete(Long id) {
+      final var category = this.findById(id);
       categoryRepository.delete(category);
   }
-
-
 }

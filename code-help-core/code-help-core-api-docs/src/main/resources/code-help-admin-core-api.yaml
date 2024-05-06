@@ -41,12 +41,12 @@ paths:
           $ref: '#/components/responses/UnauthorizedResponse'
         403:
           $ref: '#/components/responses/ForbiddenResponse'
-  /admin/categories/{name}:
+  /admin/categories/{id}:
     put:
       tags: [ category, admin ]
       operationId: updateCategory
       parameters:
-        - $ref: '#/components/parameters/CategoryName'
+        - $ref: '#/components/parameters/CategoryId'
       requestBody:
         content:
           application/json:
@@ -65,7 +65,7 @@ paths:
       tags: [ category, admin ]
       operationId: deleteCategory
       parameters:
-        - $ref: '#/components/parameters/CategoryName'
+        - $ref: '#/components/parameters/CategoryId'
       responses:
         204:
           $ref: '#/components/responses/NoContentResponse'
@@ -299,12 +299,13 @@ components:
       scheme: bearer
       bearerFormat: JWT
   parameters:
-    CategoryName:
+    CategoryId:
       in: path
-      name: name
+      name: id
       required: true
       schema:
-        type: string
+        type: integer
+        format: int64
     ProblemId:
       in: path
       name: id

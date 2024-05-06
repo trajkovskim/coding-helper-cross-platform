@@ -29,7 +29,7 @@ public class ProblemServiceImpl implements ProblemService {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Problem create(Problem problem) throws IOException {
-    categoryService.findById(problem.getCategory().getName());
+    categoryService.findByName(problem.getCategory().getName());
     return problemRepository.save(problem);
   }
 
@@ -47,7 +47,7 @@ public class ProblemServiceImpl implements ProblemService {
 
   @Override
   public Problem update(Long id, Problem problemInput) {
-    Category category = this.categoryService.findById(problemInput.getCategory().getName());
+    Category category = this.categoryService.findByName(problemInput.getCategory().getName());
 
     Problem oldProblem = this.findById(id);
     oldProblem.setDifficulty(problemInput.getDifficulty());
