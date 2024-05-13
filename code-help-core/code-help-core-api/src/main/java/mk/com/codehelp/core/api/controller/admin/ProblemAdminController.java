@@ -6,10 +6,7 @@ import mk.com.codehelp.core.api.admin.rest.model.ProblemRequest;
 import mk.com.codehelp.core.api.mappers.admin.AdminProblemMapper;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.rest.admin.api.ProblemApi;
-import mk.com.codehelp.core.rest.admin.model.Category;
-import mk.com.codehelp.core.rest.admin.model.Difficulty;
-import mk.com.codehelp.core.rest.admin.model.ProblemDetail;
-import mk.com.codehelp.core.rest.admin.model.ProblemResponse;
+import mk.com.codehelp.core.rest.admin.model.*;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +25,7 @@ public class ProblemAdminController implements ProblemApi {
     private final AdminProblemMapper problemMapper;
 
     private ProblemRequest createProblemRequest(
-            Category category,
+            CategoryRequest category,
             String title,
             Difficulty difficulty,
             String markdown,
@@ -49,7 +46,7 @@ public class ProblemAdminController implements ProblemApi {
 
     @Override
     @SneakyThrows
-    public ResponseEntity<String> createProblem(String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, Long contestId, Category category) {
+    public ResponseEntity<String> createProblem(String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, Long contestId, CategoryRequest category) {
         ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
 
         Problem problem = problemMapper.convert(problemRequest);
@@ -81,7 +78,7 @@ public class ProblemAdminController implements ProblemApi {
 
     @SneakyThrows
     @Override
-    public ResponseEntity<ProblemDetail> updateProblem(Long id, String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, Category category) {
+    public ResponseEntity<ProblemDetail> updateProblem(Long id, String title, Difficulty difficulty, String markdown, MultipartFile starterCode, MultipartFile runnerCode, List<MultipartFile> testCases, CategoryRequest category) {
         ProblemRequest problemRequest = createProblemRequest(category, title, difficulty, markdown, starterCode, runnerCode, testCases);
 
         Problem problem = problemMapper.convert(id, problemRequest);

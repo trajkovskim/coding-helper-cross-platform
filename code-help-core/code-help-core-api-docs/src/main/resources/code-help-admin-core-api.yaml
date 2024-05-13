@@ -383,7 +383,7 @@ components:
       required: [ title, difficulty, markdown, starterCode, runnerCode, testCases ]
       properties:
         category:
-          $ref: '#/components/schemas/Category'
+          $ref: '#/components/schemas/CategoryRequest'
         title:
           type: string
           example: 'Two sum'

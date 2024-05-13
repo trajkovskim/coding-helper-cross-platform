@@ -93,11 +93,12 @@ public class ContestServiceImpl implements ContestService {
 
   @Override
   public Contest update(Long id, Contest contest) {
-    if (contest.getStatus() != ContestStatus.OPEN) {
+    Contest old = this.findById(id);
+
+    if (contest.getStatus() != ContestStatus.OPEN && old.getStatus() != ContestStatus.OPEN) {
       return null;
     }
 
-    Contest old = this.findById(id);
     old.setDuration(contest.getDuration());
     old.setName(contest.getName());
     old.setStartsOn(contest.getStartsOn());
