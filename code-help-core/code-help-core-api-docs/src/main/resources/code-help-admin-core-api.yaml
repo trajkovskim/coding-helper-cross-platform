@@ -423,6 +423,14 @@ components:
           example: 1h30m
         startsOn:
           $ref: '#/components/schemas/Date'
+    ContestProblemEditRequest:
+      type: object
+      properties:
+        contestProblemId:
+          type: integer
+          format: int64
+        score:
+          type: integer
     ContestEditRequest:
       allOf:
         - $ref: '#/components/schemas/ContestRequest'
@@ -431,13 +439,7 @@ components:
             problems:
               type: array
               items:
-                type: object
-                properties:
-                  contestProblemId:
-                    type: integer
-                    format: int64
-                  score:
-                    type: integer
+                $ref: "#/components/schemas/ContestProblemEditRequest"
     Contest:
       type: object
       required: [ id, name, status, duration, startsOn ]

@@ -33,5 +33,5 @@ public interface AdminContestMapper {
 
   @Mapping(target = "id", source = "contestProblemId")
   @Mapping(target = "problem", ignore = true)
-  mk.com.codehelp.core.domain.model.ContestProblem convert(ContestEditRequestAllOfProblems contestProblemEdit);
+  mk.com.codehelp.core.domain.model.ContestProblem convert(ContestProblemEditRequest contestProblemEdit);
 }

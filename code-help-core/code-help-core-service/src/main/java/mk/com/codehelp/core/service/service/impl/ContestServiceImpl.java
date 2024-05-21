@@ -11,6 +11,7 @@ import mk.com.codehelp.core.domain.model.Contest;
 import mk.com.codehelp.core.domain.model.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.repository.ContestRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,11 +20,12 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Primary
 @Service
 @RequiredArgsConstructor
 public class ContestServiceImpl implements ContestService {
-  private final ContestRepository contestRepository;
-  private final ProblemService problemService;
+  protected final ContestRepository contestRepository;
+  protected final ProblemService problemService;
 
   @Override
   public List<Contest> findAll() {
