@@ -109,7 +109,7 @@ paths:
       parameters:
         - in: query
           name: name
-          description: Community uid
+          description: Community name
           required: true
           schema:
             type: string
@@ -123,8 +123,8 @@ paths:
     patch:
       tags:
         - community
-      operationId: Add a new moderator to the community
-      description: Add a new moderator to the
+      operationId: addModerator
+      description: Add a new moderator to the community
       requestBody:
         content:
           application/json:

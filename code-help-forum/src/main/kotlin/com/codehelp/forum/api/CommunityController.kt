@@ -66,7 +66,7 @@ class CommunityController(
         return ResponseEntity.ok().build()
     }
 
-    override fun addANewModeratorToTheCommunity(
+    override fun addModerator(
         name: String,
         moderatorRequestDto: ModeratorRequestDto
     ): ResponseEntity<Void> {

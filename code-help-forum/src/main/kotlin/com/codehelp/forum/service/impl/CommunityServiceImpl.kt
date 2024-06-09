@@ -3,6 +3,7 @@ package com.codehelp.forum.service.impl
 import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Community
+import com.codehelp.forum.exception.AlreadyModeratingCommunityException
 import com.codehelp.forum.exception.ForbiddenException
 import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.CommunityDto
@@ -97,6 +98,10 @@ class CommunityServiceImpl(
 
         if (isNotAdmin(community)) {
             throw RuntimeException()
+        }
+
+        if(community.moderators.contains(user)) {
+            throw AlreadyModeratingCommunityException(name)
         }
 
         val newCommunity = community.copy(
