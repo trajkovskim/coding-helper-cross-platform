@@ -40,6 +40,7 @@ services:
       context: code-help-admin/code-help-admin-backend
       dockerfile: ./@global/deploy/Dockerfile
     environment:
+      - FORUM_API_SERVER_URL=http://code-help-forum:3001/api/v1
       - CORE_ADMIN_API_SERVER_URL=http://code-help-core:3000/api
       - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
       - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
