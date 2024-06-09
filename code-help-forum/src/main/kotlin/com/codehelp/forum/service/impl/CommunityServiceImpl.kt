@@ -3,6 +3,7 @@ package com.codehelp.forum.service.impl
 import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Community
+import com.codehelp.forum.exception.AlreadyCommunityMemberException
 import com.codehelp.forum.exception.AlreadyModeratingCommunityException
 import com.codehelp.forum.exception.ForbiddenException
 import com.codehelp.forum.exception.UnauthorizedException
@@ -133,9 +134,12 @@ class CommunityServiceImpl(
     override fun join(name: String): CommunityDto {
         val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
         val community = communityRepository.findByName(name) ?: throw RuntimeException("")
-        val user = userService.getLoggedInUser()
 
-        val newMembers = user?.let { community.members - it } ?: community.members
+        if(community.members.contains(loggedInUser)) {
+            throw AlreadyCommunityMemberException(loggedInUser.username, name)
+        }
+
+        val newMembers = loggedInUser.let { community.members + it }
         val newCommunity = community.copy(
             members = newMembers
         )
