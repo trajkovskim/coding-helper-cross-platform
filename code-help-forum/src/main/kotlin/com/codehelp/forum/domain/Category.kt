@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "category")
-class Category(
+data class Category(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -17,7 +17,6 @@ class Category(
     @Column(name = "uid", unique = true)
     val uid: UUID = UUID.randomUUID(),
 
-    @NaturalId
     @Column(name = "name", unique = true)
     val name: String,
 

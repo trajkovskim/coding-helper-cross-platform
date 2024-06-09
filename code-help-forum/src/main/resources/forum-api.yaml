@@ -474,7 +474,52 @@ paths:
       responses:
         200:
           description: OK
-
+  /category/{uid}:
+    delete:
+      tags:
+        - category
+      operationId: deleteCategory
+      description: Deletes category by id
+      parameters:
+        - in: path
+          name: uid
+          description: Post uid
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: No content.
+    put:
+      tags:
+        - category
+      operationId: updateCategory
+      description: Updates category by uid
+      parameters:
+        - in: path
+          name: uid
+          description: Post uid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Category update body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreate'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        304:
+          description: Not Modified
+        400:
+          description: Bad Request
 
 components:
   schemas:

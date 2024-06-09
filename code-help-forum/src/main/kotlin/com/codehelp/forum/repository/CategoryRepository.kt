@@ -9,6 +9,8 @@ import java.util.*
 @Repository
 interface CategoryRepository : JpaRepository<Category, Long> {
 
+    fun findByUid(uid: UUID): Category?
+
     @Query(
         """
         select *
@@ -16,5 +18,7 @@ interface CategoryRepository : JpaRepository<Category, Long> {
         where uid in (:ids)
     """, nativeQuery = true
     )
-    fun findAllByUidIn(ids: List<UUID>): List<Category>;
+    fun findAllByUidIn(ids: List<UUID>): List<Category>
+
+    fun deleteByUid(uid: UUID)
 }

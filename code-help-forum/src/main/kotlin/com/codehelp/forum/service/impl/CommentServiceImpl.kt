@@ -98,7 +98,7 @@ class CommentServiceImpl(
     private fun isAuthorizedToDeleteComment(comment: Comment): Boolean {
         val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
-        return loggedInUser.id == comment.user.id
+        return userService.isAllowedToManageResource(comment)
                 || loggedInUser.moderating.contains(comment.post.community)
                 || loggedInUser.id == comment.post.community.user.id
     }

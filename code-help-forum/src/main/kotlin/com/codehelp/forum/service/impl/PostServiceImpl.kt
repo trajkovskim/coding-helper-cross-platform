@@ -48,11 +48,8 @@ class PostServiceImpl(
 
     override fun getAll(community: String?): List<ShortPostDto> {
 
-
         return (community?.let { postRepository.findAllByCommunityName(it) } ?: postRepository.findAll())
             .map { it.toShortDto() }
-
-
     }
 
     override fun update(uid: String, postRequestDto: PostRequestDto): PostDto {
@@ -80,7 +77,7 @@ class PostServiceImpl(
     private fun isAuthorizedToDeletePost(post: Post): Boolean {
         val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
 
-        return loggedInUser.id == post.user.id
+        return userService.isAllowedToManageResource(post)
                 || loggedInUser.moderating.contains(post.community)
                 || loggedInUser.id == post.community.user.id
     }

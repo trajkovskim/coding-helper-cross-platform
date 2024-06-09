@@ -29,7 +29,7 @@ data class Post(
     val community: Community,
 
     @ManyToOne
-    val user: User,
+    override val user: User,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val comments: List<Comment> = listOf(),
@@ -39,7 +39,7 @@ data class Post(
 
     @Column(name = "modified", nullable = false)
     var modified: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS),
-) {
+): UserCreatedResource {
 
     @PreUpdate
     fun onUpdate() {

@@ -20,7 +20,7 @@ data class Community(
     val description: String,
 
     @ManyToOne
-    val user: User,
+    override val user: User,
 
     @JsonBackReference
     @OneToMany(mappedBy = "community", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -56,7 +56,7 @@ data class Community(
     @Column(name = "modified", nullable = false)
     var modified: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS),
 
-    ) {
+    ): UserCreatedResource {
 
     @PreUpdate
     fun onUpdate() {

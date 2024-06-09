@@ -3,7 +3,6 @@ package com.codehelp.forum.service.impl
 import com.codehelp.forum.common.mapToEntity
 import com.codehelp.forum.common.toDto
 import com.codehelp.forum.domain.Community
-import com.codehelp.forum.domain.User
 import com.codehelp.forum.exception.ForbiddenException
 import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.CommunityDto
@@ -14,14 +13,10 @@ import com.codehelp.forum.repository.CategoryRepository
 import com.codehelp.forum.repository.CommunityRepository
 import com.codehelp.forum.service.CommunityService
 import com.codehelp.forum.service.UserService
-import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.HttpClientErrorException.Unauthorized
-import java.net.http.HttpHeaders
-import java.util.*
+import java.util.UUID
 
 @Service
 class CommunityServiceImpl(
@@ -158,9 +153,7 @@ class CommunityServiceImpl(
     }
 
     private fun isAdmin(community: Community): Boolean {
-        val loggedInUser = userService.getLoggedInUser() ?: throw UnauthorizedException()
-
-        return loggedInUser.id == community.user.id
+        return userService.isAllowedToManageResource(community)
     }
 
     private fun isNotAdmin(community: Community): Boolean = !isAdmin(community)

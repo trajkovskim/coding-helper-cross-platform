@@ -27,7 +27,7 @@ data class Comment(
     val parent: Comment? = null,
 
     @ManyToOne
-    val user: User,
+    override val user: User,
 
     @OneToMany(mappedBy = "parent", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val children: List<Comment> = listOf(),
@@ -37,7 +37,7 @@ data class Comment(
 
     @Column(name = "modified", nullable = false)
     var modified: Instant = Instant.now().truncatedTo(ChronoUnit.SECONDS),
-) {
+): UserCreatedResource {
 
     @PreUpdate
     fun onUpdate() {
