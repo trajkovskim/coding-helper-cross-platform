@@ -99,12 +99,17 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
 
   @Override
   public String createCode(Long problemId, String language, String code) {
+    final Problem problem = problemService.findById(problemId);
+    final String runnerCode = new String(problem.getRunnerCode().getData(), StandardCharsets.UTF_8);
+
+    return createCode(language, code, runnerCode);
+  }
+
+  @Override
+  public String createCode(String language, String code, String runnerCode) {
     if (!compilers.getCompilers().containsKey(language)) {
       throw new CompilerNotFoundException(language);
     }
-
-    final Problem problem = problemService.findById(problemId);
-    final String runnerCode = new String(problem.getRunnerCode().getData(), StandardCharsets.UTF_8);
 
     return code + "\n" + runnerCode;
   }

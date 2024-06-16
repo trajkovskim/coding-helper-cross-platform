@@ -292,6 +292,28 @@ paths:
           $ref: '#/components/responses/ForbiddenResponse'
         404:
           $ref: '#/components/responses/NotFoundResponse'
+  /admin/code-runner:
+    post:
+      operationId: runCode
+      tags: [code runner, admin]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CodeRunnerRequest'
+      responses:
+        200:
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeRunnerResponse'
+        401:
+          $ref: '#/components/responses/UnauthorizedResponse'
+        403:
+          $ref: '#/components/responses/ForbiddenResponse'
+        400:
+          $ref: '#/components/responses/BadRequestResponse'
 components:
   securitySchemes:
     Authorization_JWT: # arbitrary name for the security scheme
@@ -321,6 +343,29 @@ components:
         type: integer
         format: int64
   schemas:
+    CodeLanguage:
+      type: string
+      example: 'javascript'
+    CodeRunnerRequest:
+      type: object
+      required: [ runnerCode, language, code, testCases ]
+      properties:
+        runnerCode:
+          $ref: '#/components/schemas/Code'
+        language:
+          $ref: '#/components/schemas/CodeLanguage'
+        code:
+          $ref: '#/components/schemas/Code'
+        testCases:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+    CodeRunnerResponse:
+      type: object
+      required: [ message ]
+      properties:
+        message:
+          type: string
     ProblemResponse:
       type: object
       required: [ problems ]
