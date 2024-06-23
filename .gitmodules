@@ -1,3 +1,7 @@
 [submodule "code-help-admin"]
 	path = code-help-admin
 	url = https://github.com/vrtexe/code-help-admin
+
+[submodule "code-help-admin-gitlab"]
+	path = code-help-admin-gitlab
+	url = https://gitlab.finki.ukim.mk/code-help/code-help-admin.git
