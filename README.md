@@ -1,10 +1,19 @@
-# Mobile app install
+# Code Help
+
+## Authors
+
+- Martin Trajkovski - 195063
+- Vangel Trajkovski - 181261
+
+## Mobile app install
+
 [Apk and appbundle](https://drive.google.com/drive/folders/1d7zrgDqzDvvGHYz2a94QZ-8ceIRK_qRB?usp=share_link)
 
-# Build
+## Build
 
-## Maven build
-```
+### Maven build
+
+```sh
 Build project:
 mvn clean install
 
@@ -19,8 +28,9 @@ java -jar code-help-forum/target/code-help-forum-0.0.1-SNAPSHOT.jar
 java -jar code-help-core/code-help-core-app/target/code-help-core-app-0.0.1-SNAPSHOT.jar
 ```
 
-## Flutter generate types, run and build:
-```
+### Flutter generate types, run and build
+
+```sh
 Get dependencies and generate types:
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -35,17 +45,20 @@ Apk build:
 flutter build apk --dart-define="CODING_HELPER_FORUM_API_URL=http://10.0.2.2/forum" --dart-define="CODING_HELPER_API_URL=http://10.0.2.2/core" --dart-define="AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help"
 ```
 
-## Keycloak run (local):
+### Keycloak run (local)
+
 **Important:** realm configuration **(must be json file to be able to import it)**: [code-help.json](https://raw.githubusercontent.com/legendmt25/coding-helper-cross-platform/main/code-help-keycloak-iam/realms/code-help.json)
-```
+
+```sh
 kc.bat start-dev --hostname=http://10.0.2.2
 
 realm: code-help
 client_id: code-help-flutter
 ```
 
-## Generate self-signed certificates and keystore (not needed)
-```
+### Generate self-signed certificates and keystore (not needed)
+
+```sh
 Keycloak and nginx:
 openssl req --x509 --nodes --days 365 --newkey rsa:2048 --keyout tls.key -out tls.crt --subj "\CN=<domain.net>"
 openssl pkcs12 --export --out keycloak.p12 --inkey tls.key -in tls.crt --name keycloak-cert
@@ -55,8 +68,9 @@ Flutter:
 keytool --genkey -v --keystore flutter.jks --storetype JKS --keyalg RSA --keysize 2048 --validity 10000 --alias flutter
 ```
 
-## Docker build
-```
+### Docker build
+
+```sh
 LOCAL setup:
 docker-compose up
 
@@ -64,21 +78,25 @@ PROD setup
 docker-compose -f docker-compose.prod.yml up
 ```
 
-## Api documentation
+### Api documentation
+
 [Core api documentation](https://raw.githubusercontent.com/legendmt25/coding-helper-cross-platform/main/code-help-core/code-help-core-api-docs/src/main/resources/code-help-core-api.yaml)
 <br/>
 [Forum api documentation](https://raw.githubusercontent.com/legendmt25/coding-helper-cross-platform/main/code-help-forum/src/main/resources/forum-api.yaml)
 
-## Mockups
+### Mockups
+
 [Figma designs](https://www.figma.com/file/jPnnbfNqoAwo7Cn1DNMH5M/Coding-helper?node-id=0%3A1&t=Ov7dI0u7oWTtRXqm-1)
 <br/>
 [Prototype](https://www.figma.com/proto/jPnnbfNqoAwo7Cn1DNMH5M/Coding-helper?node-id=0%3A1&t=Ov7dI0u7oWTtRXqm-1)
-## Technology stack
-<img style="width: 100%" alt="Architecture" src="https://user-images.githubusercontent.com/46025800/222832557-e144e229-d979-4917-a780-e722d2631766.png"/>
 
-## Project structure
+### Technology stack
 
-```
+![Diagram of the app](https://user-images.githubusercontent.com/46025800/222832557-e144e229-d979-4917-a780-e722d2631766.png 'Tech stack')
+
+### Project structure
+
+```directory
 ...
 ├── .idea                           # Intellij configuration (run configurations, codeStyles, ...)
 |   ├── ...
@@ -108,16 +126,16 @@ docker-compose -f docker-compose.prod.yml up
 |   |   |   ├── mk.json             # Macedonian translation text keys file
 |   |   |   ├── en.json             # English translation text keys file
 |   |   |   └── de.json             # Deutsch translation text keys file
-|   ├── api                         # Generated api clients 
+|   ├── api                         # Generated api clients
 |   ├── lib
 |   |   ├── src                     # Source folder
 |   |   │   ├── components          # Flutter components (widgets)
 |   |   │   ├── services            # Services for fetching data
 |   |   │   |   ├── ...
-|   |   |   |   └── index.dart      # All services exports 
+|   |   |   |   └── index.dart      # All services exports
 |   |   │   ├── context             # Context providers
 |   |   │   |   ├── ...
-|   |   |   |   └── index.dart      # All context provider exports 
+|   |   |   |   └── index.dart      # All context provider exports
 |   |   │   ├── pages               # Getting started guide
 |   |   │   ├── ...
 |   |   │   ├── env.dart            # Enviroment variables
