@@ -33,17 +33,17 @@ spring.security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/iam
 ```yaml
 # Database Proeprties
 spring:
-	neo4j:
-		authentication:
-			username: neo4j
-			password: password
-		uri: bolt://localhost:7687
-	security:
-		oauth2:
-			resourceserver:
-				jwt:
-					issuer-uri: http://localhost/iam/realms/code-help
-					jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
+  neo4j:
+    authentication:
+      username: neo4j
+      password: password
+    uri: bolt://localhost:7687
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost/iam/realms/code-help
+          jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
 ```
 
 ##### Корисни команди
@@ -51,15 +51,20 @@ spring:
 ```sh
 cd code-help-core
 
-mvn clean install # jar file generated in target/APPNAME-version.jar
+# jar file generated in target/APPNAME-version.jar
+mvn clean install 
 
-mvn spring-boot:run # start the spring app in development mode
+# start the spring app in development mode
+mvn spring-boot:run 
 
-java -jar code-help-core-app-0.0.1-SNAPSHOT.jar # start from jar file
+# start from jar file
+java -jar code-help-core-app-0.0.1-SNAPSHOT.jar 
 
-java -jar code-help-core-app-0.0.1-SNAPSHOT.jar -Dspring.datasource.username=otherUser # override property
+# override property
+java -jar code-help-core-app-0.0.1-SNAPSHOT.jar -Dspring.datasource.username=otherUser 
 
-mvn spring-boot:run -Dspring.neo4j.authentication.username=otherUser # override property
+# override property
+mvn spring-boot:run -Dspring.neo4j.authentication.username=otherUser 
 
 ```
 
@@ -87,16 +92,16 @@ spring.security.oauth2.resourceserver.jwt.jwk-set-uri: http://localhost:8080/iam
 
 ```yaml
 spring:
-	datasource:
-		url: jdbc:postgresql://localhost:5432/code_help
-		username: user
-		password: password
-	security:
-		oauth2:
-			resourceserver:
-				jwt:
-					issuer-uri: http://localhost/iam/realms/code-help
-					jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
+  datasource:
+    url: jdbc:postgresql://localhost:5432/code_help
+    username: user
+    password: password
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost/iam/realms/code-help
+          jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
 ```
 
 ##### Корисни команди
@@ -104,15 +109,20 @@ spring:
 ```sh
 cd code-help-forum
 
-mvn clean install # jar file generated in target/APPNAME-version.jar
+# jar file generated in target/APPNAME-version.jar
+mvn clean install 
 
-mvn spring-boot:run # start the spring app in development mode
+# start the spring app in development mode
+mvn spring-boot:run 
 
-java -jar code-help-forum-0.0.1-SNAPSHOT.jar # start from jar file
+# start from jar file
+java -jar code-help-forum-0.0.1-SNAPSHOT.jar 
 
-java -jar code-help-forum-0.0.1-SNAPSHOT.jar -Dspring.datasource.username=otherUser # override property
+# override property
+java -jar code-help-forum-0.0.1-SNAPSHOT.jar -Dspring.datasource.username=otherUser 
 
-mvn spring-boot:run -Dspring.datasource.username=otherUser # override property
+# override property
+mvn spring-boot:run -Dspring.datasource.username=otherUser 
 
 ```
 
@@ -132,11 +142,11 @@ mvn spring-boot:run -Dspring.datasource.username=otherUser # override property
 > [Linux/macOS using export](https://www.man7.org/linux/man-pages/man1/export.1p.html) > [Linux/macOS using set](https://man7.org/linux/man-pages/man1/set.1p.html)
 
 ```
-	CORE_ADMIN_API_SERVER_URL=http://localhost:3000/api
-	FORUM_API_SERVER_URL=http://localhost:3001/api/v1
-	OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
-	OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://localhost/iam/realms/code-help
-	OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://localhost/iam/realms/code-help/protocol/openid-connect/certs
+CORE_ADMIN_API_SERVER_URL=http://localhost:3000/api
+FORUM_API_SERVER_URL=http://localhost:3001/api/v1
+OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
+OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://localhost/iam/realms/code-help
+OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://localhost/iam/realms/code-help/protocol/openid-connect/certs
 ```
 
 ##### Корисни команди
@@ -144,13 +154,16 @@ mvn spring-boot:run -Dspring.datasource.username=otherUser # override property
 ```sh
 cd code-help-admin/code-help-admin-backend
 
-go mod download # download dependencies
+# download dependencies
+go mod download 
 
 go build ./admin-api/cmd/main.go
 
-./main # Run the built app
+# Run the built app
+./main 
 
-go run ./admin-api/cmd/main.go # Run without building
+# Run without building
+go run ./admin-api/cmd/main.go 
 
 ```
 
@@ -372,29 +385,29 @@ Gо заедницата, е доволно голема и има доста и
 
 ```go
 func retry(task func(), condition func() bool) {
-    var wg sync.WaitGroup
-    ticker := time.NewTicker(5 * time.Second)
-    quit := make(chan struct{})
-    wg.Add(1)
-    go func() {
-       for {
-          select {
-          case <-ticker.C:
-             log.Println("Retrying...")
-             if condition() {
-                close(quit)
-             } else {
-                task()
-             }
-          case <-quit:
-             ticker.Stop()
-             wg.Done()
-             return
-          }
-       }
-    }()
+var wg sync.WaitGroup
+ticker := time.NewTicker(5 * time.Second)
+quit := make(chan struct{})
+wg.Add(1)
+go func() {
+for {
+select {
+case <-ticker.C:
+log.Println("Retrying...")
+if condition() {
+close(quit)
+} else {
+task()
+}
+case <-quit:
+ticker.Stop()
+wg.Done()
+return
+}
+}
+}()
 
-    wg.Wait()
+wg.Wait()
 }
 ```
 
@@ -415,7 +428,7 @@ import './app.css';
 import App from './CodeHelpAdminApp.svelte';
 
 const app = new App({
-  target: document.getElementById('app') as Element,
+    target: document.getElementById('app') as Element,
 });
 
 export default app;
@@ -424,15 +437,15 @@ export default app;
 ```html
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Code Help Admin</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>
 ```
 
@@ -444,8 +457,8 @@ Svelte исто така го олеснува создавањето на на�
 
 ```ts
 const dispatch = createEventDispatcher<{
-  error: Error;
-  success: void;
+    error: Error;
+    success: void;
 }>();
 ```
 
@@ -469,16 +482,16 @@ dispatch('success');
 ```ts
 const store = writable('hello');
 const derivedStore = derived([store], ([$store]) => {
-  console.log($store);
+    console.log($store);
 });
 const customStore = (): Writable<string> => {
-  const internalStore = writable('Other');
+    const internalStore = writable('Other');
 
-  return {
-    subscribe: internalStore.subscribe,
-    set: internalStore.set,
-    update: internalStore.update,
-  };
+    return {
+        subscribe: internalStore.subscribe,
+        set: internalStore.set,
+        update: internalStore.update,
+    };
 };
 ```
 
