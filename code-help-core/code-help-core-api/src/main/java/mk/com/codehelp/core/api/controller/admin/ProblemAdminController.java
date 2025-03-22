@@ -4,15 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.admin.rest.model.ProblemRequest;
 import mk.com.codehelp.core.api.mappers.admin.AdminProblemMapper;
+import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.domain.model.ProblemFilter;
 import mk.com.codehelp.core.rest.admin.api.ProblemApi;
 import mk.com.codehelp.core.rest.admin.model.*;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -63,7 +69,9 @@ public class ProblemAdminController implements ProblemApi {
     @Override
     public ResponseEntity<ProblemResponse> getAllProblems() {
 
-        List<Problem> problems = problemService.findAll();
+        Page<ProblemByLikesDto> problemsPage = problemService.findAll(Pageable.unpaged(), new ProblemFilter());
+
+        List<ProblemByLikesDto> problems = problemsPage.getContent();
 
         return ResponseEntity.ok(problemMapper.convert(problems));
     }

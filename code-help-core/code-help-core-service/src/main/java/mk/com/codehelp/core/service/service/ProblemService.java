@@ -2,13 +2,15 @@ package mk.com.codehelp.core.service.service;
 
 import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.domain.model.ProblemFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProblemService {
-  List<Problem> findAll();
+  Page<ProblemByLikesDto> findAll(Pageable pageable, ProblemFilter filter);
 
   Problem create(Problem problem) throws IOException;
 
@@ -18,13 +20,7 @@ public interface ProblemService {
 
   Problem update(Long id, Problem problem);
 
-  List<Problem> findAllLByCategories(Collection<String> categories);
-
-  List<ProblemByLikesDto> findTop10ByOrderByLikes();
-
   boolean likeToggle(Long id, String email);
 
   boolean isLikedBy(Long problemId, String email);
-
-  List<Problem> findAllLikedBy(String email);
 }

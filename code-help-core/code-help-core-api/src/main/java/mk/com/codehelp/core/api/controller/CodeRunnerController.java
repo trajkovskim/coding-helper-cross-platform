@@ -15,10 +15,10 @@ public class CodeRunnerController implements CodeRunnerApi {
 
   @Override
   @SneakyThrows
-  public ResponseEntity<String> runCode(RunCodeRequest body) {
+  public ResponseEntity<String> runCode(Long problemId, String authorization, RunCodeRequest body) {
 
     String mergedCode = codeRunnerService.createCode(
-        body.getProblemId(),
+        problemId,
         body.getLanguage(),
         body.getCode()
     );

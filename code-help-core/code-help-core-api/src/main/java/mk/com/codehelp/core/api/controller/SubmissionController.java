@@ -5,8 +5,7 @@ import lombok.SneakyThrows;
 import mk.com.codehelp.core.api.mappers.SubmissionMapper;
 import mk.com.codehelp.core.domain.dto.SubmissionDto;
 import mk.com.codehelp.core.rest.api.SubmissionApi;
-import mk.com.codehelp.core.rest.model.GetSubmissionsRequest;
-import mk.com.codehelp.core.rest.model.SubmissionReqBody;
+import mk.com.codehelp.core.rest.model.SubmissionBaseEntry;
 import mk.com.codehelp.core.rest.model.SubmissionsResponse;
 import mk.com.codehelp.core.service.service.SubmissionService;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +22,20 @@ public class SubmissionController implements SubmissionApi {
 
   @Override
   @SneakyThrows
-  public ResponseEntity<String> createSubmissionsEntry(String authorization, SubmissionReqBody body) {
+  public ResponseEntity<String> createSubmissionsEntry(Long problemId, String authorization, SubmissionBaseEntry body) {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
-    String output = submissionService.create(user, body.getProblemId(), body.getCode(), body.getLanguage());
+    String output = submissionService.create(user, problemId, body.getCode(), body.getLanguage());
     return ResponseEntity.ok(output);
   }
 
   @Override
-  public ResponseEntity<SubmissionsResponse> getSubmissions(String authorization, GetSubmissionsRequest body) {
+  public ResponseEntity<SubmissionsResponse> getSubmissions(Long problemId, String authorization) {
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     List<SubmissionDto> entries;
-    if (body.getProblemId() == null) {
+    if (problemId == null) {
       entries = submissionService.findAllSubmissionsByEmail(user);
     } else {
-      entries = submissionService.findAllSubmissionsByUserEmailAndProblemId(user, body.getProblemId());
+      entries = submissionService.findAllSubmissionsByUserEmailAndProblemId(user, problemId);
     }
     SubmissionsResponse response = submissionConverter.convertListOfSubmissionToResponse(entries);
     return ResponseEntity.ok(response);

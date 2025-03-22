@@ -9,6 +9,8 @@ import mk.com.codehelp.core.rest.admin.model.ContestRequest;
 import mk.com.codehelp.core.rest.admin.model.ContestResponse;
 import mk.com.codehelp.core.service.service.ContestService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +31,9 @@ public class ContestAdminController implements ContestApi {
     @Override
     public ResponseEntity<ContestResponse> getAllContests() {
 
-        List<Contest> contests = contestService.findAll();
+        Page<Contest> contestPage = contestService.findAll(Pageable.unpaged());
 
-        ContestResponse contestResponse = contestMapper.convert(contests);
+        ContestResponse contestResponse = contestMapper.convert(contestPage.getContent());
 
         return ResponseEntity.ok(contestResponse);
     }

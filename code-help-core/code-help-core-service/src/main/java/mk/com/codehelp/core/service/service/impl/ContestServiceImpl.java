@@ -12,6 +12,8 @@ import mk.com.codehelp.core.domain.model.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.repository.ContestRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,8 +30,8 @@ public class ContestServiceImpl implements ContestService {
   protected final ProblemService problemService;
 
   @Override
-  public List<Contest> findAll() {
-    return contestRepository.findAll();
+  public Page<Contest> findAll(Pageable pageable) {
+    return contestRepository.findAll(pageable);
   }
 
   @Override

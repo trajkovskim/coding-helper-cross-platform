@@ -1,0 +1,26 @@
+server:
+  port: 5000
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:db
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.H2Dialect
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+  show-actuator: true
+
+logging:
+  level:
+    org.springframework.web: DEBUG

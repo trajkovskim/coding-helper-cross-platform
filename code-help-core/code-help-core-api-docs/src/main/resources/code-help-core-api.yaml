@@ -62,18 +62,10 @@ components:
         starterCode:
           type: string
           example: 'function(...) {...}'
-
-    ProblemByLikes:
-      allOf:
-        - $ref: '#/components/schemas/ProblemEntry'
-        - type: object
-          required:
-            - likes
-          properties:
-            likes:
-              type: integer
-              format: int64
-              example: 23
+        likes:
+          type: integer
+          format: int64
+          example: 23
 
     SubmissionStatus:
       type: string
@@ -106,17 +98,6 @@ components:
               $ref: '#/components/schemas/Date'
             status:
               $ref: '#/components/schemas/SubmissionStatus'
-
-    SubmissionReqBody:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/SubmissionBaseEntry'
-        - type: object
-          required:
-            - problemId
-          properties:
-            problemId:
-              $ref: '#/components/schemas/Id'
 
     ContestStatus:
       type: string
@@ -172,15 +153,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemEntry'
-    ProblemsTop10Response:
-      required:
-        - problems
-      type: object
-      properties:
-        problems:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProblemByLikes'
     CategoriesResponse:
       required:
         - categories
@@ -233,7 +205,65 @@ components:
           type: integer
           format: int64
           example: 1
-
+  responses:
+    ProblemResponse:
+      description: Problem entry
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemEntry'
+    ProblemsResponse:
+      description: A list of problems
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemsResponse'
+    ContestsResponse:
+      description: A list of contests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ContestsResponse'
+    ContestResponse:
+      description: Contest entry
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ContestEntry'
+    CategoriesResponse:
+      description: List of categories
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CategoriesResponse'
+    SubmissionsResponse:
+      description: List of Submissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubmissionsResponse'
+    UserStatisticsResponse:
+      description: Output string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserStatistics'
+    TestCodeResponse:
+      description: Output string
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'All test cases passed'
+    BooleanResponse:
+      description: Boolean value
+      content:
+        application/json:
+          schema:
+            type: boolean
+            example: true
+    NoContentResponse:
+      description: No content.
   parameters:
     id:
       name: id
@@ -248,22 +278,70 @@ components:
       schema:
         type: string
         example: "Bearer {token}"
-  responses:
-    NoContentResponse:
-      description: No content.
+    Page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    Size:
+      in: query
+      name: size
+      description: Page size
+      required: false
+      schema:
+        type: integer
+        default: 10
+        example: 10
+    Sort:
+      in: query
+      name: sortBy
+      description: Sort by properties
+      required: false
+      schema:
+        type: array
+        default: [ ]
+        items:
+          type: string
+          example: "id=asc,title=desc"
+    Accept-Language:
+      name: Accept-Language
+      in: header
+      description: Accept language header
+      example: "en"
+      required: false
+      schema:
+        type: string
 paths:
   /problems:
     get:
       operationId: getProblemEntries
       tags: [ Problem ]
       description: Returns all coding helper problems
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+        - name: categories
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              example: "trees"
+        - name: likedBy
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "username"
       responses:
         200:
-          description: A list of problems
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemsResponse'
+          $ref: '#/components/responses/ProblemsResponse'
   /problems/liked:
     get:
       operationId: getLikedProblems
@@ -271,24 +349,7 @@ paths:
       description: Return all problems the user likes
       responses:
         200:
-          description: A list of liked problems
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemsResponse'
-
-  /problems/top10:
-    get:
-      operationId: getTop10Problems
-      tags: [ Problem ]
-      description: Returns the top 10 coding helper problems by likes count
-      responses:
-        200:
-          description: problem
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemsTop10Response'
+          $ref: '#/components/responses/ProblemsResponse'
   /problems/{id}:
     get:
       parameters:
@@ -298,11 +359,7 @@ paths:
       description: Returns a coding helper problem with likes count
       responses:
         200:
-          description: problem
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemByLikes'
+          $ref: '#/components/responses/ProblemResponse'
   /problems/{id}/like:
     get:
       parameters:
@@ -322,12 +379,7 @@ paths:
       description: Returns true if a coding helper problem is liked
       responses:
         200:
-          description: 'Returns boolean'
-          content:
-            application/json:
-              schema:
-                type: boolean
-                example: true
+          $ref: "#/components/responses/BooleanResponse"
   /categories:
     get:
       operationId: getCategories
@@ -335,66 +387,54 @@ paths:
       description: Returns all the categories
       responses:
         200:
-          description: List of categories
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CategoriesResponse'
+          $ref: "#/components/responses/CategoriesResponse"
   /submissions:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                problemId:
-                  $ref: '#/components/schemas/Id'
+    get:
       parameters:
         - $ref: '#/components/parameters/Authorization'
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
       operationId: getSubmissions
       tags: [ Submission ]
       description: Returns all submissions for the logged user
       responses:
         200:
-          description: List of Submissions
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubmissionsResponse'
-  /submit:
+          $ref: '#/components/responses/SubmissionsResponse'
     post:
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SubmissionReqBody'
+              $ref: '#/components/schemas/SubmissionBaseEntry'
       parameters:
         - $ref: '#/components/parameters/Authorization'
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
       operationId: createSubmissionsEntry
       tags: [ Submission ]
       description: Returns output string of the code that was run
       responses:
-        204:
-          description: Output string
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: 'All test cases passed'
+        200:
+          $ref: "#/components/responses/TestCodeResponse"
 
   /contests:
     get:
       operationId: getContestEntries
       tags: [ Contests ]
       description: Returns the contests happening in coding helper
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
       responses:
         200:
-          description: A list of contests
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContestsResponse'
+          $ref: '#/components/responses/ContestsResponse'
   /contests/{id}:
     get:
       parameters:
@@ -404,11 +444,7 @@ paths:
       description: Returns contest happening in coding helper
       responses:
         200:
-          description: A list of contests
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContestEntry'
+          $ref: "#/components/responses/ContestResponse"
   /contests/{contestId}/problems/{problemId}:
     get:
       parameters:
@@ -440,8 +476,6 @@ paths:
             schema:
               type: object
               properties:
-                problemId:
-                  $ref: '#/components/schemas/Id'
                 language:
                   type: string
                   example: 'javascript'
@@ -451,17 +485,19 @@ paths:
                 input:
                   type: string
                   example: '[1, 2]'
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Id"
       tags: [ CodeRunner ]
       operationId: runCode
       description: Runs code and produces output
       responses:
         200:
-          description: Output string
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: '[1, 2, 3]'
+          $ref: "#/components/responses/TestCodeResponse"
   /statistics:
     get:
       tags: [ User ]
@@ -471,8 +507,4 @@ paths:
         - $ref: '#/components/parameters/Authorization'
       responses:
         200:
-          description: Output string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserStatistics'
+          $ref: '#/components/responses/UserStatisticsResponse'

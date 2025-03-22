@@ -8,8 +8,13 @@ import mk.com.codehelp.core.rest.model.ContestEntry;
 import mk.com.codehelp.core.rest.model.ContestProblem;
 import mk.com.codehelp.core.rest.model.ContestsResponse;
 import mk.com.codehelp.core.service.service.ContestService;
+import mk.com.codehelp.core.service.util.PageUtil;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -28,9 +33,12 @@ public class ContestController implements ContestsApi {
   }
 
   @Override
-  public ResponseEntity<ContestsResponse> getContestEntries() {
-    List<Contest> contests = contestService.findAll();
-    ContestsResponse response = contestConverter.toResponse(contests);
+  public ResponseEntity<ContestsResponse> getContestEntries(Integer page, Integer size, List<String> sortBy) {
+
+    Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
+
+    Page<Contest> contestPage = contestService.findAll(pageRequest);
+    ContestsResponse response = contestConverter.toResponse(contestPage.getContent());
     return ResponseEntity.ok(response);
   }
 

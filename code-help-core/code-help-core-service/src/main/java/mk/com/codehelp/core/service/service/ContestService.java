@@ -7,8 +7,11 @@ import mk.com.codehelp.core.domain.model.Problem;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface ContestService {
-  List<Contest> findAll();
+  Page<Contest> findAll(Pageable pageable);
 
   Contest findById(Long id);
 

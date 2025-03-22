@@ -2,6 +2,7 @@ package mk.com.codehelp.core.api.mappers.admin;
 
 import mk.com.codehelp.core.api.admin.rest.model.ProblemRequest;
 import mk.com.codehelp.core.api.mappers.FileMapper;
+import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.rest.admin.model.Problem;
 import mk.com.codehelp.core.rest.admin.model.ProblemDetail;
 import mk.com.codehelp.core.rest.admin.model.ProblemResponse;
@@ -21,9 +22,9 @@ public interface AdminProblemMapper {
   @Mapping(target = "likedBy", ignore = true)
   mk.com.codehelp.core.domain.model.Problem convert(Long id, ProblemRequest problem);
 
-  Problem convertPrivate(mk.com.codehelp.core.domain.model.Problem problem);
+  Problem convertPrivate(ProblemByLikesDto problem);
 
-  default ProblemResponse convert(List<mk.com.codehelp.core.domain.model.Problem> problems) {
+  default ProblemResponse convert(List<ProblemByLikesDto> problems) {
 
     return new ProblemResponse().problems(
         problems.stream().map(this::convertPrivate).collect(Collectors.toList()));

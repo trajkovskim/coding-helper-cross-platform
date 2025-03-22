@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.domain.model.ProblemFilter;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.service.service.ProblemService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +24,8 @@ public class ProblemServiceImpl implements ProblemService {
   private final CategoryService categoryService;
 
   @Override
-  public List<Problem> findAll() {
-    return this.problemRepository.findAll();
+  public Page<ProblemByLikesDto> findAll(Pageable pageable, ProblemFilter filter) {
+    return this.problemRepository.findAll(pageable, filter);
   }
 
   @Override
@@ -66,19 +68,6 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
-  public List<Problem> findAllLByCategories(Collection<String> categories) {
-    if (categories.isEmpty()) {
-      return this.findAll();
-    }
-    return this.problemRepository.findAllByCategory_NameIn(categories);
-  }
-
-  @Override
-  public List<ProblemByLikesDto> findTop10ByOrderByLikes() {
-    return this.problemRepository.findTop10ByOrderByLikes();
-  }
-
-  @Override
   public boolean likeToggle(Long id, String email) {
     Problem problem = findById(id);
     boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.equals(email));
@@ -95,13 +84,6 @@ public class ProblemServiceImpl implements ProblemService {
   public boolean isLikedBy(Long problemId, String email) {
     final var problem = findById(problemId);
     return isLikedBy(problem, email);
-  }
-
-  @Override
-  public List<Problem> findAllLikedBy(String email) {
-    return this.problemRepository.findAll().stream()
-        .filter(problem -> isLikedBy(problem, email))
-        .toList();
   }
 
   private boolean isLikedBy(Problem problem, String email) {

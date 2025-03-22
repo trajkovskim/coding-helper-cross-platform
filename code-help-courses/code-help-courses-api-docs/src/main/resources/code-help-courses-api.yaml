@@ -1,0 +1,288 @@
+openapi: 3.0.1
+info:
+  title: 'Code Help Course API'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Open API specification
+
+security:
+  - Authorization_JWT: [ ]
+
+paths:
+  /courses/search:
+    post:
+      operationId: searchCourses
+      tags:
+        - course
+      description: Search courses pageable
+      parameters:
+        - $ref: "#/components/parameters/Accept-Language"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseFilters"
+      responses:
+        200:
+          $ref: "#/components/responses/CoursesResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+  /courses/{id}:
+    get:
+      operationId: getCourse
+      tags:
+        - course
+      description: Get course by id
+      parameters:
+        - $ref: "#/components/parameters/Accept-Language"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: "#/components/responses/CourseResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+
+components:
+  schemas:
+    Decimal:
+      type: string
+      format: decimal
+      description: Decimal value
+      example: "5.25"
+
+    CourseFilters:
+      type: object
+      properties:
+        title:
+          type: string
+
+    CourseEmbedded:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+
+    CourseModule:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        duration:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+
+    Course:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        modules:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseModule"
+
+    CourseEmbeddedResponse:
+      allOf:
+        - $ref: "#/components/schemas/CourseEmbedded"
+        - type: object
+          properties:
+            links:
+              $ref: "#/components/schemas/SelfLink"
+
+    CourseResponse:
+      allOf:
+        - $ref: "#/components/schemas/Course"
+        - type: object
+          properties:
+            links:
+              $ref: "#/components/schemas/SelfLink"
+
+    CoursesResponse:
+      type: object
+      required:
+        - pageInfo
+        - courses
+      properties:
+        info:
+          $ref: "#/components/schemas/PageInfo"
+        courses:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseEmbeddedResponse"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          example: .../api/v1/
+
+    SelfLink:
+      type: object
+      required:
+        - self
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+
+    PaginationLinks:
+      type: object
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+        first:
+          $ref: "#/components/schemas/Link"
+        last:
+          $ref: "#/components/schemas/Link"
+        prev:
+          $ref: "#/components/schemas/Link"
+        next:
+          $ref: "#/components/schemas/Link"
+
+    PageInfo:
+      type: object
+      description: Pagination info
+      required:
+        - totalPages
+        - pageSize
+        - pageNumber
+        - totalElements
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+          example: 1000
+        totalPages:
+          type: integer
+          example: 5
+        pageSize:
+          type: integer
+          example: 10
+        pageNumber:
+          type: integer
+          example: 10
+
+    ErrorResponse:
+      type: object
+      description: Error response
+      required:
+        - code
+        - message
+        - status
+      properties:
+        code:
+          type: string
+          example: "STRONGAUTO:0001"
+        message:
+          type: string
+          example: "An error happened"
+        status:
+          type: integer
+          example: 404
+
+    CreatedResponse:
+      type: object
+      description: Self links response
+      required:
+        - links
+      properties:
+        links:
+          $ref: "#/components/schemas/SelfLink"
+
+  responses:
+    CoursesResponse:
+      description: A list of pageable course entries
+      content:
+        application/hal+json:
+          schema:
+            $ref: "#/components/schemas/CoursesResponse"
+    CourseResponse:
+      description: Course data entry
+      content:
+        application/hal+json:
+          schema:
+            $ref: "#/components/schemas/CourseResponse"
+
+    BadRequestResponse:
+      description: Bad request error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundResponse:
+      description: Not found error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    CreatedResponse:
+      description: Created response
+      content:
+        application/hal+json:
+          schema:
+            $ref: "#/components/schemas/CreatedResponse"
+    NoContentResponse:
+      description: No content response.
+
+  parameters:
+    Page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    Size:
+      in: query
+      name: size
+      description: Page size
+      required: false
+      schema:
+        type: integer
+        default: 10
+        example: 10
+    Sort:
+      in: query
+      name: sortBy
+      description: Sort by properties
+      required: false
+      schema:
+        type: array
+        default: [ ]
+        items:
+          type: string
+          example: "id=asc,title=desc"
+    Accept-Language:
+      name: Accept-Language
+      in: header
+      description: Accept language header
+      example: "en"
+      required: false
+      schema:
+        type: string
