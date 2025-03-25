@@ -20,5 +20,6 @@ public class Compilers {
     private final String compiler;
     private final String ext;
   }
+
   private Map<String, SingleCompiler> compilers;
 }

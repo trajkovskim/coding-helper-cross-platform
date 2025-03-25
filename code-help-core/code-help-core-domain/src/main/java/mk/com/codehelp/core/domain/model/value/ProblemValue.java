@@ -1,11 +1,11 @@
-package mk.com.codehelp.core.domain.dto;
+package mk.com.codehelp.core.domain.model.value;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.com.codehelp.core.domain.enums.Difficulty;
 import mk.com.codehelp.core.domain.model.Category;
-import mk.com.codehelp.core.domain.model.File;
+import mk.com.codehelp.core.domain.model.Problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +13,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProblemByLikesDto {
+public class ProblemValue {
+
   private Long id;
   private Category category;
   private String title;
   private Difficulty difficulty;
   private String markdown;
-  private File starterCode;
-  private File runnerCode;
-  private List<File> testCases = new ArrayList<>();
+  private List<Problem.Code> starterCodes;
+  private List<Problem.Code> runnerCodes;
+  private List<Problem.TestCase> testCases = new ArrayList<>();
   private Long likes;
 }

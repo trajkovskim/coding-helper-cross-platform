@@ -59,14 +59,18 @@ components:
         markdown:
           type: string
           example: '## Two Sum... problem description'
-        starterCode:
-          type: string
-          example: 'function(...) {...}'
         likes:
           type: integer
           format: int64
           example: 23
-
+    ProblemEntryDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemEntry"
+        - type: object
+          properties:
+            starterCode:
+              type: string
+              example: 'function(...) {...}'
     SubmissionStatus:
       type: string
       enum: [ ACCEPTED, DECLINED ]
@@ -104,19 +108,16 @@ components:
       enum: [ OPEN, STARTED, CLOSED ]
 
     ContestProblem:
-      type: object
-      required:
-        - problem
-        - score
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        problem:
-          $ref: '#/components/schemas/ProblemEntry'
-        score:
-          type: integer
-          format: int64
-          example: 53
+      allOf:
+        - $ref: "#/components/schemas/ProblemEntry"
+        - type: object
+          required:
+            - score
+          properties:
+            score:
+              type: integer
+              format: int64
+              example: 53
 
     ContestEntry:
       type: object
@@ -211,7 +212,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProblemEntry'
+            $ref: '#/components/schemas/ProblemEntryDetail'
     ProblemsResponse:
       description: A list of problems
       content:
@@ -354,6 +355,12 @@ paths:
     get:
       parameters:
         - $ref: '#/components/parameters/id'
+        - name: language
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "javascript"
       operationId: getProblemEntry
       tags: [ Problem ]
       description: Returns a coding helper problem with likes count
@@ -458,6 +465,12 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Id'
+        - name: language
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "javascript"
       tags: [ Contests ]
       operationId: getContestProblem
       description: Returns a contest problem entry

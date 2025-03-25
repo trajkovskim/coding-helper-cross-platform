@@ -2,7 +2,7 @@ package mk.com.codehelp.core.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.api.mappers.UserMapper;
-import mk.com.codehelp.core.domain.dto.UserStatisticsDto;
+import mk.com.codehelp.core.service.dto.UserStatisticsDto;
 import mk.com.codehelp.core.rest.api.UserApi;
 import mk.com.codehelp.core.rest.model.UserStatistics;
 import mk.com.codehelp.core.service.service.UserService;

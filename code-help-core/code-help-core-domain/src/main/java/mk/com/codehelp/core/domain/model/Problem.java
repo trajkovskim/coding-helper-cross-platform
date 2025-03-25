@@ -3,6 +3,7 @@ package mk.com.codehelp.core.domain.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.com.codehelp.core.domain.enums.Difficulty;
+
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Problem {
+
   @Id
   @GeneratedValue
   private Long id;
@@ -31,12 +33,31 @@ public class Problem {
   private List<String> likedBy = new ArrayList<>();
 
   @Relationship(value = "STARTER_CODE", direction = Relationship.Direction.OUTGOING)
-  private File starterCode;
+  private List<Code> starterCode = new ArrayList<>();
 
   @Relationship(value = "RUNNER_CODE", direction = Relationship.Direction.OUTGOING)
-  private File runnerCode;
+  private List<Code> runnerCode = new ArrayList<>();
 
   @Relationship(value = "TEST_CASES", direction = Relationship.Direction.OUTGOING)
-  private List<File> testCases = new ArrayList<>();
+  private List<TestCase> testCases = new ArrayList<>();
 
+  @Node
+  @Data
+  public static class Code {
+
+    @Id
+    private Long id;
+    private String language;
+    private String code;
+  }
+
+  @Data
+  @Node
+  public static class TestCase {
+
+    @Id
+    private Long id;
+    private String in;
+    private String out;
+  }
 }

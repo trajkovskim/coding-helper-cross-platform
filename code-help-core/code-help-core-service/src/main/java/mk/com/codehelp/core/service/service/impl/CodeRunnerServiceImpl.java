@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.service.config.Compilers;
+import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.exceptions.CompilerNotFoundException;
 import mk.com.codehelp.core.service.service.CodeRunnerService;
 import mk.com.codehelp.core.service.service.ProblemService;
@@ -24,29 +25,21 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CodeRunnerServiceImpl implements CodeRunnerService {
+
   private final Compilers compilers;
   private final ProblemService problemService;
 
   @Override
-  public String runTestCases(List<mk.com.codehelp.core.domain.model.File> testCases, String code, String language)
+  public String runTestCases(List<Problem.TestCase> testCases, String code, String language)
       throws IOException, InterruptedException {
     int n = testCases.size();
     int i = 1;
 
-    Map<String, mk.com.codehelp.core.domain.model.File> testCasesByFileName = testCases.stream()
-        .collect(Collectors.toMap(mk.com.codehelp.core.domain.model.File::getName, file -> file));
+    for (final Problem.TestCase testCase : testCases) {
 
-    for (final mk.com.codehelp.core.domain.model.File inputTestCase : testCasesByFileName.values()) {
-      if (inputTestCase.getName().startsWith("OUT")) {
-        continue;
-      }
+      final String output = this.runCode(testCase.getIn(), code, language);
 
-      String input = new String(inputTestCase.getData(), StandardCharsets.UTF_8);
-      final String output = this.runCode(input, code, language);
-
-      mk.com.codehelp.core.domain.model.File outputTestCase =
-          testCasesByFileName.get(inputTestCase.getName().replaceFirst("IN", "OUT"));
-      final String expectedOutput = new String(outputTestCase.getData(), StandardCharsets.UTF_8);
+      final String expectedOutput = testCase.getOut();
 
       if (!output.equals(expectedOutput)) {
         return String.format("Test case %d of %d failed\nOutput: %s\nExpected: %s", i, n, output, expectedOutput);
@@ -91,6 +84,7 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   @Override
   public String runCodeWithTestCases(Long problemId, String language, String code)
       throws IOException, InterruptedException {
+
     final String mergedCode = this.createCode(problemId, language, code);
     final Problem problem = problemService.findById(problemId);
 
@@ -99,10 +93,10 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
 
   @Override
   public String createCode(Long problemId, String language, String code) {
-    final Problem problem = problemService.findById(problemId);
-    final String runnerCode = new String(problem.getRunnerCode().getData(), StandardCharsets.UTF_8);
 
-    return createCode(language, code, runnerCode);
+    ProblemDto problem = problemService.getProblem(problemId, language);
+
+    return createCode(language, code, problem.getRunnerCode().getCode());
   }
 
   @Override

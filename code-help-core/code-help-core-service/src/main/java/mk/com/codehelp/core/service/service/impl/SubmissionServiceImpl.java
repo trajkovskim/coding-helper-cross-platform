@@ -1,7 +1,7 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import mk.com.codehelp.core.domain.dto.SubmissionDto;
+import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.Submission;
@@ -24,20 +24,23 @@ public class SubmissionServiceImpl implements SubmissionService {
   private final ProblemService problemService;
 
   @Override
-  public List<SubmissionDto> findAllSubmissionsByEmail(String email) {
+  public List<SubmissionValue> findAllSubmissionsByEmail(String email) {
+
     return submissionRepository.findAllByUser(email);
   }
 
   @Override
-  public List<SubmissionDto> findAllSubmissionsByUserEmailAndProblemId(String email, Long problemId) {
+  public List<SubmissionValue> findAllSubmissionsByUserEmailAndProblemId(String email, Long problemId) {
+
     return submissionRepository.findAllByUserAndProblem_Id(email, problemId);
   }
 
   @Override
   public String create(String email, Long problemId, String code, String language) throws IOException, InterruptedException {
-    String user = SecurityContextHolder.getContext().getAuthentication().getName();
-    Problem problem = problemService.findById(problemId);
 
+    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    Problem problem = problemService.findById(problemId);
     String output = codeRunnerService.runCodeWithTestCases(problemId, language, code);
 
     this.submissionRepository.save(
@@ -50,6 +53,7 @@ public class SubmissionServiceImpl implements SubmissionService {
             problem
         )
     );
+
     return output;
   }
 

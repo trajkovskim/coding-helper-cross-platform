@@ -7,6 +7,7 @@ import mk.com.codehelp.core.rest.api.ContestsApi;
 import mk.com.codehelp.core.rest.model.ContestEntry;
 import mk.com.codehelp.core.rest.model.ContestProblem;
 import mk.com.codehelp.core.rest.model.ContestsResponse;
+import mk.com.codehelp.core.service.dto.ContestProblemDto;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.util.PageUtil;
 
@@ -25,10 +26,9 @@ public class ContestController implements ContestsApi {
   private final ContestMapper contestConverter;
 
   @Override
-  public ResponseEntity<ContestProblem> getContestProblem(Long contestId, Long problemId) {
-    mk.com.codehelp.core.domain.model.ContestProblem contestProblem =
-        contestService.getContestProblem(contestId, problemId);
-    ContestProblem entry = contestConverter.convertContestProblem(contestProblem);
+  public ResponseEntity<ContestProblem> getContestProblem(Long contestId, Long problemId, String language) {
+    ContestProblemDto contestProblemDto = contestService.getContestProblem(contestId, problemId, language);
+    ContestProblem entry = contestConverter.convertContestProblem(contestProblemDto);
     return ResponseEntity.ok(entry);
   }
 

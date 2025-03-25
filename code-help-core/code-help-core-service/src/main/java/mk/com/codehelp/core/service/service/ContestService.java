@@ -1,16 +1,17 @@
 package mk.com.codehelp.core.service.service;
 
 import mk.com.codehelp.core.domain.model.Contest;
-import mk.com.codehelp.core.domain.model.ContestProblem;
+import mk.com.codehelp.core.domain.model.relations.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.service.dto.ContestProblemDto;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ContestService {
+
   Page<Contest> findAll(Pageable pageable);
 
   Contest findById(Long id);
@@ -21,7 +22,7 @@ public interface ContestService {
 
   ContestProblem addProblemToContest(Long id, Problem problem) throws IOException;
 
-  ContestProblem getContestProblem(Long contestId, Long problemId);
+  ContestProblemDto getContestProblem(Long contestId, Long problemId, String language);
 
   boolean startContest(Long contestId);
 

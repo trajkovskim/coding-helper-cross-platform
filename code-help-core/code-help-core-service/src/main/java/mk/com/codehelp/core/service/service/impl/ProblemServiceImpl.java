@@ -1,14 +1,18 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import mk.com.codehelp.core.domain.dto.ProblemByLikesDto;
+import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.domain.model.ProblemFilter;
+import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
+import mk.com.codehelp.core.domain.repository.CategoryRepository;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
+import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
+import mk.com.codehelp.core.service.exceptions.StarterCodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.service.service.ProblemService;
+import mk.com.codehelp.core.service.util.ProblemUtil;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +24,14 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class ProblemServiceImpl implements ProblemService {
+
   private final ProblemRepository problemRepository;
   private final CategoryService categoryService;
 
+  private final ProblemUtil problemUtil;
+
   @Override
-  public Page<ProblemByLikesDto> findAll(Pageable pageable, ProblemFilter filter) {
+  public Page<ProblemValue> findAll(Pageable pageable, ProblemFilter filter) {
     return this.problemRepository.findAll(pageable, filter);
   }
 
@@ -32,8 +39,7 @@ public class ProblemServiceImpl implements ProblemService {
   @Transactional(rollbackFor = Exception.class)
   public Problem create(Problem problem) throws IOException {
 
-    Category category = categoryService.findByName(problem.getCategory().getName());
-
+    Category category = categoryService.getOrCreate(problem.getCategory().getName());
     problem.setCategory(category);
 
     return problemRepository.save(problem);
@@ -45,8 +51,33 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
+  public ProblemDto getProblem(Long id, String language) {
+
+    Problem problem = findById(id);
+
+    Problem.Code starterCode = problemUtil.getCodeByLanguage(problem.getStarterCode(), language)
+        .orElseThrow(() -> new StarterCodeDoesNotExistException(id, language));
+
+    Problem.Code runnerCode = problemUtil.getCodeByLanguage(problem.getRunnerCode(), language)
+        .orElseThrow(() -> new StarterCodeDoesNotExistException(id, language));
+
+    return ProblemDto.builder()
+        .id(id)
+        .title(problem.getTitle())
+        .difficulty(problem.getDifficulty())
+        .markdown(problem.getMarkdown())
+        .category(problem.getCategory())
+        .starterCode(starterCode)
+        .runnerCode(runnerCode)
+        .likes((long) problem.getLikedBy().size())
+        .build();
+  }
+
+  @Override
   public Problem deleteById(Long id) {
+
     Problem problem = this.findById(id);
+
     this.problemRepository.deleteById(id);
     return problem;
   }
@@ -69,24 +100,24 @@ public class ProblemServiceImpl implements ProblemService {
 
   @Override
   public boolean likeToggle(Long id, String email) {
+
     Problem problem = findById(id);
+
     boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.equals(email));
     if (liked) {
       problem.getLikedBy().removeIf(x -> x.equals(email));
     } else {
       problem.getLikedBy().add(email);
     }
+
     problemRepository.save(problem);
+
     return liked;
   }
 
   @Override
   public boolean isLikedBy(Long problemId, String email) {
-    final var problem = findById(problemId);
-    return isLikedBy(problem, email);
-  }
 
-  private boolean isLikedBy(Problem problem, String email) {
-    return problem.getLikedBy().stream().anyMatch(x -> x.equals(email));
+    return problemRepository.existsByIdAndLikedByContains(problemId, email);
   }
 }

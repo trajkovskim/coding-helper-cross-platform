@@ -1,4 +1,4 @@
-package mk.com.codehelp.core.domain.dto;
+package mk.com.codehelp.core.domain.model.value;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,8 @@ import java.util.Date;
 
 @NoArgsConstructor
 @Data
-public class SubmissionDto {
+public class SubmissionValue {
+
   private Long id;
   private Date timeSubmitted;
   private SubmissionStatus status;

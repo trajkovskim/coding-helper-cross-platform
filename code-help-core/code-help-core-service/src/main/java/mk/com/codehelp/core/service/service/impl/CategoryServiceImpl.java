@@ -16,24 +16,37 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryRepository categoryRepository;
 
   @Override
+  public Category getOrCreate(String name) {
+
+    return categoryRepository.findByName(name)
+        .orElseGet(() -> {
+          Category category = new Category();
+          category.setName(name);
+
+          return categoryRepository.save(category);
+        });
+  }
+
+  @Override
   public List<Category> findALl() {
     return this.categoryRepository.findAll();
   }
 
   @Override
   public Category findById(Long id) {
-    return categoryRepository.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException(id));
+
+    return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
   }
 
   @Override
   public Category findByName(String name) {
-    return categoryRepository.findByName(name)
-        .orElseThrow(() -> new CategoryNotFoundException(name));
+
+    return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFoundException(name));
   }
 
   @Override
   public void create(Category category) {
+
     categoryRepository.save(category);
   }
 
@@ -48,6 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public void delete(Long id) {
+
       final var category = this.findById(id);
       categoryRepository.delete(category);
   }

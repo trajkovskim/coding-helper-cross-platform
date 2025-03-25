@@ -5,6 +5,9 @@ import mk.com.codehelp.core.domain.model.Category;
 import java.util.List;
 
 public interface CategoryService {
+
+  Category getOrCreate(String name);
+
   List<Category> findALl();
 
   Category findById(Long id);
