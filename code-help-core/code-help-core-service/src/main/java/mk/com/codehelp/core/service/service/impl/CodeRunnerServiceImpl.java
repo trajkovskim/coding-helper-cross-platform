@@ -10,14 +10,13 @@ import mk.com.codehelp.core.service.service.CodeRunnerService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -50,7 +49,9 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
   }
 
   @Override
-  public String runCode(@Nonnull String input, String code, String language) throws IOException, InterruptedException {
+  public String runCode(@Nonnull String input, String code, String language)
+      throws IOException, InterruptedException {
+
     if (!compilers.getCompilers().containsKey(language)) {
       throw new CompilerNotFoundException(language);
     }
@@ -71,8 +72,14 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
     Process process = new ProcessBuilder().command(args).start();
     process.waitFor(10, TimeUnit.SECONDS);
 
-    String error = process.errorReader().lines().collect(Collectors.joining());
-    String output = process.inputReader().lines().collect(Collectors.joining());
+    String error;
+    String output;
+    try (BufferedReader errorReader = process.errorReader();
+         BufferedReader inputReader = process.inputReader()) {
+
+      error = errorReader.lines().collect(Collectors.joining());
+      output = inputReader.lines().collect(Collectors.joining());
+    }
 
     process.destroy();
 

@@ -11,10 +11,12 @@ import com.codehelp.forum.generated.rest.model.CommunityDto
 import com.codehelp.forum.generated.rest.model.CommunityRequestDto
 import com.codehelp.forum.generated.rest.model.ModeratorRequestDto
 import com.codehelp.forum.generated.rest.model.UserDto
+import com.codehelp.forum.model.dto.PageInfoDto
 import com.codehelp.forum.repository.CategoryRepository
 import com.codehelp.forum.repository.CommunityRepository
 import com.codehelp.forum.service.CommunityService
 import com.codehelp.forum.service.UserService
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -74,7 +76,16 @@ class CommunityServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getAll(): List<Community> = communityRepository.findAll()
+    override fun getAll(pageable: Pageable): PageInfoDto<Community> {
+        val communitiesPage = communityRepository.findAll(pageable)
+
+        return PageInfoDto<Community>().apply {
+            totalElements = communitiesPage.totalElements
+            totalPages = communitiesPage.totalPages
+            items = communitiesPage.content
+            pageNumber = pageable.pageNumber
+            pageSize = pageable.pageSize}
+    }
 
     @Transactional(readOnly = true)
     override fun getByName(name: String): CommunityDto {

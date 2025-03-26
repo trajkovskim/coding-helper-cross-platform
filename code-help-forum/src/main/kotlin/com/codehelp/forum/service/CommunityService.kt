@@ -5,6 +5,8 @@ import com.codehelp.forum.generated.rest.model.CommunityDto
 import com.codehelp.forum.generated.rest.model.CommunityRequestDto
 import com.codehelp.forum.generated.rest.model.ModeratorRequestDto
 import com.codehelp.forum.generated.rest.model.UserDto
+import com.codehelp.forum.model.dto.PageInfoDto
+import org.springframework.data.domain.Pageable
 
 interface CommunityService {
     fun createCommunity(communityCreateDto: CommunityRequestDto): CommunityDto
@@ -13,7 +15,7 @@ interface CommunityService {
 
     fun deleteCommunity(name: String)
 
-    fun getAll(): List<Community>
+    fun getAll(pageable: Pageable): PageInfoDto<Community>
 
     fun getByName(name: String): CommunityDto
 

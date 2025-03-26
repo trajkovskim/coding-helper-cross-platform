@@ -10,7 +10,7 @@ servers:
   - url: http://192.168.100.71/forum/api/v1
 
 paths:
-  /community:
+  /communities:
     get:
       tags:
         - community
@@ -41,7 +41,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Community'
-  /community/{name}:
+  /communities/{name}:
     get:
       tags:
         - community
@@ -102,7 +102,7 @@ paths:
       responses:
         200:
           description: OK
-  /community/moderator:
+  /communities/moderators:
     get:
       tags:
         - community
@@ -163,7 +163,7 @@ paths:
       responses:
         200:
           description: OK
-  /community/member:
+  /communities/members:
     patch:
       tags:
         - community
@@ -199,7 +199,7 @@ paths:
         400:
           description: Bad Request
 
-  /post:
+  /posts:
     get:
       tags:
         - post
@@ -244,7 +244,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-  /post/{uid}:
+  /posts/{uid}:
     get:
       tags:
         - post
@@ -312,7 +312,7 @@ paths:
         400:
           description: Bad Request
 
-  /comment:
+  /comments:
     get:
       tags:
         - comment
@@ -360,7 +360,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
         400:
           description: Bad Request
-  /comment/{uid}:
+  /comments/{uid}:
     get:
       tags:
         - comment
@@ -448,7 +448,7 @@ paths:
         400:
           description: Bad Request
 
-  /category:
+  /categories:
     get:
       tags:
         - category

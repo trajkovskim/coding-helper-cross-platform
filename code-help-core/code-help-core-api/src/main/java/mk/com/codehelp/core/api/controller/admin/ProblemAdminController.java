@@ -2,21 +2,33 @@ package mk.com.codehelp.core.api.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
+import mk.com.codehelp.core.api.factory.AdminLinksFactory;
 import mk.com.codehelp.core.api.mappers.admin.AdminProblemMapper;
+import mk.com.codehelp.core.domain.model.relations.ContestProblem;
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.rest.admin.api.ProblemApi;
-import mk.com.codehelp.core.rest.admin.model.*;
+import mk.com.codehelp.core.rest.admin.model.CreatedResponse;
+import mk.com.codehelp.core.rest.admin.model.PaginationLinks;
+import mk.com.codehelp.core.rest.admin.model.ProblemDetail;
+import mk.com.codehelp.core.rest.admin.model.ProblemRequest;
+import mk.com.codehelp.core.rest.admin.model.ProblemsResponse;
+import mk.com.codehelp.core.rest.admin.model.SelfLink;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
+import mk.com.codehelp.core.service.util.PageUtil;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,30 +38,54 @@ public class ProblemAdminController implements ProblemApi {
 
     private final ContestService contestService;
     private final AdminProblemMapper problemMapper;
+    private final AdminLinksFactory linksFactory;
 
     @Override
     @SneakyThrows
-    public ResponseEntity<String> createProblem(Long contestId, ProblemRequest problemRequest) {
+    public ResponseEntity<CreatedResponse> createProblem(Long contestId, ProblemRequest problemRequest) {
 
         Problem problem = problemMapper.convert(problemRequest);
 
+        Long createdId;
         if (contestId == null) {
-            problemService.create(problem);
+            Problem created = problemService.create(problem);
+            createdId = created.getId();
         } else {
-            contestService.addProblemToContest(contestId, problem);
+            ContestProblem created = contestService.addProblemToContest(contestId, problem);
+            createdId = created.getId();
         }
 
-        return ResponseEntity.noContent().build();
+        SelfLink selfLink = linksFactory.createSelfLink(methodOn(ProblemAdminController.class)
+            .getProblem(createdId));
+
+        CreatedResponse createdResponse = new CreatedResponse().links(selfLink);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdResponse);
     }
 
     @Override
-    public ResponseEntity<ProblemResponse> getAllProblems() {
+    public ResponseEntity<ProblemsResponse> getAllProblems(Integer page, Integer size, List<String> sortBy) {
 
-        Page<ProblemValue> problemsPage = problemService.findAll(Pageable.unpaged(), new ProblemFilter());
+        Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
 
-        List<ProblemValue> problems = problemsPage.getContent();
+        PageInfoDto<ProblemValue> problemsPage = problemService.findAll(new ProblemFilter(), pageRequest);
 
-        return ResponseEntity.ok(problemMapper.convert(problems));
+        PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
+            problemsPage,
+            (pageNumber, pageSize) ->
+                methodOn(ProblemAdminController.class).getAllProblems(pageNumber, pageSize, sortBy));
+
+        List<mk.com.codehelp.core.rest.admin.model.Problem> problems = problemMapper.convert(problemsPage.getItems());
+
+        ProblemsResponse response = new ProblemsResponse()
+            .problems(problems)
+            .totalElements(problemsPage.getTotalElements())
+            .totalPages(problemsPage.getTotalPages())
+            .pageNumber(page)
+            .pageSize(size)
+            .links(paginationLinks);
+
+        return ResponseEntity.ok(response);
     }
 
     @Override

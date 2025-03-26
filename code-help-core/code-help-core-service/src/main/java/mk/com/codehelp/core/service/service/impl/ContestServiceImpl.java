@@ -3,6 +3,7 @@ package mk.com.codehelp.core.service.service.impl;
 import lombok.RequiredArgsConstructor;
 
 import mk.com.codehelp.core.service.dto.ContestProblemDto;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.exceptions.ContestNotFoundException;
 import mk.com.codehelp.core.service.exceptions.ContestStatusException;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
@@ -38,8 +39,17 @@ public class ContestServiceImpl implements ContestService {
   protected final ProblemUtil problemUtil;
 
   @Override
-  public Page<Contest> findAll(Pageable pageable) {
-    return contestRepository.findAll(pageable);
+  public PageInfoDto<Contest> findAll(Pageable pageable) {
+
+    Page<Contest> pageContest = contestRepository.findAll(pageable);
+
+    return PageInfoDto.<Contest>builder()
+        .items(pageContest.getContent())
+        .pageNumber(pageable.getPageNumber())
+        .pageSize(pageContest.getSize())
+        .totalElements(pageContest.getTotalElements())
+        .totalPages(pageContest.getTotalPages())
+        .build();
   }
 
   @Override

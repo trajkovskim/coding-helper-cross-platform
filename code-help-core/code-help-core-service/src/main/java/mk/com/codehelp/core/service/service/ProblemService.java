@@ -3,16 +3,16 @@ package mk.com.codehelp.core.service.service;
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 
 import java.io.IOException;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProblemService {
 
-  Page<ProblemValue> findAll(Pageable pageable, ProblemFilter filter);
+  PageInfoDto<ProblemValue> findAll(ProblemFilter filter, Pageable pageable);
 
   Problem create(Problem problem) throws IOException;
 

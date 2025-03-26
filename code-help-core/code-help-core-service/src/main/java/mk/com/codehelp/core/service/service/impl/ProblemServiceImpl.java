@@ -1,12 +1,13 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
-import mk.com.codehelp.core.domain.repository.CategoryRepository;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
 import mk.com.codehelp.core.service.exceptions.StarterCodeDoesNotExistException;
@@ -31,8 +32,16 @@ public class ProblemServiceImpl implements ProblemService {
   private final ProblemUtil problemUtil;
 
   @Override
-  public Page<ProblemValue> findAll(Pageable pageable, ProblemFilter filter) {
-    return this.problemRepository.findAll(pageable, filter);
+  public PageInfoDto<ProblemValue> findAll(ProblemFilter filter, Pageable pageable) {
+
+    Page<ProblemValue> problemValuePage = this.problemRepository.findAll(filter, pageable);
+    return PageInfoDto.<ProblemValue>builder()
+        .items(problemValuePage.getContent())
+        .pageNumber(problemValuePage.getSize())
+        .pageSize(problemValuePage.getSize())
+        .totalElements(problemValuePage.getTotalElements())
+        .totalPages(problemValuePage.getTotalPages())
+        .build();
   }
 
   @Override

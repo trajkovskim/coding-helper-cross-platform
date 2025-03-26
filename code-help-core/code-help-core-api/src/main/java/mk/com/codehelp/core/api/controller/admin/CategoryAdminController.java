@@ -3,9 +3,10 @@ package mk.com.codehelp.core.api.controller.admin;
 import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.api.mappers.admin.AdminCategoryMapper;
 import mk.com.codehelp.core.rest.admin.api.CategoryApi;
-import mk.com.codehelp.core.rest.admin.model.CategoryRequest;
+import mk.com.codehelp.core.rest.admin.model.*;
+
 import org.springframework.web.bind.annotation.RestController;
-import mk.com.codehelp.core.rest.admin.model.CategoryResponse;
+
 import mk.com.codehelp.core.service.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,14 @@ public class CategoryAdminController implements CategoryApi {
   private final AdminCategoryMapper categoryConverter;
 
   @Override
-  public ResponseEntity<Void> createCategory(CategoryRequest category) {
+  public ResponseEntity<CreatedResponse> createCategory(CategoryRequest category) {
 
     categoryService.create(categoryConverter.convert(category));
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    CreatedResponse createdResponse = new CreatedResponse();
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(createdResponse);
   }
 
   @Override

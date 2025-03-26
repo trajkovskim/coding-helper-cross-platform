@@ -1,16 +1,18 @@
 package mk.com.codehelp.core.api.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import mk.com.codehelp.core.api.factory.LinksFactory;
 import mk.com.codehelp.core.api.mappers.ProblemMapper;
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.rest.api.ProblemApi;
 import mk.com.codehelp.core.rest.model.*;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.util.PageUtil;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequiredArgsConstructor
 public class ProblemController implements ProblemApi {
 
   private final ProblemService problemService;
   private final ProblemMapper problemConverter;
+  private final LinksFactory linksFactory;
 
   @Override
   public ResponseEntity<ProblemsResponse> getProblemEntries(
@@ -35,9 +40,22 @@ public class ProblemController implements ProblemApi {
     problemFilter.setCategories(categories);
     problemFilter.setLikedBy(likedBy);
 
-    Page<ProblemValue> problemsPage = problemService.findAll(pageRequest, problemFilter);
-    List<ProblemValue> problems = problemsPage.getContent();
-    ProblemsResponse response = problemConverter.convertListOfProblemToResponse(problems);
+    PageInfoDto<ProblemValue> problemsPage = problemService.findAll(problemFilter, pageRequest);
+    List<ProblemEntry> problems = problemConverter.convertListOfProblemToRest(problemsPage.getItems());
+
+    PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
+        problemsPage,
+        (pageNumber, pageSize) ->
+            methodOn(ProblemController.class).getProblemEntries(pageNumber, pageSize, sortBy, categories, likedBy));
+
+    ProblemsResponse response = new ProblemsResponse()
+        .problems(problems)
+        .totalElements(problemsPage.getTotalElements())
+        .totalPages(problemsPage.getTotalPages())
+        .pageNumber(page)
+        .pageSize(size)
+        .links(paginationLinks);
+
     return ResponseEntity.ok(response);
   }
 
@@ -52,7 +70,7 @@ public class ProblemController implements ProblemApi {
   }
 
   @Override
-  public ResponseEntity<Void> toggleLikeProblemEntry(Long id) {
+  public ResponseEntity<Void> toggleLikeProblemEntry(Long id, String authorization) {
 
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -62,27 +80,12 @@ public class ProblemController implements ProblemApi {
   }
 
   @Override
-  public ResponseEntity<Boolean> isProblemEntryLiked(Long id) {
+  public ResponseEntity<Boolean> isProblemEntryLiked(Long id, String authorization) {
 
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
     Boolean isLiked = problemService.isLikedBy(id, user);
 
     return ResponseEntity.ok(isLiked);
-  }
-
-  @Override
-  public ResponseEntity<ProblemsResponse> getLikedProblems() {
-
-    String user = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    ProblemFilter problemFilter = new ProblemFilter();
-    problemFilter.setLikedBy(user);
-
-    Page<ProblemValue> problemPage = problemService.findAll(Pageable.unpaged(), problemFilter);
-    List<ProblemValue> problems = problemPage.getContent();
-
-    final var response = problemConverter.convertListOfProblemToResponse(problems);
-    return ResponseEntity.ok(response);
   }
 }

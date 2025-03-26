@@ -25,13 +25,13 @@ public interface ProblemRepository extends Neo4jRepository<Problem, Long> {
         contest as node_contest,
         category as node_category,
       collect(r_category) as r_category, collect(category) as category,
-      collect(r_starter_code) as r_starter_code, collect(starter_code) as starterCode,
-      collect(r_runner_code) as r_runner_code, collect(runner_code) as runnerCode,
+      collect(r_starter_code) as r_starter_codes, collect(starter_code) as starterCodes,
+      collect(r_runner_code) as r_runner_codes, collect(runner_code) as runnerCodes,
       collect(r_test_cases) as r_test_cases, collect(test_cases) as testCases,
       size(problem.likedBy) as likes
       where (node_contest is null or node_contest.status='CLOSED')
-        and (:#{#filters.categories} is null or node_category in #{#filters.categories})
-        and (:#{#filters.likedBy} is null or :#{#filters.likedBy} in problem.likedBy)
+        and (:#{#filters.categories.size} = 0 or node_category.name in :#{#filters.categories})
+        and (:#{#filters.likedBy.length} = 0 or :#{#filters.likedBy} in problem.likedBy)
       return *
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""", countQuery = """
       match (problem:Problem)
@@ -44,14 +44,14 @@ public interface ProblemRepository extends Neo4jRepository<Problem, Long> {
         contest as node_contest,
         category as node_category,
       collect(r_category) as r_category, collect(category) as category,
-      collect(r_starter_code) as r_starter_code, collect(starter_code) as starterCode,
-      collect(r_runner_code) as r_runner_code, collect(runner_code) as runnerCode,
+      collect(r_starter_code) as r_starter_codes, collect(starter_code) as starterCodes,
+      collect(r_runner_code) as r_runner_codes, collect(runner_code) as runnerCodes,
       collect(r_test_cases) as r_test_cases, collect(test_cases) as testCases
       where (node_contest is null or node_contest.status='CLOSED')
-        and (:#{#filters.categories} is null or node_category in #{#filters.categories})
-        and (:#{#filters.likedBy} is null or :#{#filters.likedBy} in problem.likedBy)
+        and (:#{#filters.categories.size} = 0 or node_category.name in :#{#filters.categories})
+        and (:#{#filters.likedBy.length} = 0 or :#{#filters.likedBy} in problem.likedBy)
       return count(*)""")
-  Page<ProblemValue> findAll(Pageable pageable, ProblemFilter filters);
+  Page<ProblemValue> findAll(ProblemFilter filters, Pageable pageable);
 
   @Override
   @Query("""

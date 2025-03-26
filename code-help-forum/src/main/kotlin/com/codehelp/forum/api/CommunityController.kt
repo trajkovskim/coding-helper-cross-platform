@@ -1,14 +1,18 @@
 package com.codehelp.forum.api
 
 import com.codehelp.forum.common.toShortDto
+import com.codehelp.forum.factory.LinksFactory
 import com.codehelp.forum.generated.rest.api.CommunityApi
 import com.codehelp.forum.generated.rest.model.*
 import com.codehelp.forum.service.CommunityService
+import com.codehelp.forum.util.PageUtil
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.ResponseEntity
 
 @RestControllerV1
 class CommunityController(
-    private val communityService: CommunityService
+    private val communityService: CommunityService,
+    private val linksFactory: LinksFactory
 ) : CommunityApi {
 
 
@@ -22,10 +26,24 @@ class CommunityController(
         return ResponseEntity.ok().build()
     }
 
-    override fun getAllCommunities(): ResponseEntity<ShortCommunitiesDto> {
-        val communities = communityService.getAll().map { it.toShortDto() }
+    override fun getAllCommunities(page: Int, size: Int, sortBy: List<String>): ResponseEntity<ShortCommunitiesDto> {
 
-        val dto = ShortCommunitiesDto().communities(communities)
+        val pageable = PageUtil.createPageRequest(page, size, sortBy)
+        val communitiesPage = communityService.getAll(pageable)
+
+        val paginationLinks = linksFactory.createPaginationLinks(
+            communitiesPage
+        ) { pageNumber, pageSize ->
+            methodOn(CommunityController::class.java).getAllCommunities(pageNumber, pageSize, sortBy)
+        }
+
+        val dto = ShortCommunitiesDto()
+            .pageNumber(page)
+            .pageSize(size)
+            .totalElements(communitiesPage.totalElements)
+            .totalPages(communitiesPage.totalPages)
+            .communities(communitiesPage.items.map { it.toShortDto() })
+            .links(paginationLinks)
 
         return ResponseEntity.ok(dto)
     }

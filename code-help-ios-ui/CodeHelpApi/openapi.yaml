@@ -75,7 +75,7 @@ components:
             - starterCode
           properties:
             id:
-              $ref: '#/components/schemas/Id'
+              $ref: "./code-help-common-api.yaml/#/components/parameters/id"
             starterCode:
               type: string
               example: 'function(...) {...}'
@@ -155,7 +155,7 @@ components:
             - timeSubmitted
           properties:
             id:
-              $ref: '#/components/schemas/Id'
+              $ref: "./code-help-common-api.yaml/#/components/parameters/id"
             timeSubmitted:
               $ref: '#/components/schemas/Date'
             status:
@@ -170,7 +170,7 @@ components:
             - problemId
           properties:
             problemId:
-              $ref: '#/components/schemas/Id'
+              $ref: "./code-help-common-api.yaml/#/components/parameters/id"
 
     SubmissionRequest:
       allOf:
@@ -187,7 +187,7 @@ components:
         - score
       properties:
         id:
-          $ref: '#/components/schemas/Id'
+          $ref: "./code-help-common-api.yaml/#/components/parameters/id"
         problem:
           $ref: '#/components/schemas/ProblemEntry'
         score:
@@ -221,7 +221,7 @@ components:
             - problems
           properties:
             id:
-              $ref: '#/components/schemas/Id'
+              $ref: "./code-help-common-api.yaml/#/components/parameters/id"
             status:
               $ref: '#/components/schemas/ContestStatus'
             problems:
@@ -307,7 +307,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/Id'
+        $ref: "./code-help-common-api.yaml/#/components/parameters/id"
 
 paths:
   /problems:
@@ -456,7 +456,7 @@ paths:
               type: object
               properties:
                 problemId:
-                  $ref: '#/components/schemas/Id'
+                  $ref: "./code-help-common-api.yaml/#/components/parameters/id"
       operationId: getSubmissions
       tags: [ Submission ]
       description: Returns all submissions for the logged user
@@ -588,12 +588,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
         - name: 'problemId'
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
       tags: [ Contest ]
       operationId: getContestProblem
       description: Returns a contest problem entry
@@ -610,12 +610,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
         - name: 'problemId'
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
       tags: [ Contest ]
       operationId: deleteContestProblem
       description: Returns a contest problem entry
@@ -638,12 +638,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
         - name: 'problemId'
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Id'
+            $ref: "./code-help-common-api.yaml/#/components/parameters/id"
       tags: [ Contest ]
       operationId: setContestProblemScore
       description: Sets the score of a contest problem entry
@@ -660,7 +660,7 @@ paths:
               type: object
               properties:
                 problemId:
-                  $ref: '#/components/schemas/Id'
+                  $ref: "./code-help-common-api.yaml/#/components/parameters/id"
                 language:
                   type: string
                   example: 'javascript'

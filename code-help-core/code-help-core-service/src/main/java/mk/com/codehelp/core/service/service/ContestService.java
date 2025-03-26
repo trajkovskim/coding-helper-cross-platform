@@ -4,15 +4,15 @@ import mk.com.codehelp.core.domain.model.Contest;
 import mk.com.codehelp.core.domain.model.relations.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.service.dto.ContestProblemDto;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 
 import java.io.IOException;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ContestService {
 
-  Page<Contest> findAll(Pageable pageable);
+  PageInfoDto<Contest> findAll(Pageable pageable);
 
   Contest findById(Long id);
 

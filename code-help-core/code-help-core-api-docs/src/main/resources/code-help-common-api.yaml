@@ -1,0 +1,251 @@
+openapi: 3.0.1
+info:
+  title: 'Coding helper spec'
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Open API specification
+paths: {}
+components:
+  securitySchemes:
+    Authorization_JWT: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CodeLanguage:
+      type: string
+      example: 'javascript'
+    TestCaseValue:
+      type: string
+      example: |
+        ABCD FIND GO
+        CCBD FIND GO
+    Code:
+      type: string
+      example: |
+        function (arg1) {
+          // code goes here
+        }
+    ContestStatus:
+      type: string
+      enum: [ OPEN, STARTED, CLOSED ]
+    Difficulty:
+      type: string
+      enum: [ EASY, MEDIUM, HARD ]
+      example: 'EASY'
+    Id:
+      type: integer
+      format: int64
+      example: 23
+
+    Long:
+      type: integer
+      format: int64
+      example: 32
+    File:
+      type: string
+      format: binary
+    Date:
+      type: string
+      format: date
+      example: '2022-05-16'
+    Timestamp:
+      type: string
+      format: timestamp
+      example: '2022-05-16T00:00:00'
+    ErrorResponse:
+      type: object
+      description: Error response
+      required:
+        - code
+        - message
+        - status
+        - timestamp
+      properties:
+        code:
+          type: string
+          example: "ERROR:0001"
+        message:
+          type: string
+          example: "An error happened"
+        status:
+          type: integer
+          example: 404
+        timestamp:
+          $ref: "#/components/schemas/Timestamp"
+    CreatedResponse:
+      type: object
+      description: Self links response
+      required:
+        - links
+      properties:
+        links:
+          $ref: "#/components/schemas/SelfLink"
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          example: .../api/v1/
+    SelfLink:
+      type: object
+      required:
+        - self
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+    PaginationLinks:
+      type: object
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+        first:
+          $ref: "#/components/schemas/Link"
+        last:
+          $ref: "#/components/schemas/Link"
+        prev:
+          $ref: "#/components/schemas/Link"
+        next:
+          $ref: "#/components/schemas/Link"
+    PaginationLinksResponse:
+      type: object
+      properties:
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+    PageInfo:
+      type: object
+      description: Pagination info
+      required:
+        - totalPages
+        - pageSize
+        - pageNumber
+        - totalElements
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+          example: 1000
+        totalPages:
+          type: integer
+          example: 5
+        pageSize:
+          type: integer
+          example: 10
+        pageNumber:
+          type: integer
+          example: 10
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    CategoryId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ProblemId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ContestId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    CodeLanguage:
+      name: language
+      in: query
+      required: true
+      schema:
+        type: string
+        example: "javascript"
+
+    Page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 0
+    Size:
+      in: query
+      name: size
+      description: Page size
+      required: false
+      schema:
+        type: integer
+        default: 10
+        example: 10
+    Sort:
+      in: query
+      name: sortBy
+      description: Sort by properties
+      required: false
+      schema:
+        type: array
+        default: [ ]
+        items:
+          type: string
+          example: "id=asc,title=desc"
+    Accept-Language:
+      name: Accept-Language
+      in: header
+      description: Accept language header
+      example: "en"
+      required: false
+      schema:
+        type: string
+    Authorization:
+      description: Authorization header
+      name: Authorization
+      in: header
+      schema:
+        type: string
+        example: "Bearer {token}"
+  responses:
+    ForbiddenResponse:
+      description: Forbidden error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    UnauthorizedResponse:
+      description: Unauthorized error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    BadRequestResponse:
+      description: Bad request error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundResponse:
+      description: Not found error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    CreatedResponse:
+      description: Created response
+      content:
+        application/hal+json:
+          schema:
+            $ref: "#/components/schemas/CreatedResponse"
+    NoContentResponse:
+      description: No content response.
+

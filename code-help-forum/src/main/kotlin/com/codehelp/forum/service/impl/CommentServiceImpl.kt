@@ -7,10 +7,12 @@ import com.codehelp.forum.exception.ForbiddenException
 import com.codehelp.forum.exception.UnauthorizedException
 import com.codehelp.forum.generated.rest.model.CommentDto
 import com.codehelp.forum.generated.rest.model.CommentRequestDto
+import com.codehelp.forum.model.dto.PageInfoDto
 import com.codehelp.forum.repository.CommentRepository
 import com.codehelp.forum.repository.PostRepository
 import com.codehelp.forum.service.CommentService
 import com.codehelp.forum.service.UserService
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -24,20 +26,27 @@ class CommentServiceImpl(
 ) : CommentService {
 
     @Transactional(readOnly = true)
-    override fun getPostComments(postUid: String): List<CommentDto> {
-        val post = postRepository.findByUid(UUID.fromString(postUid)) ?: throw RuntimeException("not found")
+    override fun getPostComments(postUid: String, pageable: Pageable): PageInfoDto<Comment> {
+        val commentsPage = commentRepository.findAllByPostUid(UUID.fromString(postUid), pageable)
 
-        return post.comments
-            .filter { it.parent == null }
-            .map { it.toDto() }
-            .reversed()
+        return PageInfoDto<Comment>().apply {
+            totalElements = commentsPage.totalElements
+            totalPages = commentsPage.totalPages
+            items = commentsPage.content
+            pageNumber = pageable.pageNumber
+            pageSize = pageable.pageSize}
     }
 
     @Transactional(readOnly = true)
-    override fun getReplies(commentUid: String): List<CommentDto> {
-        val comment = commentRepository.findByUid(UUID.fromString(commentUid)) ?: throw RuntimeException("not found")
+    override fun getReplies(commentUid: String, pageable: Pageable): PageInfoDto<Comment> {
+        val commentsPage = commentRepository.findByParentUid(UUID.fromString(commentUid), pageable)
 
-        return comment.children.map { it.toDto() }
+        return PageInfoDto<Comment>().apply {
+            totalElements = commentsPage.totalElements
+            totalPages = commentsPage.totalPages
+            items = commentsPage.content
+            pageNumber = pageable.pageNumber
+            pageSize = pageable.pageSize}
     }
 
     @Transactional

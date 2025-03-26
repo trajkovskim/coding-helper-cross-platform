@@ -27,7 +27,7 @@ public class CodeRunnerAdminController implements CodeRunnerApi {
     String language = codeRunnerRequest.getLanguage();
 
     String mergedCode = codeRunnerService.createCode(
-        language, codeRunnerRequest.getCode(), codeRunnerRequest.getRunnerCode());
+        language, codeRunnerRequest.getCode(), "");
 
     List<Problem.TestCase> testCases = codeRunnerRequest.getTestCases()
         .stream()
