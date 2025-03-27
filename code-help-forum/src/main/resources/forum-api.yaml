@@ -310,6 +310,8 @@ paths:
                 $ref: '#/components/schemas/Comment'
         400:
           $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
   /comments/{uid}:
     get:
       tags:
@@ -320,7 +322,7 @@ paths:
         - $ref: "#/components/parameters/Page"
         - $ref: "#/components/parameters/Size"
         - $ref: "#/components/parameters/Sort"
-        - $ref: "#/components/parameters/PostUidQuery"
+        - $ref: "#/components/parameters/CommentUidPath"
       responses:
         200:
           description: OK
@@ -328,6 +330,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comments'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
     post:
       tags:
         - comment
@@ -347,6 +353,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
         404:
           $ref: "#/components/responses/NotFoundResponse"
     put:
@@ -378,12 +386,7 @@ paths:
         - comment
       operationId: deleteComment
       parameters:
-        - in: path
-          name: uid
-          description: Comment uid
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/CommentUidPath"
       responses:
         204:
           $ref: "#/components/responses/NoContentResponse"

@@ -35,7 +35,7 @@ public class ContestController implements ContestsApi {
   @Override
   public ResponseEntity<ContestProblem> getContestProblem(Long contestId, Long problemId, String language) {
     ContestProblemDto contestProblemDto = contestService.getContestProblem(contestId, problemId, language);
-    ContestProblem entry = contestConverter.convertContestProblem(contestProblemDto);
+    ContestProblem entry = contestConverter.convert(contestProblemDto);
     return ResponseEntity.ok(entry);
   }
 
@@ -50,7 +50,7 @@ public class ContestController implements ContestsApi {
         (pageNumber, pageSize) ->
             methodOn(ContestController.class).getContestEntries(pageNumber, pageSize, sortBy));
 
-    List<ContestEntry> contests = contestConverter.convertListOfContestModel(contestPage.getItems());
+    List<ContestEntry> contests = contestConverter.convert(contestPage.getItems());
     ContestsResponse contestsResponse = new ContestsResponse()
         .contests(contests)
         .pageNumber(page)
@@ -65,7 +65,7 @@ public class ContestController implements ContestsApi {
   @Override
   public ResponseEntity<ContestEntry> getContestEntry(Long id) {
     Contest contest = contestService.findById(id);
-    ContestEntry entry = contestConverter.convertContest(contest);
+    ContestEntry entry = contestConverter.convert(contest);
     return ResponseEntity.ok(entry);
   }
 }

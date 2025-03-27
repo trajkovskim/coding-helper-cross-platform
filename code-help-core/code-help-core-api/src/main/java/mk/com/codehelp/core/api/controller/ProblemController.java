@@ -41,7 +41,7 @@ public class ProblemController implements ProblemApi {
     problemFilter.setLikedBy(likedBy);
 
     PageInfoDto<ProblemValue> problemsPage = problemService.findAll(problemFilter, pageRequest);
-    List<ProblemEntry> problems = problemConverter.convertListOfProblemToRest(problemsPage.getItems());
+    List<ProblemEntry> problems = problemConverter.convert(problemsPage.getItems());
 
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
         problemsPage,
@@ -64,7 +64,7 @@ public class ProblemController implements ProblemApi {
 
     ProblemDto problemDto = problemService.getProblem(id, language);
 
-    ProblemEntryDetail entry = problemConverter.convertProblem(problemDto);
+    ProblemEntryDetail entry = problemConverter.convert(problemDto);
 
     return ResponseEntity.ok(entry);
   }

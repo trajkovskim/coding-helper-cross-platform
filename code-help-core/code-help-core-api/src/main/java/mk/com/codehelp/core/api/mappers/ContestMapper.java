@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper(uses = {CategoryMapper.class, ProblemMapper.class})
 public interface ContestMapper {
 
-  List<ContestEntry> convertListOfContestModel(Collection<Contest> contests);
+  List<ContestEntry> convert(Collection<Contest> contests);
 
-  ContestEntry convertContest(Contest contest);
+  ContestEntry convert(Contest contest);
 
-  ContestProblem convertContestProblem(ContestProblemDto contestProblemDto);
+  ContestProblem convert(ContestProblemDto contestProblemDto);
 }

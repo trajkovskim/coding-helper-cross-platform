@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mk.com.codehelp.core.api.mappers.CategoryMapper;
 import mk.com.codehelp.core.rest.api.CategoryApi;
 import mk.com.codehelp.core.rest.model.CategoriesResponse;
+import mk.com.codehelp.core.rest.model.Category;
 import mk.com.codehelp.core.service.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,10 @@ public class CategoryController implements CategoryApi {
   @Override
   public ResponseEntity<CategoriesResponse> getCategories() {
     List<mk.com.codehelp.core.domain.model.Category> categories = categoryService.findALl();
-    CategoriesResponse response = categoryConverter.toResponse(categories);
+    List<Category> categoriesRest = categoryConverter.convert(categories);
+
+    CategoriesResponse response = new CategoriesResponse().categories(categoriesRest);
+
     return ResponseEntity.ok(response);
   }
 }

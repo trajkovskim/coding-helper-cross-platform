@@ -6,6 +6,7 @@ import mk.com.codehelp.core.api.mappers.SubmissionMapper;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.rest.api.SubmissionApi;
 import mk.com.codehelp.core.rest.model.SubmissionBaseEntry;
+import mk.com.codehelp.core.rest.model.SubmissionEntry;
 import mk.com.codehelp.core.rest.model.SubmissionsResponse;
 import mk.com.codehelp.core.service.service.SubmissionService;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,19 @@ public class SubmissionController implements SubmissionApi {
 
   @Override
   public ResponseEntity<SubmissionsResponse> getSubmissions(Long problemId, String authorization) {
+
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
     List<SubmissionValue> entries;
+
     if (problemId == null) {
       entries = submissionService.findAllSubmissionsByEmail(user);
     } else {
       entries = submissionService.findAllSubmissionsByUserEmailAndProblemId(user, problemId);
     }
-    SubmissionsResponse response = submissionConverter.convertListOfSubmissionToResponse(entries);
+
+    List<SubmissionEntry> submissionEntries = submissionConverter.convert(entries);
+    SubmissionsResponse response = new SubmissionsResponse().submissions(submissionEntries);
+
     return ResponseEntity.ok(response);
   }
 }

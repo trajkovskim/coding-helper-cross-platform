@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface UserMapper {
-  UserStatistics convertUserStatistics(UserStatisticsDto statistics);
+  UserStatistics convert(UserStatisticsDto statistics);
 }

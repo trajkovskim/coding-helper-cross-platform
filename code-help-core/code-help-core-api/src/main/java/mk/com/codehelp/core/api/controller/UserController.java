@@ -21,7 +21,7 @@ public class UserController implements UserApi {
   public ResponseEntity<UserStatistics> getStatistics(String authorization) {
     String name = SecurityContextHolder.getContext().getAuthentication().getName();
     UserStatisticsDto userStatistics = userService.getStatistics(name);
-    UserStatistics entry = userConverter.convertUserStatistics(userStatistics);
+    UserStatistics entry = userConverter.convert(userStatistics);
     return ResponseEntity.ok(entry);
   }
 }

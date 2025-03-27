@@ -17,9 +17,9 @@ import java.util.List;
 public interface ProblemMapper {
 
   @Mapping(target = "starterCode", source = "starterCode.code")
-  ProblemEntryDetail convertProblem(ProblemDto problemDto);
+  ProblemEntryDetail convert(ProblemDto problemDto);
 
-  List<ProblemEntry> convertListOfProblemToRest(Collection<ProblemValue> problem);
+  List<ProblemEntry> convert(Collection<ProblemValue> problem);
 
   Problem.TestCase convert(TestCase testCase);
 }

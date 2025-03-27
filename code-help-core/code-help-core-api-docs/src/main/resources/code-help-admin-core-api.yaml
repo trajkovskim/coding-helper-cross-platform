@@ -21,9 +21,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CategoryResponse'
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
     post:
       tags: [ category, admin ]
       operationId: createCategory
@@ -34,17 +34,17 @@ paths:
               $ref: '#/components/schemas/CategoryRequest'
       responses:
         201:
-          $ref: "./code-help-common-api.yaml/#/components/responses/CreatedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/CreatedResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
   /admin/categories/{id}:
     put:
       tags: [ category, admin ]
       operationId: updateCategory
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/CategoryId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/CategoryId"
       requestBody:
         content:
           application/json:
@@ -52,35 +52,35 @@ paths:
               $ref: '#/components/schemas/CategoryRequest'
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
     delete:
       tags: [ category, admin ]
       operationId: deleteCategory
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/CategoryId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/CategoryId"
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
   /admin/problems:
     get:
       tags: [ problem, admin ]
       operationId: getAllProblems
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Page"
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Size"
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Sort"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Page"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Size"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
       responses:
         200:
           description: OK
@@ -89,9 +89,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemsResponse'
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
     post:
       tags: [ problem, admin ]
       operationId: createProblem
@@ -100,7 +100,7 @@ paths:
           name: contestId
           required: false
           schema:
-            $ref: "./code-help-common-api.yaml/#/components/schemas/Long"
+            $ref: "code-help-common-api.yaml#/components/schemas/Long"
       requestBody:
         content:
           application/json:
@@ -109,17 +109,17 @@ paths:
       description: Create a problem in the backend
       responses:
         201:
-          $ref: "./code-help-common-api.yaml/#/components/responses/CreatedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/CreatedResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
   /admin/problems/{id}:
     get:
       tags: [ problem, admin ]
       operationId: getProblem
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ProblemId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ProblemId"
       responses:
         200:
           description: OK
@@ -128,18 +128,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         400:
-          $ref: "./code-help-common-api.yaml/#/components/responses/BadRequestResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/BadRequestResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
     put:
       tags: [ problem, admin ]
       operationId: updateProblem
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ProblemId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ProblemId"
       requestBody:
         content:
           application/json:
@@ -153,35 +153,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         400:
-          $ref: "./code-help-common-api.yaml/#/components/responses/BadRequestResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/BadRequestResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
     delete:
       tags: [ problem, admin ]
       operationId: deleteProblem
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ProblemId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ProblemId"
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
   /admin/contests:
     get:
       tags: [ contest, admin ]
       operationId: getAllContests
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Page"
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Size"
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/Sort"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Page"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Size"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
       responses:
         200:
           description: OK. All contests
@@ -190,9 +190,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContestsResponse'
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
     post:
       tags: [ contest, admin ]
       operationId: createContest
@@ -203,17 +203,17 @@ paths:
               $ref: '#/components/schemas/ContestRequest'
       responses:
         201:
-          $ref: "./code-help-common-api.yaml/#/components/responses/CreatedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/CreatedResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
   /admin/contests/{id}:
     get:
       tags: [ contest, admin ]
       operationId: getContest
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ContestId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ContestId"
       responses:
         200:
           description: OK. Contest
@@ -222,16 +222,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ContestDetail'
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
     put:
       tags: [ contest, admin ]
       operationId: updateContest
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ContestId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ContestId"
       requestBody:
         content:
           application/json:
@@ -239,59 +239,59 @@ paths:
               $ref: '#/components/schemas/ContestEditRequest'
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
     delete:
       tags: [ contest, admin ]
       operationId: deleteContest
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ContestId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ContestId"
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
   /admin/contests/{id}/start:
     get:
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ContestId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ContestId"
       operationId: startContest
       tags: [ contest, admin ]
       description: Starts contest happening in coding helper
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         404:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NotFoundResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
   /admin/contests/{id}/close:
     get:
       parameters:
-        - $ref: "./code-help-common-api.yaml/#/components/parameters/ContestId"
+        - $ref: "code-help-common-api.yaml#/components/parameters/ContestId"
       operationId: closeContest
       tags: [ contest, admin ]
       description: Closes contest happening in coding helper
       responses:
         204:
-          $ref: "./code-help-common-api.yaml/#/components/responses/NoContentResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/NoContentResponse"
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         400:
-          $ref: "./code-help-common-api.yaml/#/components/responses/BadRequestResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/BadRequestResponse"
   /admin/code-runner:
     post:
       operationId: runCode
@@ -309,11 +309,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/CodeRunnerResponse'
         401:
-          $ref: "./code-help-common-api.yaml/#/components/responses/UnauthorizedResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
-          $ref: "./code-help-common-api.yaml/#/components/responses/ForbiddenResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
         400:
-          $ref: "./code-help-common-api.yaml/#/components/responses/BadRequestResponse"
+          $ref: "code-help-common-api.yaml#/components/responses/BadRequestResponse"
 components:
   schemas:
     CodeRunnerRequest:
@@ -321,9 +321,9 @@ components:
       required: [ language, code, testCases ]
       properties:
         language:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/CodeLanguage"
+          $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
         code:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Code"
+          $ref: "code-help-common-api.yaml#/components/schemas/Code"
         testCases:
           type: array
           items:
@@ -336,8 +336,8 @@ components:
           type: string
     ProblemsResponse:
       allOf:
-        - $ref: "./code-help-common-api.yaml/#/components/schemas/PageInfo"
-        - $ref: "./code-help-common-api.yaml/#/components/schemas/PaginationLinksResponse"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PageInfo"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PaginationLinksResponse"
         - type: object
           required: [ problems ]
           properties:
@@ -355,7 +355,7 @@ components:
         title:
           type: string
         difficulty:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Difficulty"
+          $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
         category:
           $ref: '#/components/schemas/Category'
     ProblemCode:
@@ -366,7 +366,7 @@ components:
           type: integer
           format: int64
         code:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Code"
+          $ref: "code-help-common-api.yaml#/components/schemas/Code"
         language:
           type: string
           example: "javascript"
@@ -397,19 +397,19 @@ components:
                     type: integer
                     format: int64
                   in:
-                    $ref: "./code-help-common-api.yaml/#/components/schemas/TestCaseValue"
+                    $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
                   out:
-                    $ref: "./code-help-common-api.yaml/#/components/schemas/TestCaseValue"
+                    $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
     TestCase:
       type: object
       required: [ id, in, out ]
       properties:
         id:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Long"
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
         in:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/TestCaseValue"
+          $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
         out:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/TestCaseValue"
+          $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
     ProblemRequest:
       type: object
       required: [ title, difficulty, markdown, starterCode, runnerCode, testCases ]
@@ -420,7 +420,7 @@ components:
           type: string
           example: 'Two sum'
         difficulty:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Difficulty"
+          $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
         markdown:
           type: string
           example: '## Two Sum... problem description'
@@ -438,8 +438,8 @@ components:
             $ref: "#/components/schemas/TestCase"
     ContestsResponse:
       allOf:
-        - $ref: "./code-help-common-api.yaml/#/components/schemas/PageInfo"
-        - $ref: "./code-help-common-api.yaml/#/components/schemas/PaginationLinksResponse"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PageInfo"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PaginationLinksResponse"
         - type: object
           required: [ contests ]
           properties:
@@ -455,13 +455,13 @@ components:
           type: string
           example: 'Contest name'
         status:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/ContestStatus"
+          $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
         duration:
           type: string
           format: duration
           example: 1h30m
         startsOn:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Date"
+          $ref: "code-help-common-api.yaml#/components/schemas/Date"
     ContestProblemEditRequest:
       type: object
       properties:
@@ -490,13 +490,13 @@ components:
           type: string
           example: 'Contest name'
         status:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/ContestStatus"
+          $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
         duration:
           type: string
           format: duration
           example: 1h30m
         startsOn:
-          $ref: "./code-help-common-api.yaml/#/components/schemas/Date"
+          $ref: "code-help-common-api.yaml#/components/schemas/Date"
     ContestDetail:
       allOf:
         - $ref: '#/components/schemas/Contest'
