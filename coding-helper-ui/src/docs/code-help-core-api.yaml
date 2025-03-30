@@ -1,0 +1,478 @@
+openapi: 3.0.1
+info:
+  title: 'Coding helper spec'
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+    description: Open API specification
+
+security:
+  - Authorization_JWT: [ ]
+
+components:
+  securitySchemes:
+    Authorization_JWT: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Id:
+      type: integer
+      format: int64
+      example: 23
+
+    Difficulty:
+      type: string
+      enum: [ EASY, MEDIUM, HARD ]
+      example: 'EASY'
+
+    Date:
+      type: string
+      format: date
+      example: '2022-05-16'
+
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Binary trees'
+
+    ProblemEntry:
+      type: object
+      required:
+        - starterCode
+        - title
+        - difficulty
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        category:
+          $ref: '#/components/schemas/Category'
+        title:
+          type: string
+          example: 'Two sum'
+        difficulty:
+          $ref: '#/components/schemas/Difficulty'
+        markdown:
+          type: string
+          example: '## Two Sum... problem description'
+        starterCode:
+          type: string
+          example: 'function(...) {...}'
+
+    ProblemByLikes:
+      allOf:
+        - $ref: '#/components/schemas/ProblemEntry'
+        - type: object
+          required:
+            - likes
+          properties:
+            likes:
+              type: integer
+              format: int64
+              example: 23
+
+    SubmissionStatus:
+      type: string
+      enum: [ ACCEPTED, DECLINED ]
+
+    SubmissionBaseEntry:
+      type: object
+      required:
+        - language
+        - code
+      properties:
+        language:
+          type: string
+          example: 'javascript'
+        code:
+          type: string
+          example: 'function(...) {...}'
+
+    SubmissionEntry:
+      allOf:
+        - $ref: '#/components/schemas/SubmissionBaseEntry'
+        - type: object
+          required:
+            - status
+            - timeSubmitted
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            timeSubmitted:
+              $ref: '#/components/schemas/Date'
+            status:
+              $ref: '#/components/schemas/SubmissionStatus'
+
+    SubmissionReqBody:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SubmissionBaseEntry'
+        - type: object
+          required:
+            - problemId
+          properties:
+            problemId:
+              $ref: '#/components/schemas/Id'
+
+    ContestStatus:
+      type: string
+      enum: [ OPEN, STARTED, CLOSED ]
+
+    ContestProblem:
+      type: object
+      required:
+        - problem
+        - score
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        problem:
+          $ref: '#/components/schemas/ProblemEntry'
+        score:
+          type: integer
+          format: int64
+          example: 53
+
+    ContestEntry:
+      type: object
+      required:
+        - problems
+        - name
+        - duration
+        - startsOn
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/ContestStatus'
+        name:
+          type: string
+          example: 'Bitweekly 122 contest'
+        duration:
+          type: string
+          format: duration
+          example: 1h30m
+        startsOn:
+          $ref: '#/components/schemas/Date'
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestProblem'
+
+    ProblemsResponse:
+      required:
+        - problems
+      type: object
+      properties:
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemEntry'
+    ProblemsTop10Response:
+      required:
+        - problems
+      type: object
+      properties:
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemByLikes'
+    CategoriesResponse:
+      required:
+        - categories
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    SubmissionsResponse:
+      required:
+        - submissions
+      type: object
+      properties:
+        submissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmissionEntry'
+    ContestsResponse:
+      required:
+        - contests
+      type: object
+      properties:
+        contests:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestEntry'
+
+    UserStatistics:
+      type: object
+      required:
+        - solved
+        - easy
+        - medium
+        - hard
+      properties:
+        solved:
+          type: integer
+          format: int64
+          example: 5
+        easy:
+          type: integer
+          format: int64
+          example: 2
+        medium:
+          type: integer
+          format: int64
+          example: 2
+        hard:
+          type: integer
+          format: int64
+          example: 1
+
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+    Authorization:
+      description: Authorization header
+      name: Authorization
+      in: header
+      schema:
+        type: string
+        example: "Bearer {token}"
+  responses:
+    NoContentResponse:
+      description: No content.
+paths:
+  /problems:
+    get:
+      operationId: getProblemEntries
+      tags: [ Problem ]
+      description: Returns all coding helper problems
+      responses:
+        200:
+          description: A list of problems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsResponse'
+  /problems/liked:
+    get:
+      operationId: getLikedProblems
+      tags: [ Problem ]
+      description: Return all problems the user likes
+      responses:
+        200:
+          description: A list of liked problems
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsResponse'
+
+  /problems/top10:
+    get:
+      operationId: getTop10Problems
+      tags: [ Problem ]
+      description: Returns the top 10 coding helper problems by likes count
+      responses:
+        200:
+          description: problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemsTop10Response'
+  /problems/{id}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/id'
+      operationId: getProblemEntry
+      tags: [ Problem ]
+      description: Returns a coding helper problem with likes count
+      responses:
+        200:
+          description: problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemByLikes'
+  /problems/{id}/like:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/id'
+      operationId: toggleLikeProblemEntry
+      tags: [ Problem ]
+      description: Toggles like of a coding helper problem
+      responses:
+        204:
+          $ref: '#/components/responses/NoContentResponse'
+  /problems/{id}/is-liked:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/id'
+      operationId: isProblemEntryLiked
+      tags: [ Problem ]
+      description: Returns true if a coding helper problem is liked
+      responses:
+        200:
+          description: 'Returns boolean'
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+  /categories:
+    get:
+      operationId: getCategories
+      tags: [ Category ]
+      description: Returns all the categories
+      responses:
+        200:
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesResponse'
+  /submissions:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                problemId:
+                  $ref: '#/components/schemas/Id'
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      operationId: getSubmissions
+      tags: [ Submission ]
+      description: Returns all submissions for the logged user
+      responses:
+        200:
+          description: List of Submissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionsResponse'
+  /submit:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionReqBody'
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      operationId: createSubmissionsEntry
+      tags: [ Submission ]
+      description: Returns output string of the code that was run
+      responses:
+        204:
+          description: Output string
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'All test cases passed'
+
+  /contests:
+    get:
+      operationId: getContestEntries
+      tags: [ Contests ]
+      description: Returns the contests happening in coding helper
+      responses:
+        200:
+          description: A list of contests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestsResponse'
+  /contests/{id}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/id'
+      operationId: getContestEntry
+      tags: [ Contests ]
+      description: Returns contest happening in coding helper
+      responses:
+        200:
+          description: A list of contests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestEntry'
+  /contests/{contestId}/problems/{problemId}:
+    get:
+      parameters:
+        - name: 'contestId'
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+        - name: 'problemId'
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Id'
+      tags: [ Contests ]
+      operationId: getContestProblem
+      description: Returns a contest problem entry
+      responses:
+        200:
+          description: Contest problem entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestProblem'
+  /run-code:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                problemId:
+                  $ref: '#/components/schemas/Id'
+                language:
+                  type: string
+                  example: 'javascript'
+                code:
+                  type: string
+                  example: 'function(...) {...)'
+                input:
+                  type: string
+                  example: '[1, 2]'
+      tags: [ CodeRunner ]
+      operationId: runCode
+      description: Runs code and produces output
+      responses:
+        200:
+          description: Output string
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: '[1, 2, 3]'
+  /statistics:
+    get:
+      tags: [ User ]
+      operationId: getStatistics
+      description: Returns problem solving statistics for user
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        200:
+          description: Output string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStatistics'
