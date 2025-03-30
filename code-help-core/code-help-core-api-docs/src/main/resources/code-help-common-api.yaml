@@ -196,7 +196,6 @@ components:
       required: false
       schema:
         type: array
-        default: [ ]
         items:
           type: string
           example: "id=asc,title=desc"

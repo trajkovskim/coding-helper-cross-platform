@@ -8,12 +8,11 @@ services:
       - 80:80
       - 433:433
     depends_on:
-      - code-help-admin-backend
+      - code-help-admin-proxy
       - code-help-admin-ui
       - code-help-core
       - code-help-forum
       - code-help-keycloak-iam
-
   code-help-keycloak-iam:
     image: keycloak/keycloak:21.0
     container_name: code-help-keycloak-iam
@@ -32,16 +31,14 @@ services:
       - --import-realm
     volumes:
       - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
-
-  code-help-admin-backend:
-    image: code-help-admin-backend
-    container_name: code-help-admin-backend
+  code-help-admin-proxy:
+    image: code-help-admin-proxy
+    container_name: code-help-admin-proxy
     build:
-      context: code-help-admin/code-help-admin-backend
+      context: code-help-admin/code-help-admin-proxy
       dockerfile: ./@global/deploy/Dockerfile
     environment:
-      - FORUM_API_SERVER_URL=http://code-help-forum:3001/api/v1
-      - CORE_ADMIN_API_SERVER_URL=http://code-help-core:3000/api
+      - PROXY_MAPPINGS=*/admin/forum::http://code-help-forum:3001,.*/admin::http://code-help-core:3000
       - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
       - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
       - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
@@ -49,7 +46,6 @@ services:
       - 4000:4000
     depends_on:
       - code-help-keycloak-iam
-
   code-help-admin-ui:
     image: code-help-admin-ui
     container_name: code-help-admin-ui
@@ -62,7 +58,6 @@ services:
         - VITE_KEYCLOAK_REALM=code-help
         - VITE_KEYCLOAK_CLIENTID=code-help-flutter
         - VITE_BASE_ROUTE=/admin-ui
-
   code-help-core:
     image: code-help-core
     container_name: code-help-core
@@ -74,7 +69,6 @@ services:
       - 3000:3000
     depends_on:
       - code-help-core-neo4j
-
   code-help-forum:
     image: code-help-forum
     container_name: code-help-forum
@@ -86,7 +80,6 @@ services:
       - 3001:3001
     depends_on:
       - code-help-forum-postgres
-
   code-help-forum-postgres:
     image: postgres:15.1-alpine
     container_name: code-help-forum-postgres
@@ -98,7 +91,6 @@ services:
       - 5432:5432
     volumes:
       - code-help-forum-postgres-data:/var/lib/postgresql/data
-
   code-help-core-neo4j:
     image: neo4j:5.2.0
     hostname: neo4j
@@ -112,7 +104,6 @@ services:
       - code-help-core-neo4j-data:/data
       - code-help-core-neo4j-plugins:/plugins
       - code-help-core-neo4j-logs:/logs
-
 volumes:
   code-help-forum-postgres-data:
   code-help-core-neo4j-data:

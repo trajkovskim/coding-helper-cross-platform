@@ -347,11 +347,10 @@ components:
                 $ref: '#/components/schemas/Problem'
     Problem:
       type: object
-      required: [ id, title, difficulty ]
+      required: [ id, title, difficulty, category ]
       properties:
         id:
-          type: integer
-          format: int64
+          $ref: "code-help-common-api.yaml#/components/schemas/Id"
         title:
           type: string
         difficulty:
@@ -360,16 +359,20 @@ components:
           $ref: '#/components/schemas/Category'
     ProblemCode:
       type: object
-      required: [ id, code, language ]
+      required: [ code, language ]
       properties:
-        id:
-          type: integer
-          format: int64
         code:
           $ref: "code-help-common-api.yaml#/components/schemas/Code"
         language:
-          type: string
-          example: "javascript"
+          $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
+    ProblemCodeResponse:
+      allOf:
+        - $ref: "#/components/schemas/ProblemCode"
+        - type: object
+          required: [ id ]
+          properties:
+            id:
+              $ref: "code-help-common-api.yaml#/components/schemas/Id"
     ProblemDetail:
       allOf:
         - $ref: '#/components/schemas/Problem'
@@ -382,37 +385,34 @@ components:
             starterCode:
               type: array
               items:
-                $ref: "#/components/schemas/ProblemCode"
+                $ref: "#/components/schemas/ProblemCodeResponse"
             runnerCode:
               type: array
               items:
-                $ref: "#/components/schemas/ProblemCode"
+                $ref: "#/components/schemas/ProblemCodeResponse"
             testCases:
               type: array
               items:
-                type: object
-                required: [ id, in, out ]
-                properties:
-                  id:
-                    type: integer
-                    format: int64
-                  in:
-                    $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
-                  out:
-                    $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
+                $ref: "#/components/schemas/TestCaseResponse"
     TestCase:
       type: object
-      required: [ id, in, out ]
+      required: [ in, out ]
       properties:
-        id:
-          $ref: "code-help-common-api.yaml#/components/schemas/Long"
         in:
           $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
         out:
           $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
+    TestCaseResponse:
+      allOf:
+        - $ref: "#/components/schemas/TestCase"
+        - type: object
+          required: [ id ]
+          properties:
+            id:
+              $ref: "code-help-common-api.yaml#/components/schemas/Id"
     ProblemRequest:
       type: object
-      required: [ title, difficulty, markdown, starterCode, runnerCode, testCases ]
+      required: [ title, category, difficulty, markdown, starterCode, runnerCode, testCases ]
       properties:
         category:
           $ref: '#/components/schemas/CategoryRequest'
@@ -466,8 +466,7 @@ components:
       type: object
       properties:
         contestProblemId:
-          type: integer
-          format: int64
+          $ref: "code-help-common-api.yaml#/components/schemas/Id"
         score:
           type: integer
     ContestEditRequest:
@@ -484,8 +483,7 @@ components:
       required: [ id, name, status, duration, startsOn ]
       properties:
         id:
-          type: integer
-          format: int64
+          $ref: "code-help-common-api.yaml#/components/schemas/Id"
         name:
           type: string
           example: 'Contest name'
@@ -514,8 +512,7 @@ components:
           required: [ contestProblemId, score ]
           properties:
             contestProblemId:
-              type: integer
-              format: int64
+              $ref: "code-help-common-api.yaml#/components/schemas/Id"
             score:
               type: integer
     CategoryResponse:
@@ -531,8 +528,7 @@ components:
       required: [ id, name ]
       properties:
         id:
-          type: integer
-          format: int64
+          $ref: "code-help-common-api.yaml#/components/schemas/Id"
         name:
           type: string
           example: 'Binary trees'

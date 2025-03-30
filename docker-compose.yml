@@ -1,92 +1,85 @@
 version: '3'
 services:
-#  code-help-ingress:
-#    image: code-help-ingress
-#    container_name: code-help-ingress
-#    build: code-help-ingress
-#    ports:
-#      - 80:80
-#      - 433:433
-#    depends_on:
-#      - code-help-admin-backend
-#      - code-help-admin-ui
-#      - code-help-core
-#      - code-help-forum
-#      - code-help-keycloak-iam
-#
-#  code-help-keycloak-iam:
-#    image: keycloak/keycloak:21.0
-#    container_name: code-help-keycloak-iam
-#    ports:
-#      - 8443:8443
-#      - 8080:8080
-#    environment:
-#      - KEYCLOAK_ADMIN=admin
-#      - KEYCLOAK_ADMIN_PASSWORD=admin
-#    command:
-#      - start-dev
-#      - --http-relative-path=/iam
-#      - --proxy=edge
-#      - --hostname-url=http://localhost/iam
-#      - --hostname-admin-url=http://localhost/iam
-#      - --import-realm
-#    volumes:
-#      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
-#
-#  code-help-admin-backend:
-#    image: code-help-admin-backend
-#    container_name: code-help-admin-backend
-#    build:
-#      context: code-help-admin/code-help-admin-backend
-#      dockerfile: ./@global/deploy/Dockerfile
-#    environment:
-#      - FORUM_API_SERVER_URL=http://code-help-forum:3001/api/v1
-#      - CORE_ADMIN_API_SERVER_URL=http://code-help-core:3000/api
-#      - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
-#      - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
-#      - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
-#    ports:
-#      - 4000:4000
-#    depends_on:
-#      - code-help-keycloak-iam
-
-#  code-help-admin-ui:
-#    image: code-help-admin-ui
-#    container_name: code-help-admin-ui
-#    build:
-#      context: code-help-admin/code-help-admin-ui
-#      dockerfile: Dockerfile
-#      args:
-#        - VITE_ADMIN_API_URL=http://localhost/admin/api/v1
-#        - VITE_KEYCLOAK_URL=http://localhost/iam
-#        - VITE_KEYCLOAK_REALM=code-help
-#        - VITE_KEYCLOAK_CLIENTID=code-help-flutter
-#        - VITE_BASE_ROUTE=/admin-ui
-
-#  code-help-core:
-#    image: code-help-core
-#    container_name: code-help-core
-#    build:
-#      context: code-help-core
-#      args:
-#        - VERSION=0.0.1-SNAPSHOT
-#    ports:
-#      - 3000:3000
-#    depends_on:
-#      - code-help-core-neo4j
-
-#  code-help-forum:
-#    image: code-help-forum
-#    container_name: code-help-forum
-#    build:
-#      context: code-help-forum
-#      args:
-#        - VERSION=0.0.1-SNAPSHOT
-#    ports:
-#      - 3001:3001
-#    depends_on:
-#      - code-help-forum-postgres
-
+  code-help-ingress:
+    image: code-help-ingress
+    container_name: code-help-ingress
+    build: code-help-ingress
+    ports:
+      - 80:80
+      - 433:433
+    depends_on:
+      - code-help-admin-proxy
+      - code-help-admin-ui
+      - code-help-core
+      - code-help-forum
+      - code-help-keycloak-iam
+  code-help-keycloak-iam:
+    image: keycloak/keycloak:21.0
+    container_name: code-help-keycloak-iam
+    ports:
+      - 8443:8443
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command:
+      - start-dev
+      - --http-relative-path=/iam
+      - --proxy=edge
+      - --hostname-url=http://localhost/iam
+      - --hostname-admin-url=http://localhost/iam
+      - --import-realm
+    volumes:
+      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
+  code-help-admin-proxy:
+    image: code-help-admin-proxy
+    container_name: code-help-admin-proxy
+    build:
+      context: code-help-admin/code-help-admin-proxy
+      dockerfile: ./@global/deploy/Dockerfile
+    environment:
+      - PROXY_MAPPINGS=.*/admin/api/v1/forum->http://code-help-forum:3001/api/v1,.*/admin/api/v1->http://code-help-core:3000/api/admin
+      - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
+      - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
+      - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+    ports:
+      - 4000:4000
+    depends_on:
+      - code-help-keycloak-iam
+  code-help-admin-ui:
+    image: code-help-admin-ui
+    container_name: code-help-admin-ui
+    build:
+      context: code-help-admin/code-help-admin-ui
+      dockerfile: Dockerfile
+      args:
+        - VITE_ADMIN_API_URL=http://localhost/admin/api/v1
+        - VITE_KEYCLOAK_URL=http://localhost/iam
+        - VITE_KEYCLOAK_REALM=code-help
+        - VITE_KEYCLOAK_CLIENTID=code-help-flutter
+        - VITE_BASE_ROUTE=/admin-ui
+  code-help-core:
+    image: code-help-core
+    container_name: code-help-core
+    build:
+      context: code-help-core
+      args:
+        - VERSION=0.0.1-SNAPSHOT
+    ports:
+      - 3000:3000
+    depends_on:
+      - code-help-core-neo4j
+  code-help-forum:
+    image: code-help-forum
+    container_name: code-help-forum
+    build:
+      context: code-help-forum
+      args:
+        - VERSION=0.0.1-SNAPSHOT
+    ports:
+      - 3001:3001
+    depends_on:
+      - code-help-forum-postgres
   code-help-forum-postgres:
     image: postgres:15.1-alpine
     container_name: code-help-forum-postgres
@@ -98,7 +91,6 @@ services:
       - 5432:5432
     volumes:
       - code-help-forum-postgres-data:/var/lib/postgresql/data
-
   code-help-core-neo4j:
     image: neo4j:5.2.0
     hostname: neo4j
@@ -112,7 +104,6 @@ services:
       - code-help-core-neo4j-data:/data
       - code-help-core-neo4j-plugins:/plugins
       - code-help-core-neo4j-logs:/logs
-
 volumes:
   code-help-forum-postgres-data:
   code-help-core-neo4j-data:

@@ -3,6 +3,7 @@ package mk.com.codehelp.core.service.util;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -12,6 +13,10 @@ import java.util.List;
 public class PageUtil {
 
   public static Pageable createPageRequest(Integer pageNumber, Integer pageSize, List<String> sortBy) {
+
+    if(CollectionUtils.isEmpty(sortBy)) {
+      return PageRequest.of(pageNumber, pageSize);
+    }
 
     List<Sort.Order> orders = sortBy.stream().map(sorter -> {
       final String[] x = sorter.split("=");

@@ -15,9 +15,13 @@ public class PageUtil {
 
   public Pageable createPageRequest(Integer pageNumber, Integer pageSize, List<String> sortBy) {
 
+    if(CollectionUtils.isEmpty(sortBy)) {
+      return PageRequest.of(pageNumber, pageSize)
+    }
+
     List<Sort.Order> orders = sortBy.stream().map(sorter -> {
       final String[] x = sorter.split("=");
-      return x[1] != null && x[1].equals("desc") ? Sort.Order.desc(x[0]) : Sort.Order.asc(x[0]);
+      return x.length > 1 && x[1].equals("desc") ? Sort.Order.desc(x[0]) : Sort.Order.asc(x[0]);
     }).toList();
 
     final Sort sort = Sort.by(orders);
