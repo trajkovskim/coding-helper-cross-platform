@@ -39,3 +39,6 @@ compilers:
   javascript:
     ext: .js
     compiler: node
+  java:
+    ext: .java
+    compiler: java

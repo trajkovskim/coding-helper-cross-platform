@@ -1,0 +1,34 @@
+---
+interface Props {
+  id: number;
+  title: string;
+  description: string;
+}
+
+const props = Astro.props;
+---
+
+<style>
+  .container {
+    border: 1px solid #c2c2c2;
+    box-shadow: #c2c2c2 0 0 0.7px 0.2px;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .description {
+    color: #c2c2c2;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container">
+  <div>
+    <div class="title">{props.title}</div>
+    <div class="description">{props.description}</div>
+  </div>
+</div>

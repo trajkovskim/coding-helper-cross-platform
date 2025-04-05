@@ -84,6 +84,7 @@ components:
       required:
         - problems
         - name
+        - description
         - duration
         - startsOn
       properties:
@@ -94,6 +95,9 @@ components:
         name:
           type: string
           example: 'Bitweekly 122 contest'
+        description:
+          type: string
+          example: "This is the bitweekly 122 contest"
         duration:
           type: string
           format: duration
@@ -162,6 +166,36 @@ components:
           $ref: "code-help-common-api.yaml#/components/schemas/Long"
         hard:
           $ref: "code-help-common-api.yaml#/components/schemas/Long"
+    CodeRunnerRequest:
+      type: object
+      required: [ language, code, input ]
+      properties:
+        language:
+          $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
+        code:
+          $ref: "code-help-common-api.yaml#/components/schemas/Code"
+        input:
+          $ref: "code-help-common-api.yaml#/components/schemas/TestCaseValue"
+    CodeRunnerResponse:
+      type: object
+      required: [ message ]
+      properties:
+        message:
+          type: string
+    CreatedSubmissionResponse:
+      type: object
+      required: [ status, message ]
+      properties:
+        message:
+          type: string
+        status:
+          $ref: "#/components/schemas/SubmissionStatus"
+        links:
+          type: object
+          required: [ getSubmissions ]
+          properties:
+            getSubmissions:
+              $ref: "code-help-common-api.yaml#/components/schemas/Link"
   responses:
     ProblemResponse:
       description: Problem entry
@@ -200,18 +234,23 @@ components:
           schema:
             $ref: '#/components/schemas/SubmissionsResponse'
     UserStatisticsResponse:
-      description: Output string
+      description: User statistics response
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/UserStatistics'
-    TestCodeResponse:
-      description: Output string
+    CodeRunnerResponse:
+      description: Code runner response
       content:
-        text/plain:
+        application/json:
           schema:
-            type: string
-            example: 'All test cases passed'
+            $ref: "#/components/schemas/CodeRunnerResponse"
+    CreatedSubmissionResponse:
+      description: Created submission response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreatedSubmissionResponse"
     BooleanResponse:
       description: Boolean value
       content:
@@ -229,6 +268,12 @@ paths:
         - $ref: "code-help-common-api.yaml#/components/parameters/Page"
         - $ref: "code-help-common-api.yaml#/components/parameters/Size"
         - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "title1"
         - name: categories
           in: query
           required: false
@@ -243,6 +288,11 @@ paths:
           schema:
             type: string
             example: "username"
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
       responses:
         200:
           $ref: '#/components/responses/ProblemsResponse'
@@ -337,8 +387,8 @@ paths:
           schema:
             $ref: "code-help-common-api.yaml#/components/schemas/Id"
       responses:
-        200:
-          $ref: "#/components/responses/TestCodeResponse"
+        201:
+          $ref: "#/components/responses/CreatedSubmissionResponse"
         401:
           $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:
@@ -398,19 +448,6 @@ paths:
       tags: [ CodeRunner ]
       operationId: runCode
       description: Runs code and produces output
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                language:
-                  $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
-                code:
-                  $ref: "code-help-common-api.yaml#/components/schemas/Code"
-                input:
-                  type: string
-                  example: '[1, 2]'
       parameters:
         - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
         - name: problemId
@@ -418,9 +455,14 @@ paths:
           required: true
           schema:
             $ref: "code-help-common-api.yaml#/components/schemas/Id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeRunnerRequest"
       responses:
         200:
-          $ref: "#/components/responses/TestCodeResponse"
+          $ref: "#/components/responses/CodeRunnerResponse"
         401:
           $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
         403:

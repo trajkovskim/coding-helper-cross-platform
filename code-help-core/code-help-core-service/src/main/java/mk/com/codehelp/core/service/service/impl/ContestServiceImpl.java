@@ -90,10 +90,7 @@ public class ContestServiceImpl implements ContestService {
 
     Problem problem = contestProblem.getProblem();
 
-    Problem.Code starterCode = problemUtil.getCodeByLanguage(problem.getStarterCode(), language)
-        .orElseThrow(() -> new StarterCodeDoesNotExistException(problemId, language));
-
-    Problem.Code runnerCode = problemUtil.getCodeByLanguage(problem.getRunnerCode(), language)
+    Problem.Code code = problemUtil.getCodeByLanguage(problem.getCodes(), language)
         .orElseThrow(() -> new StarterCodeDoesNotExistException(problemId, language));
 
     return ContestProblemDto.builder()
@@ -102,8 +99,7 @@ public class ContestServiceImpl implements ContestService {
         .difficulty(problem.getDifficulty())
         .markdown(problem.getMarkdown())
         .category(problem.getCategory())
-        .starterCode(starterCode)
-        .runnerCode(runnerCode)
+        .code(code)
         .likes((long) problem.getLikedBy().size())
         .score(contestProblem.getScore())
         .build();

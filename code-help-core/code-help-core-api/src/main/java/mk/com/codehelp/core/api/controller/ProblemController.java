@@ -32,13 +32,21 @@ public class ProblemController implements ProblemApi {
 
   @Override
   public ResponseEntity<ProblemsResponse> getProblemEntries(
-      Integer page, Integer size, List<String> sortBy, List<String> categories, String likedBy) {
+      Integer page,
+      Integer size,
+      List<String> sortBy,
+      String title,
+      List<String> categories,
+      String likedBy,
+      Difficulty difficulty) {
 
     Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
 
     ProblemFilter problemFilter = new ProblemFilter();
+    problemFilter.setTitle(title);
     problemFilter.setCategories(categories);
     problemFilter.setLikedBy(likedBy);
+    problemFilter.setDifficulty(problemConverter.convert(difficulty));
 
     PageInfoDto<ProblemValue> problemsPage = problemService.findAll(problemFilter, pageRequest);
     List<ProblemEntry> problems = problemConverter.convert(problemsPage.getItems());
@@ -46,7 +54,8 @@ public class ProblemController implements ProblemApi {
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
         problemsPage,
         (pageNumber, pageSize) ->
-            methodOn(ProblemController.class).getProblemEntries(pageNumber, pageSize, sortBy, categories, likedBy));
+            methodOn(ProblemController.class)
+                .getProblemEntries(pageNumber, pageSize, sortBy, title, categories, likedBy, difficulty));
 
     ProblemsResponse response = new ProblemsResponse()
         .problems(problems)

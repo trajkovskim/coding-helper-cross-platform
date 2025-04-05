@@ -9,6 +9,7 @@ import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.rest.admin.api.CodeRunnerApi;
 import mk.com.codehelp.core.rest.admin.model.CodeRunnerRequest;
 import mk.com.codehelp.core.rest.admin.model.CodeRunnerResponse;
+import mk.com.codehelp.core.service.dto.CodeRunnerDto;
 import mk.com.codehelp.core.service.service.CodeRunnerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,19 +25,15 @@ public class CodeRunnerAdminController implements CodeRunnerApi {
   @SneakyThrows
   public ResponseEntity<CodeRunnerResponse> runCode(CodeRunnerRequest codeRunnerRequest) {
 
-    String language = codeRunnerRequest.getLanguage();
-
-    String mergedCode = codeRunnerService.createCode(
-        language, codeRunnerRequest.getCode(), "");
-
     List<Problem.TestCase> testCases = codeRunnerRequest.getTestCases()
         .stream()
         .map(problemMapper::convert)
         .toList();
 
-    String runTestCasesMessage = codeRunnerService.runTestCases(testCases, mergedCode, language);
+    CodeRunnerDto runTestCasesMessage = codeRunnerService.runTestCases(
+        testCases, codeRunnerRequest.getCode(), codeRunnerRequest.getLanguage());
 
-    CodeRunnerResponse codeRunnerResponse = new CodeRunnerResponse().message(runTestCasesMessage);
+    CodeRunnerResponse codeRunnerResponse = new CodeRunnerResponse().message(runTestCasesMessage.getMessage());
 
     return ResponseEntity.ok(codeRunnerResponse);
   }

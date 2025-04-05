@@ -12,7 +12,7 @@ public class ProblemUtil {
 
   public  Optional<Problem.Code> getCodeByLanguage(List<Problem.Code> codes, String language) {
     return codes.stream()
-        .filter(starterCode -> language.equals(starterCode.getLanguage()))
+        .filter(code -> language.equals(code.getLanguage()))
         .findAny();
   }
 }

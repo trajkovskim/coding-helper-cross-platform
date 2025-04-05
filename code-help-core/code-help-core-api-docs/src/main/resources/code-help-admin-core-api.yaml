@@ -359,9 +359,11 @@ components:
           $ref: '#/components/schemas/Category'
     ProblemCode:
       type: object
-      required: [ code, language ]
+      required: [ starter, runner, language ]
       properties:
-        code:
+        starter:
+          $ref: "code-help-common-api.yaml#/components/schemas/Code"
+        runner:
           $ref: "code-help-common-api.yaml#/components/schemas/Code"
         language:
           $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
@@ -377,16 +379,12 @@ components:
       allOf:
         - $ref: '#/components/schemas/Problem'
         - type: object
-          required: [ markdown, starterCode, runnerCode, testCases ]
+          required: [ markdown, codes, testCases ]
           properties:
             markdown:
               type: string
               example: '## Two Sum... problem description'
-            starterCode:
-              type: array
-              items:
-                $ref: "#/components/schemas/ProblemCodeResponse"
-            runnerCode:
+            codes:
               type: array
               items:
                 $ref: "#/components/schemas/ProblemCodeResponse"
@@ -412,7 +410,7 @@ components:
               $ref: "code-help-common-api.yaml#/components/schemas/Id"
     ProblemRequest:
       type: object
-      required: [ title, category, difficulty, markdown, starterCode, runnerCode, testCases ]
+      required: [ title, category, difficulty, markdown, codes, testCases ]
       properties:
         category:
           $ref: '#/components/schemas/CategoryRequest'
@@ -424,14 +422,10 @@ components:
         markdown:
           type: string
           example: '## Two Sum... problem description'
-        starterCode:
+        codes:
           type: array
           items:
-            $ref: '#/components/schemas/ProblemCode'
-        runnerCode:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProblemCode'
+            $ref: "#/components/schemas/ProblemCode"
         testCases:
           type: array
           items:
@@ -454,6 +448,9 @@ components:
         name:
           type: string
           example: 'Contest name'
+        description:
+          type: string
+          example: "Contest description"
         status:
           $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
         duration:
@@ -480,13 +477,16 @@ components:
                 $ref: "#/components/schemas/ContestProblemEditRequest"
     Contest:
       type: object
-      required: [ id, name, status, duration, startsOn ]
+      required: [ id, name, description, status, duration, startsOn ]
       properties:
         id:
           $ref: "code-help-common-api.yaml#/components/schemas/Id"
         name:
           type: string
           example: 'Contest name'
+        description:
+          type: string
+          example: "Contest description"
         status:
           $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
         duration:

@@ -64,10 +64,7 @@ public class ProblemServiceImpl implements ProblemService {
 
     Problem problem = findById(id);
 
-    Problem.Code starterCode = problemUtil.getCodeByLanguage(problem.getStarterCode(), language)
-        .orElseThrow(() -> new StarterCodeDoesNotExistException(id, language));
-
-    Problem.Code runnerCode = problemUtil.getCodeByLanguage(problem.getRunnerCode(), language)
+    Problem.Code code = problemUtil.getCodeByLanguage(problem.getCodes(), language)
         .orElseThrow(() -> new StarterCodeDoesNotExistException(id, language));
 
     return ProblemDto.builder()
@@ -76,8 +73,7 @@ public class ProblemServiceImpl implements ProblemService {
         .difficulty(problem.getDifficulty())
         .markdown(problem.getMarkdown())
         .category(problem.getCategory())
-        .starterCode(starterCode)
-        .runnerCode(runnerCode)
+        .code(code)
         .likes((long) problem.getLikedBy().size())
         .build();
   }
@@ -100,8 +96,7 @@ public class ProblemServiceImpl implements ProblemService {
     oldProblem.setCategory(category);
     oldProblem.setMarkdown(problemInput.getMarkdown());
     oldProblem.setTitle(problemInput.getTitle());
-    oldProblem.setStarterCode(problemInput.getStarterCode());
-    oldProblem.setRunnerCode(problemInput.getRunnerCode());
+    oldProblem.setCodes(problemInput.getCodes());
     oldProblem.setTestCases(oldProblem.getTestCases());
 
     return problemRepository.save(oldProblem);

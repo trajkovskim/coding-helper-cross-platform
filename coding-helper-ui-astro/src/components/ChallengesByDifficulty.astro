@@ -1,0 +1,70 @@
+---
+interface Props {
+  difficulty: "easy" | "medium" | "hard";
+}
+
+const props = Astro.props;
+
+const difficultyColors: Record<Props['difficulty'], string> = {
+  easy: "green",
+  medium: "orange",
+  hard: "red",
+};
+
+const difficultyColor = difficultyColors[props.difficulty]
+---
+
+<style define:vars={{ backgroundColor: difficultyColor }}>
+  .container {
+    border: 1px solid gainsboro;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .title {
+    font-weight: bold;
+    border-bottom: 1px solid gainsboro;
+    padding: 15px;
+  }
+
+  .challenge-container {
+    padding: 10px;
+    position: relative;
+  }
+
+  .challenge-title {
+    font-size: 1.1rem;
+  }
+  
+  .challenge-category {
+    color: #c2c2c2;
+    font-size: 0.9rem;
+  }
+
+  .challenge-container:hover::after {
+    opacity: 1;
+    right: 15px;
+  }
+
+  .challenge-container::after {
+    content: ">";
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 25px;
+
+    transition: all 200ms;
+    opacity: 0;
+  }
+</style>
+
+<div class="container">
+  <div class="title">{props.difficulty}</div>
+  <ul class="challenge-container">
+    <li>
+      <div class="challenge-title">Two sum</div>
+      <div class="challenge-category">Arrays</div>
+    </li>
+  </ul>
+</div>

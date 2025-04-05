@@ -38,7 +38,7 @@ services:
       context: code-help-admin/code-help-admin-proxy
       dockerfile: ./@global/deploy/Dockerfile
     environment:
-      - PROXY_MAPPINGS=.*/admin/api/v1/forum->http://code-help-forum:3001/api/v1,.*/admin/api/v1->http://code-help-core:3000/api/admin
+      - PROXY_MAPPINGS=.*/admin/api/v1/forum->http://code-help-forum:3001/api/v1,.*/admin/api/v1->http://code-help-core:3000/api
       - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
       - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
       - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs

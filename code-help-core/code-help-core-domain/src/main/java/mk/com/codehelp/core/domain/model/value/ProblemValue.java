@@ -20,8 +20,7 @@ public class ProblemValue {
   private String title;
   private Difficulty difficulty;
   private String markdown;
-  private List<Problem.Code> starterCodes;
-  private List<Problem.Code> runnerCodes;
-  private List<Problem.TestCase> testCases = new ArrayList<>();
   private Long likes;
+  private List<Problem.Code> codes = new ArrayList<>();
+  private List<Problem.TestCase> testCases = new ArrayList<>();
 }

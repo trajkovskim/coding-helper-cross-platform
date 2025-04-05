@@ -1,0 +1,24 @@
+{
+  "name": "coding-helper-ui-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types:core-api": "openapi-generator-cli generate -i src/docs/code-help-core-api.yaml -g typescript-fetch -o src/generated/core-api --additional-properties=withInterfaces=true",
+    "generate-types:forum-api": "openapi-generator-cli generate -i src/docs/forum-api.yaml -g typescript-fetch -o src/generated/forum-api --additional-properties=withInterfaces=true",
+    "generate-types": "rimraf -rf /src/generated && run-p generate-types:*"
+  },
+  "dependencies": {
+    "astro": "^5.5.5",
+    "astro-icon": "^1.1.5"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@openapitools/openapi-generator-cli": "^2.18.4",
+    "rimraf": "^5.0.5",
+    "npm-run-all": "^4.1.5"
+  }
+}

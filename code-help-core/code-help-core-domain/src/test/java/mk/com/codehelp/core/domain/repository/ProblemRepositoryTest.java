@@ -52,26 +52,28 @@ public class ProblemRepositoryTest {
     problem.setDifficulty(Difficulty.EASY);
     problem.setMarkdown("MARKDOWN");
 
-    Problem.Code starterCode = new Problem.Code();
-    starterCode.setCode("starter");
-    starterCode.setLanguage("javascript");
-    problem.setStarterCode(List.of(starterCode));
-
-    Problem.Code runnerCode = new Problem.Code();
-    runnerCode.setCode("runner");
-    runnerCode.setLanguage("javascript");
-    problem.setRunnerCode(List.of(runnerCode));
+    Problem.Code code = new Problem.Code();
+    code.setStarter("starter");
+    code.setRunner("runner");
+    code.setLanguage("javascript");
+    problem.setCodes(List.of(code));
 
     return problem;
   }
 
   private static Stream<Arguments> shouldGetProblemsArguments() {
 
+    ProblemFilter titleFilter = new ProblemFilter();
+    titleFilter.setTitle("title1");
+
     ProblemFilter categoriesFilter = new ProblemFilter();
     categoriesFilter.setCategories(List.of("test"));
 
     ProblemFilter likedByFilter = new ProblemFilter();
     likedByFilter.setLikedBy("test");
+
+    ProblemFilter difficultyFilter = new ProblemFilter();
+    difficultyFilter.setDifficulty(Difficulty.HARD);
 
     ProblemFilter categoriesAndLikedByFilter = new ProblemFilter();
     categoriesAndLikedByFilter.setLikedBy("test");
@@ -82,10 +84,12 @@ public class ProblemRepositoryTest {
     Pageable pageRequest = PageRequest.of(0, 10);
 
     return Stream.of(
-        Arguments.arguments(categoriesFilter, pageRequest, 2),
+        Arguments.arguments(titleFilter, pageRequest, 1),
+        Arguments.arguments(categoriesFilter, pageRequest, 3),
         Arguments.arguments(likedByFilter, pageRequest, 1),
+        Arguments.arguments(difficultyFilter, pageRequest, 1),
         Arguments.arguments(categoriesAndLikedByFilter, pageRequest, 1),
-        Arguments.arguments(emptyFilter, pageRequest, 2)
+        Arguments.arguments(emptyFilter, pageRequest, 3)
     );
   }
 
@@ -99,11 +103,16 @@ public class ProblemRepositoryTest {
     long totalElementsBefore = problemRepository.findAll(filter, pageable).getTotalElements();
 
     Problem problem1 = createProblem(category);
+    problem1.setTitle("title123");
     problemRepository.save(problem1);
 
     Problem problem2 = createProblem(category);
     problem2.setLikedBy(List.of("test"));
     problemRepository.save(problem2);
+
+    Problem problem3 = createProblem(category);
+    problem3.setDifficulty(Difficulty.HARD);
+    problemRepository.save(problem3);
 
     // When
     Page<ProblemValue> problemValuePage = problemRepository.findAll(filter, pageable);
@@ -125,15 +134,11 @@ public class ProblemRepositoryTest {
     problem.setDifficulty(Difficulty.EASY);
     problem.setMarkdown("MARKDOWN");
 
-    Problem.Code starterCode = new Problem.Code();
-    starterCode.setCode("starter");
-    starterCode.setLanguage("javascript");
-    problem.setStarterCode(List.of(starterCode));
-
-    Problem.Code runnerCode = new Problem.Code();
-    runnerCode.setCode("runner");
-    runnerCode.setLanguage("javascript");
-    problem.setRunnerCode(List.of(runnerCode));
+    Problem.Code code = new Problem.Code();
+    code.setStarter("starter");
+    code.setRunner("runner");
+    code.setLanguage("javascript");
+    problem.setCodes(List.of(code));
 
     Problem saved = problemRepository.save(problem);
 

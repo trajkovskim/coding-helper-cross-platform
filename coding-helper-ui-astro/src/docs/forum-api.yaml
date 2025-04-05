@@ -1,0 +1,897 @@
+openapi: 3.0.1
+info:
+  title: Forum application
+  description: Forum application api
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:3001/api/v1
+
+paths:
+  /communities:
+    get:
+      tags:
+        - community
+      operationId: getAllCommunities
+      description: Get communities by parameters
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortCommunities'
+    post:
+      tags:
+        - community
+      operationId: createCommunity
+      description: Create a new community
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Community'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+  /communities/{name}:
+    get:
+      tags:
+        - community
+      operationId: getCommunityByUid
+      description: Find a specific community by id
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Community'
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    put:
+      tags:
+        - community
+      operationId: updateCommunity
+      description: Update community
+      requestBody:
+        required: true
+        description: Community update request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommunityRequest'
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Community'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    delete:
+      tags:
+        - community
+      operationId: deleteCommunity
+      description: Delete the community
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+  /communities/{name}/moderators:
+    get:
+      tags:
+        - community
+      operationId: getCommunityModerators
+      description: Get moderators for a community
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+    patch:
+      tags:
+        - community
+      operationId: addModerator
+      description: Add a new moderator to the community
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModeratorRequest'
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+    delete:
+      tags:
+        - community
+      operationId: removeModerator
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+        - in: query
+          name: username
+          description: moderator to remove
+          required: true
+          explode: true
+          schema:
+            type: string
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+  /communities/{name}/members:
+    patch:
+      tags:
+        - community
+      operationId: joinCommunity
+      description: Join a community
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+    delete:
+      tags:
+        - community
+      operationId: leaveCommunity
+      description: Leave a community
+      parameters:
+        - $ref: "#/components/parameters/CommunityNamePath"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+  /posts:
+    get:
+      tags:
+        - post
+      operationId: getPosts
+      description: Get certain posts
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/CommunityNameQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortPosts'
+    post:
+      tags:
+        - post
+      operationId: createCommunityPost
+      description: Create a post inside a community
+      requestBody:
+        required: true
+        description: Post request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+      parameters:
+        - $ref: "#/components/parameters/CommunityNameQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+  /posts/{uid}:
+    get:
+      tags:
+        - post
+      operationId: getPost
+      description: Get a single post
+      parameters:
+        - $ref: "#/components/parameters/PostUidPath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    put:
+      tags:
+        - post
+      operationId: updatePost
+      description: Update content or title of a post
+      requestBody:
+        required: true
+        description: Post update request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+      parameters:
+        - $ref: "#/components/parameters/PostUidPath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        304:
+          $ref: "#/components/responses/NotModifiedResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    delete:
+      tags:
+        - post
+      operationId: deletePost
+      parameters:
+        - $ref: "#/components/parameters/PostUidPath"
+      description: Delete a post
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+  /comments:
+    get:
+      tags:
+        - comment
+      operationId: getCommentsForPost
+      description: Get all comments for a post
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/PostUidQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
+    post:
+      tags:
+        - comment
+      operationId: commentOnPost
+      description: Write a comment on a post
+      requestBody:
+        required: true
+        description: Comment request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      parameters:
+        - $ref: "#/components/parameters/PostUidQuery"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+  /comments/{uid}:
+    get:
+      tags:
+        - comment
+      operationId: getCommentReplies
+      description: Get all comment replies
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Size"
+        - $ref: "#/components/parameters/Sort"
+        - $ref: "#/components/parameters/CommentUidPath"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    post:
+      tags:
+        - comment
+      operationId: replyToComment
+      description: Reply to a comment
+      parameters:
+        - $ref: "#/components/parameters/CommentUidPath"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    put:
+      tags:
+        - comment
+      operationId: updateComment
+      parameters:
+        - $ref: "#/components/parameters/CommentUidPath"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        304:
+          $ref: "#/components/responses/NotModifiedResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    delete:
+      tags:
+        - comment
+      operationId: deleteComment
+      parameters:
+        - $ref: "#/components/parameters/CommentUidPath"
+      responses:
+        204:
+          $ref: "#/components/responses/NoContentResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+  /categories:
+    get:
+      tags:
+        - category
+      operationId: getAllCategories
+      description: Get all categories
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categories'
+    post:
+      tags:
+        - category
+      operationId: createCategory
+      description: Create a new category
+      requestBody:
+        required: true
+        description: Category creation body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreate'
+      responses:
+        201:
+          $ref: "#/components/responses/CreatedResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+  /categories/{uid}:
+    delete:
+      tags:
+        - category
+      operationId: deleteCategory
+      description: Deletes category by id
+      parameters:
+        - $ref: "#/components/parameters/CategoryUidPath"
+      responses:
+        204:
+          description: No content.
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+    put:
+      tags:
+        - category
+      operationId: updateCategory
+      description: Updates category by uid
+      parameters:
+        - $ref: "#/components/parameters/CategoryUidPath"
+      requestBody:
+        required: true
+        description: Category update body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreate'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        304:
+          $ref: "#/components/responses/NotModifiedResponse"
+        400:
+          $ref: "#/components/responses/BadRequestResponse"
+        404:
+          $ref: "#/components/responses/NotFoundResponse"
+components:
+  schemas:
+    Timestamp:
+      type: string
+      format: timestamp
+      example: '2022-05-16T00:00:00'
+    ErrorResponse:
+      type: object
+      description: Error response
+      required:
+        - code
+        - message
+        - status
+        - timestamp
+      properties:
+        code:
+          type: string
+          example: "ERROR:0001"
+        message:
+          type: string
+          example: "An error happened"
+        status:
+          type: integer
+          example: 404
+        timestamp:
+          $ref: "#/components/schemas/Timestamp"
+    CreatedResponse:
+      type: object
+      description: Self links response
+      required:
+        - links
+      properties:
+        links:
+          $ref: "#/components/schemas/SelfLink"
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          example: .../api/v1/
+    SelfLink:
+      type: object
+      required:
+        - self
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+    PaginationLinks:
+      type: object
+      properties:
+        self:
+          $ref: "#/components/schemas/Link"
+        first:
+          $ref: "#/components/schemas/Link"
+        last:
+          $ref: "#/components/schemas/Link"
+        prev:
+          $ref: "#/components/schemas/Link"
+        next:
+          $ref: "#/components/schemas/Link"
+    PaginationLinksResponse:
+      type: object
+      properties:
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+    PageInfo:
+      type: object
+      description: Pagination info
+      required:
+        - totalPages
+        - pageSize
+        - pageNumber
+        - totalElements
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+          example: 1000
+        totalPages:
+          type: integer
+          example: 5
+        pageSize:
+          type: integer
+          example: 10
+        pageNumber:
+          type: integer
+          example: 10
+    Community:
+      allOf:
+        - $ref: '#/components/schemas/ShortCommunity'
+        - type: object
+          required: [ admin, categories, created, moderators, posts, joined ]
+          properties:
+            admin:
+              $ref: '#/components/schemas/User'
+            categories:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+            posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShortPost'
+            joined:
+              type: boolean
+            moderators:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+            created:
+              type: string
+              format: date-time
+    Communities:
+      type: object
+      required: [ communities ]
+      properties:
+        communities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Community'
+    ShortCommunity:
+      type: object
+      required: [ name, description ]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    ShortCommunities:
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - $ref: "#/components/schemas/PaginationLinksResponse"
+        - type: object
+          required: [ communities ]
+          properties:
+            communities:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShortCommunity'
+    CommunityRequest:
+      type: object
+      required: [ name, description ]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        categories:
+          type: object
+          properties:
+            uids:
+              type: array
+              items:
+                type: string
+    ShortPost:
+      type: object
+      required: [ uid, title, created, user ]
+      properties:
+        uid:
+          type: string
+        title:
+          type: string
+        created:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+    ShortPosts:
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - $ref: "#/components/schemas/PaginationLinksResponse"
+        - type: object
+          required: [ posts ]
+          properties:
+            posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/ShortPost'
+    Post:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ShortPost'
+        - type: object
+          required: [ content, modified, comments ]
+          properties:
+            content:
+              type: string
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+            modified:
+              type: string
+              format: date-time
+    Posts:
+      type: object
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    Comment:
+      type: object
+      required: [ uid, content, created, modified, user ]
+      properties:
+        uid:
+          type: string
+        content:
+          type: string
+        created:
+          type: string
+          format: date-time
+        replies:
+          type: object
+          required: [ count ]
+          properties:
+            count:
+              type: integer
+            replies:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+
+        modified:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+    Comments:
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - $ref: "#/components/schemas/PaginationLinksResponse"
+        - type: object
+          properties:
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+    User:
+      type: object
+      required: [ username ]
+      properties:
+        username:
+          type: string
+
+    Users:
+      type: object
+      required: [ users ]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    Category:
+      type: object
+      required: [ uid, name ]
+      properties:
+        uid:
+          type: string
+        name:
+          type: string
+    Categories:
+      type: object
+      required: [ categories ]
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+
+    CommentRequest:
+      type: object
+      required: [ content ]
+      properties:
+        content:
+          type: string
+
+    PostRequest:
+      type: object
+      required: [ content, title ]
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+
+    ModeratorRequest:
+      type: object
+      required: [ username ]
+      properties:
+        username:
+          type: string
+
+    CategoryCreate:
+      type: object
+      required: [ name ]
+      properties:
+        name:
+          type: string
+  responses:
+    ForbiddenResponse:
+      description: Forbidden error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    UnauthorizedResponse:
+      description: Unauthorized error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    BadRequestResponse:
+      description: Bad request error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundResponse:
+      description: Not found error info
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    CreatedResponse:
+      description: Created response
+      content:
+        application/hal+json:
+          schema:
+            $ref: "#/components/schemas/CreatedResponse"
+    NoContentResponse:
+      description: No content response.
+    NotModifiedResponse:
+      description: Not modified response.
+  parameters:
+    CategoryUidPath:
+      in: path
+      name: uid
+      description: Category uid
+      required: true
+      schema:
+        type: string
+    CommentUidPath:
+      in: path
+      name: uid
+      description: Comment uid
+      required: true
+      schema:
+        type: string
+    PostUidPath:
+      in: path
+      name: uid
+      description: Post uid
+      required: true
+      schema:
+        type: string
+    PostUidQuery:
+      in: query
+      name: post
+      description: Post uid
+      required: true
+      schema:
+        type: string
+    CommunityNamePath:
+      in: path
+      name: name
+      description: Community name
+      required: true
+      schema:
+        type: string
+    CommunityNameQuery:
+      in: query
+      name: community
+      description: Community name
+      required: false
+      schema:
+        type: string
+    Authorization:
+      description: Authorization header
+      name: Authorization
+      in: header
+      schema:
+        type: string
+        example: "Bearer {token}"
+    Page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        example: 1
+        default: 0
+    Size:
+      in: query
+      name: size
+      description: Page size
+      required: false
+      schema:
+        type: integer
+        default: 10
+        example: 10
+    Sort:
+      in: query
+      name: sortBy
+      description: Sort by properties
+      required: false
+      schema:
+        type: array
+        default: [ ]
+        items:
+          type: string
+          example: "id=asc,title=desc"
+    Accept-Language:
+      name: Accept-Language
+      in: header
+      description: Accept language header
+      example: "en"
+      required: false
+      schema:
+        type: string
+

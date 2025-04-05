@@ -16,7 +16,6 @@ public class ProblemDto {
   private String title;
   private Difficulty difficulty;
   private String markdown;
-  private Problem.Code starterCode;
-  private Problem.Code runnerCode;
+  private Problem.Code code;
   private Long likes;
 }

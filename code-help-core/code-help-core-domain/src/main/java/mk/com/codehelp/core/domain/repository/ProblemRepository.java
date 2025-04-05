@@ -18,38 +18,38 @@ public interface ProblemRepository extends Neo4jRepository<Problem, Long> {
       match (problem:Problem)
       optional match (problem)-[r_contest]-(contest:Contest)
       optional match (problem)-[r_category:IN_CATEGORY]->(category:Category)
-      optional match (problem)-[r_starter_code:STARTER_CODE]->(starter_code)
-      optional match (problem)-[r_runner_code:RUNNER_CODE]->(runner_code)
+      optional match (problem)-[r_code:CODE]->(code:Code)
       optional match (problem)-[r_test_cases:TEST_CASES]->(test_cases)
       with problem as problem,
         contest as node_contest,
         category as node_category,
       collect(r_category) as r_category, collect(category) as category,
-      collect(r_starter_code) as r_starter_codes, collect(starter_code) as starterCodes,
-      collect(r_runner_code) as r_runner_codes, collect(runner_code) as runnerCodes,
+      collect(r_code) as r_codes, collect(code) as codes,
       collect(r_test_cases) as r_test_cases, collect(test_cases) as testCases,
       size(problem.likedBy) as likes
       where (node_contest is null or node_contest.status='CLOSED')
+        and (:#{#filters.title.length} = 0 or problem.title =~ :#{#filters.title})
         and (:#{#filters.categories.size} = 0 or node_category.name in :#{#filters.categories})
         and (:#{#filters.likedBy.length} = 0 or :#{#filters.likedBy} in problem.likedBy)
+        and (:#{#filters.difficulty.length} = 0 or problem.difficulty = :#{#filters.difficulty})
       return *
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""", countQuery = """
       match (problem:Problem)
       optional match (problem)-[r_contest]-(contest:Contest)
       optional match (problem)-[r_category:IN_CATEGORY]->(category:Category)
-      optional match (problem)-[r_starter_code:STARTER_CODE]->(starter_code)
-      optional match (problem)-[r_runner_code:RUNNER_CODE]->(runner_code)
+      optional match (problem)-[r_code:CODE]->(code:Code)
       optional match (problem)-[r_test_cases:TEST_CASES]->(test_cases)
       with problem as problem,
         contest as node_contest,
         category as node_category,
       collect(r_category) as r_category, collect(category) as category,
-      collect(r_starter_code) as r_starter_codes, collect(starter_code) as starterCodes,
-      collect(r_runner_code) as r_runner_codes, collect(runner_code) as runnerCodes,
+      collect(r_code) as r_codes, collect(code) as codes,
       collect(r_test_cases) as r_test_cases, collect(test_cases) as testCases
       where (node_contest is null or node_contest.status='CLOSED')
+        and (:#{#filters.title.length} = 0 or problem.title =~ :#{#filters.title})
         and (:#{#filters.categories.size} = 0 or node_category.name in :#{#filters.categories})
         and (:#{#filters.likedBy.length} = 0 or :#{#filters.likedBy} in problem.likedBy)
+        and (:#{#filters.difficulty.length} = 0 or :#{#filters.difficulty} = problem.difficulty)
       return count(*)""")
   Page<ProblemValue> findAll(ProblemFilter filters, Pageable pageable);
 
@@ -62,7 +62,7 @@ public interface ProblemRepository extends Neo4jRepository<Problem, Long> {
       optional match (problem)-[r_test_cases:TEST_CASES]->(test_cases)
       with problem, starter_code, runner_code, test_cases, submission
       where ID(problem)=$id
-      detach delete problem, file_starter_code, file_runner_code, file_test_cases, submission""")
+      detach delete problem, starter_code, runner_code, test_cases, submission""")
   void deleteById(@NonNull Long id);
 
   boolean existsByIdAndLikedByContains(Long id, String likedBy);

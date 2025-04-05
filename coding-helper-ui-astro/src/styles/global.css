@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.page-section-gap {
+  margin-top: 50px;
+}
+
+.page-size {
+  max-width: 1600px;
+}
+
+.pb-sm {
+  padding-bottom: 5px;
+}
+
+.pb-md {
+  padding-bottom: 10px;
+}
+
+.pb-xl {
+  padding-bottom: 30px;
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-padding {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.text-xl {
+  font-size: 32px;
+  font-weight: bold;
+}

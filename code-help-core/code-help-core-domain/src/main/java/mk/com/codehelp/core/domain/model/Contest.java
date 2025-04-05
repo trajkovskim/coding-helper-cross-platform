@@ -23,6 +23,7 @@ public class Contest {
   @GeneratedValue
   private Long id;
   private String name;
+  private String description;
   private String duration;
   private Date startsOn;
   private ContestStatus status;

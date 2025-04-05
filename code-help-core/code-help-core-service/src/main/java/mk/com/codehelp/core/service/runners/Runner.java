@@ -4,5 +4,7 @@ import mk.com.codehelp.core.service.config.Compilers;
 
 public interface Runner {
 
-  String run(Compilers.SingleCompiler compiler);
+  Compilers.SingleCompiler getCompiler();
+
+  Process run(String code, String input);
 }

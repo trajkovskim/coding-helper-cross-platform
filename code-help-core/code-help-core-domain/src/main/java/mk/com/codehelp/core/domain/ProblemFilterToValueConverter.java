@@ -13,14 +13,15 @@ public class ProblemFilterToValueConverter implements Converter<ProblemFilter, V
   @Override
   public Value convert(ProblemFilter source) {
 
-    var convertedPerson = Map.of(
+    var converted = Map.of(
         "categories", source.getCategories(),
-        "likedBy", source.getLikedBy()
+        "likedBy", source.getLikedBy(),
+        "difficulty", source.getDifficulty()
         // plus whatever else, it does not actually be filled, can be empty to
         // our spel extracts the value of person.name anyway.
     );
 
-    return Values.value(convertedPerson);
+    return Values.value(converted);
   }
 
   @Override

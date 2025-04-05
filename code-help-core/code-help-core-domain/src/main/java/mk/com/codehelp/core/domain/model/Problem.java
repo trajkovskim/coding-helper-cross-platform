@@ -32,11 +32,8 @@ public class Problem {
 
   private List<String> likedBy = new ArrayList<>();
 
-  @Relationship(value = "STARTER_CODE", direction = Relationship.Direction.OUTGOING)
-  private List<Code> starterCode = new ArrayList<>();
-
-  @Relationship(value = "RUNNER_CODE", direction = Relationship.Direction.OUTGOING)
-  private List<Code> runnerCode = new ArrayList<>();
+  @Relationship(value = "CODE", direction = Relationship.Direction.OUTGOING)
+  private List<Code> codes = new ArrayList<>();
 
   @Relationship(value = "TEST_CASES", direction = Relationship.Direction.OUTGOING)
   private List<TestCase> testCases = new ArrayList<>();
@@ -48,7 +45,8 @@ public class Problem {
     @Id
     private Long id;
     private String language;
-    private String code;
+    private String starter;
+    private String runner;
   }
 
   @Data

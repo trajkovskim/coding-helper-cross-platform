@@ -1,0 +1,458 @@
+openapi: 3.0.1
+info:
+  title: 'Coding helper spec'
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Open API specification
+security:
+  - Authorization_JWT: [ ]
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Binary trees'
+    ProblemEntry:
+      type: object
+      required:
+        - starterCode
+        - title
+        - difficulty
+      properties:
+        id:
+          $ref: 'code-help-common-api.yaml#/components/schemas/Id'
+        category:
+          $ref: '#/components/schemas/Category'
+        title:
+          type: string
+          example: 'Two sum'
+        difficulty:
+          $ref: 'code-help-common-api.yaml#/components/schemas/Difficulty'
+        markdown:
+          type: string
+          example: '## Two Sum... problem description'
+        likes:
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
+    ProblemEntryDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProblemEntry"
+        - type: object
+          properties:
+            starterCode:
+              $ref: 'code-help-common-api.yaml#/components/schemas/Code'
+    SubmissionStatus:
+      type: string
+      enum: [ ACCEPTED, DECLINED ]
+    SubmissionBaseEntry:
+      type: object
+      required:
+        - language
+        - code
+      properties:
+        language:
+          $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
+        code:
+          $ref: "code-help-common-api.yaml#/components/schemas/Code"
+    SubmissionEntry:
+      allOf:
+        - $ref: '#/components/schemas/SubmissionBaseEntry'
+        - type: object
+          required:
+            - status
+            - timeSubmitted
+          properties:
+            id:
+              $ref: 'code-help-common-api.yaml#/components/schemas/Id'
+            timeSubmitted:
+              $ref: 'code-help-common-api.yaml#/components/schemas/Date'
+            status:
+              $ref: '#/components/schemas/SubmissionStatus'
+    ContestProblem:
+      allOf:
+        - $ref: "#/components/schemas/ProblemEntry"
+        - type: object
+          required:
+            - score
+          properties:
+            score:
+              $ref: "code-help-common-api.yaml#/components/schemas/Long"
+    ContestEntry:
+      type: object
+      required:
+        - problems
+        - name
+        - description
+        - duration
+        - startsOn
+      properties:
+        id:
+          $ref: 'code-help-common-api.yaml#/components/schemas/Id'
+        status:
+          $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
+        name:
+          type: string
+          example: 'Bitweekly 122 contest'
+        description:
+          type: string
+          example: "This is the bitweekly 122 contest"
+        duration:
+          type: string
+          format: duration
+          example: 1h30m
+        startsOn:
+          $ref: 'code-help-common-api.yaml#/components/schemas/Date'
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContestProblem'
+    ProblemsResponse:
+      allOf:
+        - $ref: "code-help-common-api.yaml#/components/schemas/PageInfo"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PaginationLinksResponse"
+        - type: object
+          required:
+            - problems
+          properties:
+            problems:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProblemEntry'
+    CategoriesResponse:
+      required:
+        - categories
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    SubmissionsResponse:
+      required:
+        - submissions
+      type: object
+      properties:
+        submissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmissionEntry'
+    ContestsResponse:
+      allOf:
+        - $ref: "code-help-common-api.yaml#/components/schemas/PageInfo"
+        - $ref: "code-help-common-api.yaml#/components/schemas/PaginationLinksResponse"
+        - type: object
+          required:
+            - contests
+          properties:
+            contests:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContestEntry'
+    UserStatistics:
+      type: object
+      required:
+        - solved
+        - easy
+        - medium
+        - hard
+      properties:
+        solved:
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
+        easy:
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
+        medium:
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
+        hard:
+          $ref: "code-help-common-api.yaml#/components/schemas/Long"
+  responses:
+    ProblemResponse:
+      description: Problem entry
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemEntryDetail'
+    ProblemsResponse:
+      description: A list of problems
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemsResponse'
+    ContestsResponse:
+      description: A list of contests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ContestsResponse'
+    ContestResponse:
+      description: Contest entry
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ContestEntry'
+    CategoriesResponse:
+      description: List of categories
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CategoriesResponse'
+    SubmissionsResponse:
+      description: List of Submissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubmissionsResponse'
+    UserStatisticsResponse:
+      description: Output string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserStatistics'
+    TestCodeResponse:
+      description: Output string
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: 'All test cases passed'
+    BooleanResponse:
+      description: Boolean value
+      content:
+        application/json:
+          schema:
+            type: boolean
+            example: true
+paths:
+  /problems:
+    get:
+      operationId: getProblemEntries
+      tags: [ Problem ]
+      description: Returns all coding helper problems
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Page"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Size"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "title1"
+        - name: categories
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              example: "trees"
+        - name: likedBy
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "username"
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
+      responses:
+        200:
+          $ref: '#/components/responses/ProblemsResponse'
+  /problems/{id}:
+    get:
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/id"
+        - $ref: "code-help-common-api.yaml#/components/parameters/CodeLanguage"
+      operationId: getProblemEntry
+      tags: [ Problem ]
+      description: Returns a coding helper problem with likes count
+      responses:
+        200:
+          $ref: '#/components/responses/ProblemResponse'
+        404:
+          $ref: 'code-help-common-api.yaml#/components/responses/NotFoundResponse'
+  /problems/{id}/like:
+    get:
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+        - $ref: "code-help-common-api.yaml#/components/parameters/id"
+      operationId: toggleLikeProblemEntry
+      tags: [ Problem ]
+      description: Toggles like of a coding helper problem
+      responses:
+        204:
+          $ref: 'code-help-common-api.yaml#/components/responses/NoContentResponse'
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
+        404:
+          $ref: 'code-help-common-api.yaml#/components/responses/NotFoundResponse'
+  /problems/{id}/is-liked:
+    get:
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+        - $ref: "code-help-common-api.yaml#/components/parameters/id"
+      operationId: isProblemEntryLiked
+      tags: [ Problem ]
+      description: Returns true if a coding helper problem is liked
+      responses:
+        200:
+          $ref: "#/components/responses/BooleanResponse"
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
+        404:
+          $ref: 'code-help-common-api.yaml#/components/responses/NotFoundResponse'
+  /categories:
+    get:
+      operationId: getCategories
+      tags: [ Category ]
+      description: Returns all the categories
+      responses:
+        200:
+          $ref: "#/components/responses/CategoriesResponse"
+  /submissions:
+    get:
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Id"
+      operationId: getSubmissions
+      tags: [ Submission ]
+      description: Returns all submissions for the logged user
+      responses:
+        200:
+          $ref: '#/components/responses/SubmissionsResponse'
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
+    post:
+      operationId: createSubmissionsEntry
+      tags: [ Submission ]
+      description: Returns output string of the code that was run
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionBaseEntry'
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Id"
+      responses:
+        200:
+          $ref: "#/components/responses/TestCodeResponse"
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
+  /contests:
+    get:
+      operationId: getContestEntries
+      tags: [ Contests ]
+      description: Returns the contests happening in coding helper
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Page"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Size"
+        - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
+      responses:
+        200:
+          $ref: '#/components/responses/ContestsResponse'
+  /contests/{id}:
+    get:
+      parameters:
+        - $ref: 'code-help-common-api.yaml#/components/parameters/id'
+      operationId: getContestEntry
+      tags: [ Contests ]
+      description: Returns contest happening in coding helper
+      responses:
+        200:
+          $ref: "#/components/responses/ContestResponse"
+        404:
+          $ref: 'code-help-common-api.yaml#/components/responses/NotFoundResponse'
+  /contests/{contestId}/problems/{problemId}:
+    get:
+      tags: [ Contests ]
+      operationId: getContestProblem
+      description: Returns a contest problem entry
+      parameters:
+        - name: 'contestId'
+          in: path
+          required: true
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Id"
+        - name: 'problemId'
+          in: path
+          required: true
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Id"
+        - $ref: "code-help-common-api.yaml#/components/parameters/CodeLanguage"
+      responses:
+        200:
+          description: Contest problem entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContestProblem'
+        404:
+          $ref: 'code-help-common-api.yaml#/components/responses/NotFoundResponse'
+  /code-runner:
+    post:
+      tags: [ CodeRunner ]
+      operationId: runCode
+      description: Runs code and produces output
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                language:
+                  $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
+                code:
+                  $ref: "code-help-common-api.yaml#/components/schemas/Code"
+                input:
+                  type: string
+                  example: '[1, 2]'
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+        - name: problemId
+          in: query
+          required: true
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/Id"
+      responses:
+        200:
+          $ref: "#/components/responses/TestCodeResponse"
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
+        404:
+          $ref: "code-help-common-api.yaml#/components/responses/NotFoundResponse"
+  /statistics:
+    get:
+      tags: [ User ]
+      operationId: getStatistics
+      description: Returns problem solving statistics for user
+      parameters:
+        - $ref: "code-help-common-api.yaml#/components/parameters/Authorization"
+      responses:
+        200:
+          $ref: '#/components/responses/UserStatisticsResponse'
+        401:
+          $ref: "code-help-common-api.yaml#/components/responses/UnauthorizedResponse"
+        403:
+          $ref: "code-help-common-api.yaml#/components/responses/ForbiddenResponse"
