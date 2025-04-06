@@ -13,6 +13,14 @@ services:
       - code-help-core
       - code-help-forum
       - code-help-keycloak-iam
+  code-help-astro-ui:
+    image: code-help-astro-ui
+    container_name: code-help-astro-ui
+    build:
+      context: code-help-astro-ui
+      dockerfile: Dockerfile
+    ports:
+      - 4321:4321
   code-help-keycloak-iam:
     image: keycloak/keycloak:21.0
     container_name: code-help-keycloak-iam

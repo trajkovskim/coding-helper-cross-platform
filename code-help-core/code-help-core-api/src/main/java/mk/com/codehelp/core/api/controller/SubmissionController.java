@@ -22,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class SubmissionController implements SubmissionApi {
   private final SubmissionService submissionService;
-  private final SubmissionMapper submissionConverter;
+  private final SubmissionMapper submissionMapper;
   private final LinksFactory linksFactory;
 
   @Override
@@ -36,7 +36,7 @@ public class SubmissionController implements SubmissionApi {
         methodOn(SubmissionController.class).getSubmissions(problemId, authorization));
 
     CreatedSubmissionResponseLinks links = new CreatedSubmissionResponseLinks().getSubmissions(getSubmissionsLink);
-    CreatedSubmissionResponse response = submissionConverter.convert(createdSubmissionDto).links(links);
+    CreatedSubmissionResponse response = submissionMapper.convert(createdSubmissionDto).links(links);
 
     return ResponseEntity.ok(response);
   }
@@ -53,7 +53,7 @@ public class SubmissionController implements SubmissionApi {
       entries = submissionService.findAllSubmissionsByUserEmailAndProblemId(user, problemId);
     }
 
-    List<SubmissionEntry> submissionEntries = submissionConverter.convert(entries);
+    List<SubmissionEntry> submissionEntries = submissionMapper.convert(entries);
     SubmissionsResponse response = new SubmissionsResponse().submissions(submissionEntries);
 
     return ResponseEntity.ok(response);

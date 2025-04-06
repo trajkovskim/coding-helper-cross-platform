@@ -27,7 +27,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProblemController implements ProblemApi {
 
   private final ProblemService problemService;
-  private final ProblemMapper problemConverter;
+  private final ProblemMapper problemMapper;
   private final LinksFactory linksFactory;
 
   @Override
@@ -46,10 +46,10 @@ public class ProblemController implements ProblemApi {
     problemFilter.setTitle(title);
     problemFilter.setCategories(categories);
     problemFilter.setLikedBy(likedBy);
-    problemFilter.setDifficulty(problemConverter.convert(difficulty));
+    problemFilter.setDifficulty(problemMapper.convert(difficulty));
 
     PageInfoDto<ProblemValue> problemsPage = problemService.findAll(problemFilter, pageRequest);
-    List<ProblemEntry> problems = problemConverter.convert(problemsPage.getItems());
+    List<ProblemEntry> problems = problemMapper.convert(problemsPage.getItems());
 
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
         problemsPage,
@@ -73,7 +73,7 @@ public class ProblemController implements ProblemApi {
 
     ProblemDto problemDto = problemService.getProblem(id, language);
 
-    ProblemEntryDetail entry = problemConverter.convert(problemDto);
+    ProblemEntryDetail entry = problemMapper.convert(problemDto);
 
     return ResponseEntity.ok(entry);
   }

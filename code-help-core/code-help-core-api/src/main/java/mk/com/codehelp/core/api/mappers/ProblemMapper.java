@@ -22,6 +22,7 @@ public interface ProblemMapper {
 
   List<ProblemEntry> convert(Collection<ProblemValue> problem);
 
+  @Mapping(target = "id", ignore = true)
   Problem.TestCase convert(TestCase testCase);
 
   Difficulty convert(mk.com.codehelp.core.rest.model.Difficulty difficulty);
