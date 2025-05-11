@@ -21,14 +21,14 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
 
   String selectedLanguage = CodeEditor.EDITOR_LANGUAGES.keys.first;
 
-  void handleTapProblem(ProblemEntry problem) {
+  void handleTapProblem(ContestProblem problem) {
     ProblemEntryBuilder problemBuilder = problem.toBuilder();
-    ProblemByLikesBuilder builder = ProblemByLikesBuilder()
+    $ProblemEntryBuilder builder = $ProblemEntryBuilder()
       ..id = problemBuilder.id
       ..category = problemBuilder.category
       ..markdown = problemBuilder.markdown
       ..starterCode = problemBuilder.starterCode
-      ..title = problem.title
+      ..name = problem.name
       ..difficulty = problem.difficulty
       ..likes = 0;
 
@@ -107,7 +107,7 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text('${t('duration')} ${entry?.duration}'),
-                                                Text('${t('startsOn')} ${entry?.startsOn}'),
+                                                Text('${t('startsOn')} ${entry?.startDate}'),
                                                 Text('${t('status')} ${entry?.status}')
                                               ],
                                             )
@@ -168,9 +168,9 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                                         .map(
                                           (problem) => ListItem(
                                             image: CircleAvatar(child: Text(problem.score.toString())),
-                                            title: problem.problem.title,
-                                            subtitle: 'Difficulty: ${problem.problem.difficulty}',
-                                            onTap: () => handleTapProblem(problem.problem),
+                                            title: problem.name,
+                                            subtitle: 'Difficulty: ${problem.difficulty}',
+                                            onTap: () => handleTapProblem(problem),
                                           ),
                                         )
                                         .toList() ??

@@ -14,7 +14,7 @@
         <module>code-help-core</module>
         <module>code-help-forum</module>
         <module>code-help-courses</module>
-        <!--        <module>code-help-mobile-ui</module>-->
+        <module>code-help-mobile-ui</module>
     </modules>
 
 </project>

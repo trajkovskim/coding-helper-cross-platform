@@ -39,7 +39,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     init = true;
   }
 
-  void handleTapStart(ProblemByLikes entry) {
+  void handleTapStart(ProblemEntry entry) {
     final navigator = Navigator.of(context);
     navigator.pushNamed('/problem-arena', arguments: {
       'problem': entry,
@@ -59,19 +59,17 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final id = params?['id'] as String?;
+    final idParam = params?['id'] as String?;
 
-    if (id == null) {
+    if (idParam == null) {
       throw 'id is null';
     }
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
-      ..problemId = int.parse(id);
-
+    final id = int.parse(idParam);
     return FutureBuilder(
         future: Future.wait([
           problemsService.getProblemEntry(id),
-          submissionsService.getSubmissionEntries(builder.build()),
+          submissionsService.getSubmissionEntries(id),
         ]),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -89,14 +87,14 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
             );
           }
 
-          final entry = snapshot.data![0] as ProblemByLikes;
+          final entry = snapshot.data![0] as ProblemEntry;
           final entries = snapshot.data![1] as List<SubmissionEntry>;
           final navigator = Navigator.of(context);
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(entry.title),
-              actions: [ProblemLikeButton(id: id)],
+              title: Text(entry.name),
+              actions: [ProblemLikeButton(id: idParam)],
             ),
             body: LayoutBuilder(builder: (context, constraints) {
               if (!snapshot.hasData) {
@@ -155,7 +153,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                     ],
                                   ),
                                   Text(
-                                    entry.title,
+                                    entry.name,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,

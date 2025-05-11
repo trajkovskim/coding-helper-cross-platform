@@ -30,10 +30,10 @@ class BearerInterceptor extends Interceptor {
 
   @override
   void onError(
-    DioError err,
+    DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    if (err.type != DioErrorType.response || err.response?.statusCode != HttpStatus.unauthorized) {
+    if (err.type != DioExceptionType.badResponse || err.response?.statusCode != HttpStatus.unauthorized) {
       handler.next(err);
       return;
     }

@@ -13,7 +13,7 @@ final dio = Dio(
 final _API = CodingHelperApi(dio: dio, interceptors: [BearerInterceptor()]);
 
 final PROBLEMS_API = _API.getProblemApi();
-final CONTESTS_API = _API.getContestApi();
+final CONTESTS_API = _API.getContestsApi();
 final CODE_RUNNER_API = _API.getCodeRunnerApi();
 final SUBMISSIONS_API = _API.getSubmissionApi();
 final USER_API = _API.getUserApi();

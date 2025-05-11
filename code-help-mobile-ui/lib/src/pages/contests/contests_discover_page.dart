@@ -24,7 +24,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   bool showSearch = false;
   bool init = false;
   bool loading = false;
-  View view = View.LIST;
+  ViewProfile view = ViewProfile.LIST;
 
   List<String> options = [];
 
@@ -181,7 +181,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                         const SizedBox(width: 8),
                         ElevatedButton.icon(
                           onPressed: () => setState(() {
-                            view = view == View.GRID ? View.LIST : View.GRID;
+                            view = view == ViewProfile.GRID ? ViewProfile.LIST : ViewProfile.GRID;
                           }),
                           icon: const Icon(Icons.settings),
                           label: Text(
@@ -196,7 +196,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                       onRemove: handleRemoveOption,
                     ),
                     SizedBox.fromSize(size: const Size.fromHeight(15)),
-                    if (view == View.LIST)
+                    if (view == ViewProfile.LIST)
                       VerticalListView(
                         children: entries
                             .map(
@@ -207,12 +207,12 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                   arguments: {'id': entry.id.toString()},
                                 ),
                                 subtitle:
-                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startDate} ${t('status')}: ${entry.status}',
                               ),
                             )
                             .toList(),
                       ),
-                    if (view == View.GRID)
+                    if (view == ViewProfile.GRID)
                       CustomGridView(
                         children: entries
                             .map(
@@ -223,7 +223,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                   arguments: {'id': entry.id.toString()},
                                 ),
                                 subtitle:
-                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startsOn} ${t('status')}: ${entry.status}',
+                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startDate} ${t('status')}: ${entry.status}',
                               ),
                             )
                             .toList(),

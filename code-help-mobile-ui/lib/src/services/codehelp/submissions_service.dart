@@ -4,17 +4,15 @@ import 'api.dart';
 class SubmissionsService {
   const SubmissionsService();
 
-  Future<List<SubmissionEntry>> getSubmissionEntries(
-    GetSubmissionsRequest request,
-  ) {
+  Future<List<SubmissionEntry>> getSubmissionEntries(int problemId) {
     return SUBMISSIONS_API
-        .getSubmissions(getSubmissionsRequest: request)
+        .getSubmissions(problemId: problemId)
         .then((value) => value.data!.submissions.toList());
   }
 
-  Future<String> submit(SubmissionReqBody request) {
+  Future<CreatedSubmissionResponse> submit(int problemId, SubmissionBaseEntry request) {
     return SUBMISSIONS_API
-        .createSubmissionsEntry(submissionReqBody: request)
+        .createSubmissionsEntry(problemId: problemId, submissionBaseEntry: request)
         .then((value) => value.data!);
   }
 }

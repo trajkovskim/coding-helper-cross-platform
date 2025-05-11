@@ -13,7 +13,7 @@ import '../../services/codehelp/index.dart';
 
 class Params {
   final String? language;
-  final ProblemByLikes? entry;
+  final ProblemEntry? entry;
   final String? code;
 
   const Params({
@@ -43,7 +43,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final language = params['language'] as String?;
-    final entry = params['problem'] as ProblemByLikes?;
+    final entry = params['problem'] as ProblemEntry?;
     final code = params['code'] as String?;
     return Params(language: language, entry: entry, code: code);
   }
@@ -69,13 +69,12 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final params = useParams();
 
-    SubmissionReqBodyBuilder builder = SubmissionReqBodyBuilder()
+    $SubmissionBaseEntryBuilder builder = $SubmissionBaseEntryBuilder()
       ..code = codeController.text
-      ..language = params.language
-      ..problemId = params.entry?.id;
+      ..language = params.language;
 
-    submissionsService.submit(builder.build()).then<void>((value) {
-      showSnackBar(scaffoldMessenger, value);
+    submissionsService.submit(params.entry!.id, builder.build()).then<void>((value) {
+      showSnackBar(scaffoldMessenger, value.message);
       setState(() {});
     }).onError(
       (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
@@ -91,14 +90,13 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       builder: (context) => const CodeTestInputModal(),
     );
 
-    RunCodeRequestBuilder builder = RunCodeRequestBuilder()
+    CodeRunnerRequestBuilder builder = CodeRunnerRequestBuilder()
       ..code = codeController.text
       ..language = params.language
-      ..input = input
-      ..problemId = params.entry?.id;
+      ..input = input;
 
     codeRunnerService
-        .runCode(builder.build())
+        .runCode(params.entry!.id, builder.build())
         .then((value) => showSnackBar(scaffoldMessenger, value))
         .onError(
           (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
@@ -123,15 +121,12 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       throw ErrorCode.PROBLEM_ARENA;
     }
 
-    GetSubmissionsRequestBuilder builder = GetSubmissionsRequestBuilder()
-      ..problemId = params.entry?.id;
-
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(params.entry?.title ?? ''),
+          title: Text(params.entry?.name ?? ''),
           actions: [ProblemLikeButton(id: params.entry!.id.toString())],
           bottom: TabBar(
             tabs: [
@@ -179,7 +174,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
               ),
               FutureBuilder(
                 future:
-                    submissionsService.getSubmissionEntries(builder.build()),
+                    submissionsService.getSubmissionEntries(params.entry!.id),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     throw ErrorCode.PROBLEM_ARENA;
@@ -198,7 +193,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                         children: entries
                             .map(
                               (submission) => ListItem(
-                                title: submission.timeSubmitted.toString(),
+                                title: submission.createdDate.toString(),
                                 subtitle: submission.status.name,
                                 onTap: () {
                                   codeController.text = submission.code;

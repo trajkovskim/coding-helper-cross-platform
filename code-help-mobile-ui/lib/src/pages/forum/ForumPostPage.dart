@@ -402,7 +402,7 @@ createModalDialog(context) {
                   Navigator.pop(context, null);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).errorColor.withAlpha(150),
+                  backgroundColor: Theme.of(context).colorScheme.error.withAlpha(150),
                 ),
                 child: const Text("cancel"),
               ),

@@ -5,9 +5,9 @@ import 'api.dart';
 class CodeRunnerService {
   const CodeRunnerService();
 
-  Future<String> runCode(RunCodeRequest request) {
+  Future<String> runCode(int problemId, CodeRunnerRequest request) {
     return CODE_RUNNER_API
-        .runCode(runCodeRequest: request)
-        .then((value) => value.data ?? '');
+        .runCode(problemId: problemId, codeRunnerRequest: request)
+        .then((value) => value.data?.message ?? '');
   }
 }

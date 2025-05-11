@@ -3,7 +3,7 @@ import 'package:coding_helper_cross_platform/src/components/common/modal.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 
-enum View {
+enum ViewProfile {
   LIST,
   GRID;
 }
@@ -14,14 +14,14 @@ class SearchSettingsRow extends StatelessWidget {
       required this.handleFilterSubmit,
       required this.handleSortSubmit,
       required this.handleViewModeChange,
-      this.viewMode = View.LIST})
+      this.viewMode = ViewProfile.LIST})
       : super(key: key);
 
   final Function(List<String>) handleFilterSubmit;
   final Function(List<String>) handleSortSubmit;
-  final Function(View view) handleViewModeChange;
+  final Function(ViewProfile view) handleViewModeChange;
 
-  View viewMode;
+  ViewProfile viewMode;
 
   getSearchSettingsButtonStyle() => ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
@@ -32,7 +32,7 @@ class SearchSettingsRow extends StatelessWidget {
       );
 
   changeViewMode() {
-    viewMode = viewMode == View.LIST ? View.GRID : View.LIST;
+    viewMode = viewMode == ViewProfile.LIST ? ViewProfile.GRID : ViewProfile.LIST;
     return viewMode;
   }
 

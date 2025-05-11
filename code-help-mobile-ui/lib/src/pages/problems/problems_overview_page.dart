@@ -121,7 +121,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                           items: problems
                               .map(
                                 (entry) => Item(
-                                  title: entry.title,
+                                  title: entry.name,
                                   onTap: () {
                                     navigator.pushNamed(
                                       '/problem-overview',

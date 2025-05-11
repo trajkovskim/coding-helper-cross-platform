@@ -21,7 +21,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
 
   final TextEditingController searchController = TextEditingController();
   bool showSearch = false;
-  View view = View.LIST;
+  ViewProfile view = ViewProfile.LIST;
 
   List<String> options = [];
 
@@ -66,7 +66,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
     });
   }
 
-  void handleViewModeChange(View newViewMode) {
+  void handleViewModeChange(ViewProfile newViewMode) {
     setState(() {
       view = newViewMode;
     });
@@ -136,7 +136,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                     onRemove: handleRemoveOption,
                   ),
                   SizedBox.fromSize(size: const Size.fromHeight(15)),
-                  if (view == View.LIST)
+                  if (view == ViewProfile.LIST)
                     Container(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -145,12 +145,12 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                         children: entries
                             .map(
                               (entry) => ListItem(
-                                  title: entry.title,
+                                  title: entry.name,
                                   onTap: () => navigator.pushNamed(
                                         '/problem-overview',
                                         arguments: {'id': entry.id.toString()},
                                       ),
-                                  subtitle: entry.markdown,
+                                  subtitle: entry.description,
                                   image: const CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         "https://dotnettutorials.net/wp-content/uploads/2020/10/word-image-4.png"),
@@ -159,17 +159,17 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                             .toList(),
                       ),
                     ),
-                  if (view == View.GRID)
+                  if (view == ViewProfile.GRID)
                     CustomGridView(
                       children: entries
                           .map(
                             (entry) => GridItem(
-                                title: entry.title,
+                                title: entry.name,
                                 onTap: () => navigator.pushNamed(
                                       '/problem-overview',
                                       arguments: {'id': entry.id.toString()},
                                     ),
-                                subtitle: entry.markdown,
+                                subtitle: entry.description,
                                 image: const CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       "https://dotnettutorials.net/wp-content/uploads/2020/10/word-image-4.png"),

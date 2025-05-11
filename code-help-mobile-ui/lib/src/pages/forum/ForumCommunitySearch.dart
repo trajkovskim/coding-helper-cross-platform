@@ -24,7 +24,7 @@ class ForumCommunitySearchPage extends StatefulWidget {
 
 class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   String? searchTerm;
-  View view = View.LIST;
+  ViewProfile view = ViewProfile.LIST;
   List<String> options = [];
   final _communityService = CommunityService.getInstance();
 
@@ -57,7 +57,7 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
     });
   }
 
-  void handleViewModeChange(View newViewMode) {
+  void handleViewModeChange(ViewProfile newViewMode) {
     setState(() {
       view = newViewMode;
     });
@@ -145,12 +145,12 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
 class ViewList extends StatelessWidget {
   const ViewList({Key? key, required this.view, required this.communities}) : super(key: key);
 
-  final View view;
+  final ViewProfile view;
   final ShortCommunities communities;
 
   @override
   Widget build(BuildContext context) {
-    if (view == View.LIST) {
+    if (view == ViewProfile.LIST) {
       return Container(
         decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
         child: VerticalListView(
@@ -175,7 +175,7 @@ class ViewList extends StatelessWidget {
       );
     }
 
-    if (view == View.GRID) {
+    if (view == ViewProfile.GRID) {
       return CustomGridView(
         children: communities.communities
             .map(
@@ -341,7 +341,7 @@ createModalDialog(context) {
                   Navigator.pop(context, null);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).errorColor.withAlpha(150),
+                  backgroundColor: Theme.of(context).colorScheme.error.withAlpha(150),
                 ),
                 child: const Text("cancel"),
               ),

@@ -15,7 +15,7 @@ class CodingHelperInitialPage extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               'Coding helper',
-              style: theme.textTheme.headline4,
+              style: theme.textTheme.headlineMedium,
             ),
           ],
         ),

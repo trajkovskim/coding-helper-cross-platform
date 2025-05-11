@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
-  <component name="CheckStyle-IDEA-Module" serialisationVersion="2">
-    <option name="activeLocationsIds" />
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/build" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/build" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/build" />
+    </content>
   </component>
-  <component name="Go" enabled="true" />
 </module>

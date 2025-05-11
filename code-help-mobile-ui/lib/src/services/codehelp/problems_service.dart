@@ -1,25 +1,25 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
+import 'package:built_collection/built_collection.dart';
 
 import 'api.dart';
 
 class ProblemsService {
   const ProblemsService();
 
-  Future<List<ProblemEntry>> getProblemEntries() {
+  Future<List<ProblemEntryBase>> getProblemEntries() {
     return PROBLEMS_API
         .getProblemEntries()
         .then((response) => response.data!.problems.toList());
   }
 
-  Future<List<ProblemByLikes>> getTop10ProblemEntries() {
-    return PROBLEMS_API
-        .getTop10Problems()
+  Future<List<ProblemEntryBase>> getTop10ProblemEntries() {
+    return PROBLEMS_API.getProblemEntries(size: 10, sortBy: BuiltList.of(["likes=asc"]))
         .then((response) => response.data!.problems.toList());
   }
 
-  Future<ProblemByLikes> getProblemEntry(String id) {
+  Future<ProblemEntry> getProblemEntry(int id) {
     return PROBLEMS_API
-        .getProblemEntry(id: int.parse(id))
+        .getProblemEntry(id: id, language: '')
         .then((response) => response.data!);
   }
 

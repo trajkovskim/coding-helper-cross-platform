@@ -204,7 +204,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                               alignment: WrapAlignment.start,
                                               crossAxisAlignment: WrapCrossAlignment.end,
                                               children: snapshot.data?.categories
-                                                      .map((tag) => TagChip(category: tag))
+                                                      ?.map((tag) => TagChip(category: tag))
                                                       .toList() ??
                                                   [],
                                             ),
@@ -396,7 +396,7 @@ createModalDialog(context) {
                   Navigator.pop(context, null);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).errorColor.withAlpha(150),
+                  backgroundColor: Theme.of(context).colorScheme.error.withAlpha(150),
                 ),
                 child: const Text("cancel"),
               ),

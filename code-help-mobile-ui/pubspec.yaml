@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.4 <=3.3.10'
+  sdk: '>=3.0.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,36 +34,36 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
-  provider: ^6.0.5
-  flutter_code_editor: ^0.2.5
-  shared_preferences: ^2.0.15
-  flutter_i18n: ^0.32.4
-  openapi_generator_annotations: ^4.0.0
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5
+  flutter_code_editor: ^0.3.3
+  shared_preferences: ^2.5.3
+  flutter_i18n: ^0.36.2
+  openapi_generator_annotations: ^6.1.0
   coding_helper_api:
     path: api/coding_helper_api
   coding_helper_forum_api:
     path: api/coding_helper_forum_api
-  flutter_markdown: ^0.6.13
-  timeago: ^3.3.0
-  openid_client: ^0.4.7
-  url_launcher: ^6.1.9
+  flutter_markdown: ^0.7.7+1
+  timeago: ^3.7.1
+  openid_client: ^0.4.9
+  url_launcher: ^6.3.1
 
-  image_picker: ^0.8.6+2
+  image_picker: ^1.1.2
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner:
-  openapi_generator: ^4.0.0
+  build_runner: ^2.4.15
+  openapi_generator: ^6.1.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true

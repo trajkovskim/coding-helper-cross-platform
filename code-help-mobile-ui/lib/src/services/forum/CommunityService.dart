@@ -54,10 +54,10 @@ class CommunityService {
   }
 
   joinCommunity(String community) async {
-    return await _communityApi.joinCommunity(community: community);
+    return await _communityApi.joinCommunity(name: community);
   }
 
   leaveCommunity(String community) async {
-    return await _communityApi.leaveCommunity(community: community);
+    return await _communityApi.leaveCommunity(name: community);
   }
 }
