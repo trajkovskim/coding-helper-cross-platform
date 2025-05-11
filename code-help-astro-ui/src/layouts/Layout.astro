@@ -1,6 +1,7 @@
 ---
-import Navigation from "../components/Navigation.astro";
+import Navigation from "./Navigation.astro";
 import "../styles/global.css";
+
 interface Props {
   title: string;
 }
@@ -29,20 +30,12 @@ const props = Astro.props;
   </body>
 </html>
 
-<style is:global>
-  body {
-    font-family: "Poppins", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
-  }
-</style>
-
 <style>
   html,
   body {
     margin: 0;
     width: 100%;
-    height: 100%;
+    //height: 100%;
+    position: relative;
   }
 </style>

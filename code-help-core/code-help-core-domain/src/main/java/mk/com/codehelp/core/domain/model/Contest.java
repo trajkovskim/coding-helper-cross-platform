@@ -10,6 +10,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +26,12 @@ public class Contest {
   private String name;
   private String description;
   private String duration;
-  private Date startsOn;
+  private LocalDateTime startDate;
   private ContestStatus status;
 
   @Relationship(value = "IN_CONTEST", direction = Relationship.Direction.INCOMING)
-  List<ContestProblem> problems = new ArrayList<>();
+  private List<ContestProblem> problems = new ArrayList<>();
+
+  @Relationship(value = "PARTICIPATES", direction = Relationship.Direction.INCOMING)
+  private List<User> participants = new ArrayList<>();
 }

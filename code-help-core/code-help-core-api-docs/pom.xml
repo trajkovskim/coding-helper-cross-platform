@@ -36,7 +36,14 @@
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -56,9 +63,6 @@
               <generatorName>spring</generatorName>
               <apiPackage>mk.com.codehelp.core.rest.api</apiPackage>
               <modelPackage>mk.com.codehelp.core.rest.model</modelPackage>
-              <typeMappings>
-                <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-              </typeMappings>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>
                 <skipDefaultInterface>true</skipDefaultInterface>
@@ -78,9 +82,6 @@
               <generatorName>spring</generatorName>
               <apiPackage>mk.com.codehelp.core.rest.admin.api</apiPackage>
               <modelPackage>mk.com.codehelp.core.rest.admin.model</modelPackage>
-              <typeMappings>
-                <typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-              </typeMappings>
               <configOptions>
                 <interfaceOnly>true</interfaceOnly>
                 <skipDefaultInterface>true</skipDefaultInterface>

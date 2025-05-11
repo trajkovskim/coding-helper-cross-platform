@@ -17,7 +17,8 @@ public class ProblemValue {
 
   private Long id;
   private Category category;
-  private String title;
+  private String name;
+  private String description;
   private Difficulty difficulty;
   private String markdown;
   private Long likes;

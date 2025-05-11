@@ -1,0 +1,104 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const navigationOptions = [
+  {
+    label: 'Challenges',
+    href: '/challenges',
+    icon: 'mdi:code-braces',
+  },
+  {
+    label: 'Contests',
+    href: '/contests',
+    icon: 'mdi:trophy',
+  },
+  {
+    label: 'Forum',
+    href: '/forum',
+    icon: 'mdi:forum',
+  },
+];
+
+// Get the current path to highlight active link
+const currentPath = Astro.url.pathname;
+---
+
+<style>
+  .navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 64px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-right: 3rem;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    color: #4b5563;
+  }
+
+  .nav-link:hover {
+    background: #f3f4f6;
+    color: #2563eb;
+  }
+
+  .nav-link.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 500;
+  }
+</style>
+
+<nav class="navbar">
+  <div class="nav-content">
+    <a href="/" class="logo">
+      <Icon name="mdi:code" size={24} />
+      Code Help
+    </a>
+    <div class="nav-links">
+      {
+        navigationOptions.map((option) => (
+          <a
+            href={option.href}
+            class:list={[
+              'nav-link',
+              { active: currentPath === option.href },
+            ]}
+          >
+            <Icon name={option.icon} size={20} />
+            {option.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</nav>

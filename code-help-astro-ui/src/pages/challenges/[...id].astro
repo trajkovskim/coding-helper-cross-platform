@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Challenge from '../../react/components/challenges/[id]/Challenge';
+import CodeEditor from '../../react/components/challenges/[id]/CodeEditor';
+const { id } = Astro.params;
+
+// const categoriesResponse = await CoreService.getCategories();
+// if(Number.isNaN(id)) {
+//   throw Error();
+// }
+
+// const problem = await CoreService.getProblem(Number(id), "javascript");
+---
+
+<style>
+  main {
+    padding: 0.5rem;
+  }
+</style>
+
+<Layout title={'Problem - ' + id}>
+  <main class="page-padding centered page-section-gap">
+    <Challenge id={Number(id)} client:only="react" />
+  </main>
+</Layout>

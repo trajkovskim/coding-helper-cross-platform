@@ -628,11 +628,13 @@ components:
                 type: string
     ShortPost:
       type: object
-      required: [ uid, title, created, user ]
+      required: [ uid, title, content, created, user ]
       properties:
         uid:
           type: string
         title:
+          type: string
+        content:
           type: string
         created:
           type: string
@@ -657,8 +659,6 @@ components:
         - type: object
           required: [ content, modified, comments ]
           properties:
-            content:
-              type: string
             comments:
               type: array
               items:

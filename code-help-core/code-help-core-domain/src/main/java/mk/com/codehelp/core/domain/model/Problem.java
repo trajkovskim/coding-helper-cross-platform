@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.com.codehelp.core.domain.enums.Difficulty;
 
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +21,16 @@ public class Problem {
   @Relationship(value = "IN_CATEGORY", direction = Relationship.Direction.OUTGOING)
   private Category category;
 
-  private String title;
+  private String name;
+
+  private String description;
 
   private Difficulty difficulty;
 
   private String markdown;
 
-  private List<String> likedBy = new ArrayList<>();
+  @Relationship(value = "LIKES", direction = Relationship.Direction.INCOMING)
+  private List<User> likedBy = new ArrayList<>();
 
   @Relationship(value = "CODE", direction = Relationship.Direction.OUTGOING)
   private List<Code> codes = new ArrayList<>();
@@ -43,6 +43,7 @@ public class Problem {
   public static class Code {
 
     @Id
+    @GeneratedValue
     private Long id;
     private String language;
     private String starter;
@@ -54,6 +55,7 @@ public class Problem {
   public static class TestCase {
 
     @Id
+    @GeneratedValue
     private Long id;
     private String in;
     private String out;

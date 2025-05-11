@@ -1,0 +1,18 @@
+.difficulty {
+  border-radius: 13px;
+  padding: 4px 15px;
+  color: var(--white-color);
+  font-weight: bold;
+}
+
+.easy {
+  background-color: var(--difficulty-easy-color);
+}
+
+.medium {
+  background-color: var(--difficulty-medium-color);
+}
+
+.hard {
+  background-color: var(--difficulty-hard-color);
+}

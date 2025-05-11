@@ -1,0 +1,28 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.card-body {
+  text-align: justify;
+  font-size: 1rem;
+}
+
+.card-footer {
+  color: var(--secondary-color);
+}
+
+.category {
+  color: var(--secondary-color);
+}

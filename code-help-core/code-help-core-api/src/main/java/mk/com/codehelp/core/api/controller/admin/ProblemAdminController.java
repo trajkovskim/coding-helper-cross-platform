@@ -17,6 +17,8 @@ import mk.com.codehelp.core.rest.admin.model.ProblemRequest;
 import mk.com.codehelp.core.rest.admin.model.ProblemsResponse;
 import mk.com.codehelp.core.rest.admin.model.SelfLink;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
+import mk.com.codehelp.core.service.dto.ProblemDto;
+import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.util.PageUtil;
@@ -64,16 +66,19 @@ public class ProblemAdminController implements ProblemApi {
     }
 
     @Override
-    public ResponseEntity<ProblemsResponse> getAllProblems(Integer page, Integer size, List<String> sortBy) {
+    public ResponseEntity<ProblemsResponse> getAllProblems(Integer page, Integer size, List<String> sortBy, String name) {
 
         Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
 
-        PageInfoDto<ProblemValue> problemsPage = problemService.findAll(new ProblemFilter(), pageRequest);
+        ProblemFilter problemFilter = new ProblemFilter();
+        problemFilter.setName(name);
+
+        PageInfoDto<ProblemDto> problemsPage = problemService.findAll(problemFilter, pageRequest);
 
         PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
             problemsPage,
             (pageNumber, pageSize) ->
-                methodOn(ProblemAdminController.class).getAllProblems(pageNumber, pageSize, sortBy));
+                methodOn(ProblemAdminController.class).getAllProblems(pageNumber, pageSize, sortBy, name));
 
         List<mk.com.codehelp.core.rest.admin.model.Problem> problems = problemMapper.convert(problemsPage.getItems());
 

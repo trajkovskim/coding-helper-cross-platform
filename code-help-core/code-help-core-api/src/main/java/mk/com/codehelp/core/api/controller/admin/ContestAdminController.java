@@ -5,6 +5,8 @@ import java.util.List;
 import mk.com.codehelp.core.api.factory.AdminLinksFactory;
 import mk.com.codehelp.core.api.mappers.admin.AdminContestMapper;
 import mk.com.codehelp.core.domain.model.Contest;
+import mk.com.codehelp.core.domain.model.filter.ContestFilter;
+import mk.com.codehelp.core.domain.model.value.ContestValue;
 import mk.com.codehelp.core.rest.admin.api.ContestApi;
 import mk.com.codehelp.core.rest.admin.model.*;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
@@ -37,16 +39,20 @@ public class ContestAdminController implements ContestApi {
     }
 
     @Override
-    public ResponseEntity<ContestsResponse> getAllContests(Integer page, Integer size, List<String> sortBy) {
+    public ResponseEntity<ContestsResponse> getAllContests(Integer page, Integer size, List<String> sortBy, String name, ContestStatus status) {
 
         Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
 
-        PageInfoDto<Contest> contestPage = contestService.findAll(pageRequest);
+        ContestFilter contestFilter = new ContestFilter();
+        contestFilter.setName(name);
+        contestFilter.setStatus(contestMapper.convert(status));
+
+        PageInfoDto<ContestValue> contestPage = contestService.findAll(contestFilter, pageRequest);
 
         PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
             contestPage,
             (pageNumber, pageSize) ->
-                methodOn(ContestAdminController.class).getAllContests(pageNumber, pageSize, sortBy));
+                methodOn(ContestAdminController.class).getAllContests(pageNumber, pageSize, sortBy, name, status));
 
         List<mk.com.codehelp.core.rest.admin.model.Contest> contests = contestMapper.convert(contestPage.getItems());
 

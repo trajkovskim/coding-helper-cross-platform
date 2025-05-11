@@ -1,0 +1,59 @@
+:root {
+    --input-border-color: #d1d5db;
+    --input-hover-color: #9ca3af;
+    --input-focus-color: #3b82f6;
+    --error-color: #ef4444;
+    --text-color: #374151;
+    --input-text-color: #1f2937;
+}
+
+.select {
+    appearance: none;
+    background-color: #ffffff;
+    border: 1px solid var(--input-border-color);
+    border-radius: 0.375rem;
+    color: var(--input-text-color);
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0.625rem 0.75rem;
+    width: 100%;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.select:hover {
+    border-color: var(--input-hover-color);
+}
+
+.select:focus {
+    border-color: var(--input-focus-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.select:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.select.input-error {
+    border-color: var(--error-color);
+}
+
+.select.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.select option {
+    color: var(--input-text-color);
+    padding: 0.5rem;
+}
+
+.select option:disabled {
+    color: var(--input-hover-color);
+}

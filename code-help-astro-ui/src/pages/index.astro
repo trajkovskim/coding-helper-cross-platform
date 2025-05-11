@@ -1,23 +1,11 @@
 ---
-import ProblemOfTheDay from "../components/ProblemOfTheDay.astro";
-import ChallengesByDifficulty from "../components/ChallengesByDifficulty.astro";
-import Layout from "../layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
-import ChallengeCard from "../components/ChallengeCard.astro";
-import UpcomingContestCart from "../components/UpcomingContestCart.astro";
-import CommnutyCard from "../components/CommnutyCard.astro";
-import PostCard from "../components/PostCard.astro";
-
-const problemOfTheDay = {
-  id: 0,
-  title: "Two sum",
-  description:
-    "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-  difficulty: "EASY",
-  category: "Arrays",
-  input: "[0, 1]",
-  likes: 100,
-};
+import Layout from '../layouts/Layout.astro';
+import Categories from '../react/components/Categories';
+import Challenges from '../react/components/Challenges';
+import UpcomingContests from '../react/components/UpcomingContests';
+import Communities from '../react/components/Communities';
+import ChallengeOfTheDay from '../react/components/ChallengeOfTheDay';
+import Posts from '../react/components/Posts';
 ---
 
 <style>
@@ -43,12 +31,6 @@ const problemOfTheDay = {
     position: relative;
   }
 
-  .box-1 {
-    max-width: 700px;
-    border-radius: 12px;
-    padding: 40px;
-  }
-
   .box {
     display: flex;
     gap: 50px;
@@ -65,7 +47,7 @@ const problemOfTheDay = {
   }
 
   .grow::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 110%;
     height: 130%;
@@ -76,52 +58,6 @@ const problemOfTheDay = {
     top: -70px;
     left: -40px;
     filter: brightness(110%);
-  }
-
-  .categories {
-    display: grid;
-    grid-template: 1fr / repeat(4, 1fr);
-    gap: 20px;
-  }
-
-  .category-card:hover {
-    scale: 1.01;
-  }
-
-  .category-card {
-    border-radius: 7px;
-    padding: 20px 40px;
-    /* border: 1px solid #1cb5e0; */
-    box-shadow: #c2c2c2 0 0 4px;
-    background: linear-gradient(to right, #1cb5e0, #000046);
-    position: relative;
-    color: #fff;
-
-    transition: all 200ms;
-  }
-
-  .category-card:hover::after {
-    opacity: 1;
-    right: 35px;
-  }
-
-  .category-card::after {
-    content: ">";
-    font-size: 2rem;
-    position: absolute;
-    bottom: 20px;
-    right: 40px;
-
-    transition: all 200ms;
-    opacity: 0;
-  }
-
-  .category-card-header {
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: bold;
   }
 
   .challenges-by-difficulty-section {
@@ -138,8 +74,8 @@ const problemOfTheDay = {
 
   .communities,
   .posts {
-    border: 1px #c2c2c2 solid;
-    padding: 20px;
+    border: 1px var(--secondary-color) solid;
+    padding: min(20px, 8%);
     border-radius: 10px;
   }
 
@@ -148,113 +84,84 @@ const problemOfTheDay = {
     display: grid;
     gap: 20px;
   }
-
-  .join-community {
-    display: grid;
-    grid-template: 1fr / 1fr 1fr;
-    gap: 20px;
-  }
 </style>
 
 <Layout title="Coding helper">
   <main>
     <div class="top">
       <div class="page-padding page-size centered box">
-        <div class="box-1">
-          <div class="text-xl pb-md">Prove your coding skills with our challenges</div>
-          <div>Master algorithms, ace technical interviews, and connect with a global community of developers.</div>
+        <div style="max-width: 600px;">
+          <h1 class="pb-xl">Prove your coding skills with our challenges</h1>
+          <p class="text-lg">
+            Master algorithms, ace technical interviews, and connect with a global community of developers.
+          </p>
         </div>
         <div class="grow">
-          <ProblemOfTheDay {...problemOfTheDay} />
+          <ChallengeOfTheDay client:only="react" />
+          <!--<ProblemOfTheDay-->
+          <!--  id={problemsResponse[0].id}-->
+          <!--  title={problemsResponse[0].name}-->
+          <!--  likes={problemsResponse[0].likes}-->
+          <!--  difficulty={problemsResponse[0].difficulty}-->
+          <!--  description={problemsResponse[0].description}-->
+          <!--  testCase={problemsResponse[0].testCases[0]}-->
+          <!--/>-->
         </div>
       </div>
     </div>
     <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md"><span class="title">Challenges</span></h2>
+      <h3>Challenges</h3>
       <p class="pb-xl">Practice problems organized by topic to build your skills systematically</p>
-      <div class="categories">
-        <div class="category-card">
-          <Icon class="icon" name="mdi:code-tags" size="32px" />
-          <div class="category-card-header pb-sm">Arrays</div>
-          <div class="category-card-body">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
-          </div>
-        </div>
-        <div class="category-card">
-          <Icon class="icon" name="mdi:code-tags" size="32px" />
-          <div class="category-card-header pb-sm">Binary trees</div>
-          <div class="category-card-body">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
-          </div>
-        </div>
-        <div class="category-card">
-          <Icon class="icon" name="mdi:code-tags" size="32px" />
-          <div class="category-card-header pb-sm">Backtracking</div>
-          <div class="category-card-body">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
-          </div>
-        </div>
+      <div class="grid-by-4">
+        <Categories client:only="react"/>
       </div>
     </div>
-    <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md"><span class="title">Explore challenges</span></h2>
+    <!-- <div class="page-size page-padding centered page-section-gap">
+      <h2 class="pb-xl">Explore challenges</h2>
       <div class="challenges-by-difficulty-section">
         <ChallengesByDifficulty difficulty="easy" />
         <ChallengesByDifficulty difficulty="medium" />
         <ChallengesByDifficulty difficulty="hard" />
       </div>
-    </div>
+    </div> -->
     <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md"><span class="title">Popular challenges</span></h2>
+      <h3>Popular challenges</h3>
       <p class="pb-xl">Tackle the most solved and discussed problems on our platform</p>
-      <div class="popular-challenges">
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
-        <ChallengeCard {...problemOfTheDay} />
+      <div class="grid-by-4">
+        <Challenges client:only="react"/>
       </div>
     </div>
     <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md">Upcomming contests</h2>
+      <h3>Upcomming contests</h3>
       <p class="pb-xl">Participate in coding competitions to test your skills and win prizes</p>
-      <UpcomingContestCart
-        id={0}
-        title="Weekly Contest 342"
-        description="Lorem Ipsum is simply dummy text of the"
-        startDate={new Date()}
-        duration="1h30m"
-      />
+      <div class="grid-by-2">
+        <UpcomingContests client:only="react"/>
+      </div>
     </div>
     <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md">Join a community</h2>
+      <h3>Join a community</h3>
       <p class="pb-xl">Connect with fellow developers, share solutions, and learn together</p>
-      <div class="join-community">
+      <div class="grid-by-2">
         <div class="communities">
-          <h2 class="pb-md">Communities</h2>
+          <h4>Communities</h4>
           <div class="communities-list">
-            <CommnutyCard id={0} title="Community 1" description="Community 1 description" />
-            <CommnutyCard id={1} title="Community 2" description="Community 2 description" />
-            <CommnutyCard id={2} title="Community 3" description="Community 3 description" />
+            <Communities client:only="react"/>
           </div>
         </div>
         <div class="posts">
-          <h2 class="pb-md">Recent posts</h2>
+          <h4>Recent posts</h4>
           <div class="posts-list">
-            <PostCard id={0} title="Post 1" content="Post 1 content" username="username" />
-            <PostCard id={1} title="Post 2" content="Post 2 content" username="username" />
-            <PostCard id={2} title="Post 3" content="Post 3 content" username="username" />
+              <Posts client:only="react"/>
           </div>
         </div>
       </div>
     </div>
 
     <div class="page-size page-padding centered page-section-gap">
-      <h2 class="pb-md">Ready to Improve Your Coding Skills?</h2>
-      <p>Join thousands of developers who are mastering algorithms and acing technical interviews with CodingHelper.</p>
+      <h3>Ready to Improve Your Coding Skills?</h3>
+      <p class="text-lg">
+        Join thousands of developers who are mastering algorithms and acing technical interviews with CodingHelper.
+      </p>
     </div>
   </main>
 </Layout>

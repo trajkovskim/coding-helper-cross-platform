@@ -2,19 +2,26 @@ package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import mk.com.codehelp.core.domain.model.filter.ContestFilter;
+import mk.com.codehelp.core.domain.model.value.ContestValue;
+import mk.com.codehelp.core.domain.model.value.ProblemValue;
+import mk.com.codehelp.core.domain.model.value.relations.ContestProblemValue;
+import mk.com.codehelp.core.domain.repository.ContestRepository;
+import mk.com.codehelp.core.domain.repository.impl.ContestProblemRepository;
+import mk.com.codehelp.core.service.dto.ContestDto;
 import mk.com.codehelp.core.service.dto.ContestProblemDto;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
+import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.exceptions.ContestNotFoundException;
 import mk.com.codehelp.core.service.exceptions.ContestStatusException;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
-import mk.com.codehelp.core.service.exceptions.StarterCodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.ContestService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.domain.enums.ContestStatus;
 import mk.com.codehelp.core.domain.model.Contest;
 import mk.com.codehelp.core.domain.model.relations.ContestProblem;
 import mk.com.codehelp.core.domain.model.Problem;
-import mk.com.codehelp.core.domain.repository.ContestRepository;
+import mk.com.codehelp.core.service.util.PageUtil;
 import mk.com.codehelp.core.service.util.ProblemUtil;
 
 import org.springframework.context.annotation.Primary;
@@ -25,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -34,22 +42,17 @@ import java.util.stream.Collectors;
 public class ContestServiceImpl implements ContestService {
 
   protected final ContestRepository contestRepository;
+  protected final ContestProblemRepository contestProblemRepository;
   protected final ProblemService problemService;
 
   protected final ProblemUtil problemUtil;
 
   @Override
-  public PageInfoDto<Contest> findAll(Pageable pageable) {
+  public PageInfoDto<ContestValue> findAll(ContestFilter contestFilter, Pageable pageable) {
 
-    Page<Contest> pageContest = contestRepository.findAll(pageable);
+    Page<ContestValue> pageContest = contestRepository.findAll(contestFilter, pageable);
 
-    return PageInfoDto.<Contest>builder()
-        .items(pageContest.getContent())
-        .pageNumber(pageable.getPageNumber())
-        .pageSize(pageContest.getSize())
-        .totalElements(pageContest.getTotalElements())
-        .totalPages(pageContest.getTotalPages())
-        .build();
+    return PageUtil.createPageInfo(pageContest, pageable);
   }
 
   @Override
@@ -65,6 +68,47 @@ public class ContestServiceImpl implements ContestService {
   }
 
   @Override
+  public ContestDto getContest(Long id, String language) {
+
+    ContestValue contestValue = contestRepository.findContestById(id)
+      .orElseThrow(() -> new ContestNotFoundException(id));
+
+    List<ContestProblemValue> contestProblemValues = contestProblemRepository.getContestProblems(id);
+    List<ContestProblemDto> contestProblemDtos = contestProblemValues.stream()
+      .<ContestProblemDto>map(contestProblem -> {
+
+        ProblemValue problemValue = contestProblem.getProblem();
+
+        Problem.Code code = problemUtil.getCodeByLanguage(problemValue.getCodes(), language)
+          .orElse(null);
+
+        return ContestProblemDto.builder()
+          .id(contestProblem.getId())
+          .name(problemValue.getName())
+          .description(problemValue.getDescription())
+          .difficulty(problemValue.getDifficulty())
+          .likes(problemValue.getLikes())
+          .category(problemValue.getCategory())
+          .markdown(problemValue.getMarkdown())
+          .testCases(problemValue.getTestCases())
+          .code(code)
+          .score(contestProblem.getScore())
+          .build();
+      }
+    ).toList();
+
+    return ContestDto.builder()
+      .id(contestValue.getId())
+      .name(contestValue.getName())
+      .description(contestValue.getDescription())
+      .startDate(contestValue.getStartDate())
+      .problems(contestProblemDtos)
+      .duration(contestValue.getDuration())
+      .status(contestValue.getStatus())
+      .build();
+  }
+
+  @Override
   public ContestProblem addProblemToContest(Long id, Problem problem) throws IOException {
 
     Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
@@ -73,7 +117,7 @@ public class ContestServiceImpl implements ContestService {
       throw new ContestStatusException(id, ContestStatus.OPEN);
 
     Problem createdProblem = problemService.create(problem);
-    ContestProblem contestProblem = new ContestProblem(createdProblem, 0L);
+    ContestProblem contestProblem = new ContestProblem(createdProblem, 0);
     contest.getProblems().add(contestProblem);
     contestRepository.save(contest);
     return contestProblem;
@@ -91,11 +135,11 @@ public class ContestServiceImpl implements ContestService {
     Problem problem = contestProblem.getProblem();
 
     Problem.Code code = problemUtil.getCodeByLanguage(problem.getCodes(), language)
-        .orElseThrow(() -> new StarterCodeDoesNotExistException(problemId, language));
+        .orElseThrow(() -> new CodeDoesNotExistException(problemId, language));
 
     return ContestProblemDto.builder()
         .id(problemId)
-        .title(problem.getTitle())
+        .name(problem.getName())
         .difficulty(problem.getDifficulty())
         .markdown(problem.getMarkdown())
         .category(problem.getCategory())
@@ -151,7 +195,7 @@ public class ContestServiceImpl implements ContestService {
 
     old.setDuration(contest.getDuration());
     old.setName(contest.getName());
-    old.setStartsOn(contest.getStartsOn());
+    old.setStartDate(contest.getStartDate());
     old.setStatus(contest.getStatus());
 
     Map<Long, ContestProblem> problemsById =

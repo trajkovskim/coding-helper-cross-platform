@@ -1,7 +1,8 @@
 package mk.com.codehelp.core.domain.repository;
 
 import mk.com.codehelp.core.domain.model.Category;
-import org.junit.jupiter.api.Disabled;
+import mk.com.codehelp.core.domain.model.value.CategoryValue;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
@@ -17,18 +18,32 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataNeo4jTest
 @ActiveProfiles("test")
 @ContextConfiguration(classes = RepositoryTestConfiguration.class)
-@Disabled
 public class CategoryRepositoryTest {
 
   @Autowired
   private CategoryRepository categoryRepository;
 
   @Test
+  void shouldGetAllCategoriesValues() {
+
+    // Given
+    Category category = new Category();
+    category.setName("Category1");
+    categoryRepository.save(category);
+
+    // When
+    List<CategoryValue> categories = categoryRepository.findAllCategories();
+
+    // Then
+    assertTrue(!CollectionUtils.isEmpty(categories));
+  }
+
+  @Test
   void shouldGetAllCategories() {
 
     List<Category> categories = categoryRepository.findAll();
 
-    assertTrue(CollectionUtils.isEmpty(categories));
+    assertTrue(!CollectionUtils.isEmpty(categories));
   }
 
   @Test

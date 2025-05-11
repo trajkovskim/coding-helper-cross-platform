@@ -1,7 +1,88 @@
+@import url("./card.css");
+@import url("./grid.css");
+
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+:root {
+  --primary-color: #1c71e0;
+  --primary-color-dark: #1a5bb0;
+  --secondary-color: #c2c2c2;
+  --dark-color: #232323;
+  --white-color: white;
+
+  --text-color: #232323;
+
+  --difficulty-easy-color: green;
+  --difficulty-medium-color: orange;
+  --difficulty-hard-color: red;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+
+  color: var(--text-color);
+}
+
+h1 {
+  line-height: clamp(2.75rem, 2.65rem + 0.5vw, 3.25rem);
+  font-size: clamp(2.25rem, 2.175rem + 0.38vw, 2.625rem);
+}
+
+h2 {
+  line-height: clamp(2.5rem, 2.45rem + 0.25vw, 2.75rem);
+  font-size: clamp(2rem, 1.95rem + 0.25vw, 2.25rem);
+}
+
+h3 {
+  line-height: clamp(2rem, 1.9rem + 0.5vw, 2.5rem);
+  font-size: clamp(1.75rem, 1.7rem + 0.25vw, 2rem);
+}
+
+h4 {
+  line-height: clamp(1.75rem, 1.7rem + 0.25vw, 2rem);
+  font-size: clamp(1.5rem, 1.45rem + 0.25vw, 1.75rem);
+}
+
+h5 {
+  line-height: clamp(1.5rem, 1.45rem + 0.25vw, 1.75rem);
+  font-size: clamp(1.25rem, 1.2rem + 0.25vw, 1.5rem);
+}
+
+h6 {
+  line-height: 1.5rem;
+  font-size: 1rem;
+}
+
+.text-xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-lg {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+p, .text-md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1.125rem;
 }
 
 .page-section-gap {
@@ -32,9 +113,4 @@
 .page-padding {
   padding-left: 20px;
   padding-right: 20px;
-}
-
-.text-xl {
-  font-size: 32px;
-  font-weight: bold;
 }

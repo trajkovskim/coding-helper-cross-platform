@@ -1,16 +1,20 @@
 package mk.com.codehelp.core.service.service;
 
+import mk.com.codehelp.core.domain.model.filter.SubmissionFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.service.dto.CreatedSubmissionDto;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface SubmissionService {
 
-  List<SubmissionValue> findAllSubmissionsByEmail(String email);
-
-  List<SubmissionValue> findAllSubmissionsByUserEmailAndProblemId(String email, Long problemId);
+  PageInfoDto<SubmissionValue> findAll(SubmissionFilter submissionFilter, Pageable pageable);
 
   CreatedSubmissionDto create(String email, Long problemId, String code, String language) throws IOException, InterruptedException;
 }

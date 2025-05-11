@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.Problem;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -12,10 +13,8 @@ import java.util.Date;
 public class SubmissionValue {
 
   private Long id;
-  private Date timeSubmitted;
+  private LocalDateTime createdDate;
   private SubmissionStatus status;
   private String language;
   private String code;
-
-  private Problem problem;
 }

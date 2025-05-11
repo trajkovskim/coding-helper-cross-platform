@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Challenge from "../../react/components/challenges/[id]/Challenge";
+const { id } = Astro.params;
+
+// const categoriesResponse = await CoreService.getCategories();
+// if(Number.isNaN(id)) {
+//   throw Error();
+// }
+
+// const problem = await CoreService.getProblem(Number(id), "javascript");
+---
+
+<Layout title={"Contest - " + id}>
+  <main>
+    <Challenge id={Number(id)} client:only="react"/>
+  </main>
+</Layout>

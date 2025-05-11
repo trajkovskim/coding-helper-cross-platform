@@ -1,6 +1,8 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import mk.com.codehelp.core.domain.model.filter.SubmissionFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.Problem;
@@ -8,18 +10,21 @@ import mk.com.codehelp.core.domain.model.Submission;
 import mk.com.codehelp.core.domain.repository.SubmissionRepository;
 import mk.com.codehelp.core.service.dto.CodeRunnerDto;
 import mk.com.codehelp.core.service.dto.CreatedSubmissionDto;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.service.CodeRunnerService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.service.SubmissionService;
 import mk.com.codehelp.core.service.util.CodeUtil;
+import mk.com.codehelp.core.service.util.PageUtil;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +36,16 @@ public class SubmissionServiceImpl implements SubmissionService {
   private final CodeUtil codeUtil;
 
   @Override
-  public List<SubmissionValue> findAllSubmissionsByEmail(String email) {
+  public PageInfoDto<SubmissionValue> findAll(SubmissionFilter submissionFilter, Pageable pageable) {
 
-    return submissionRepository.findAllByUser(email);
+    Page<SubmissionValue> submissionValuePage = submissionRepository.findAll(submissionFilter, pageable);
+
+    return PageUtil.createPageInfo(submissionValuePage, pageable);
   }
 
   @Override
-  public List<SubmissionValue> findAllSubmissionsByUserEmailAndProblemId(String email, Long problemId) {
-
-    return submissionRepository.findAllByUserAndProblem_Id(email, problemId);
-  }
-
-  @Override
-  public CreatedSubmissionDto create(String email, Long problemId, String code, String language) throws IOException, InterruptedException {
-
-    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+  public CreatedSubmissionDto create(String email, Long problemId, String code, String language)
+    throws IOException, InterruptedException {
 
     Problem problem = problemService.findById(problemId);
     ProblemDto problemDto = problemService.getProblem(problemId, language);
@@ -53,14 +53,14 @@ public class SubmissionServiceImpl implements SubmissionService {
     CodeRunnerDto codeRunnerDto = codeRunnerService.runTestCases(problem.getTestCases(), mergedCode, language);
 
     Submission saved = this.submissionRepository.save(
-        new Submission(
-            new Date(),
-            codeRunnerDto.isError() ? SubmissionStatus.ACCEPTED : SubmissionStatus.DECLINED,
-            language,
-            code,
-            user,
-            problem
-        )
+      new Submission(
+        codeRunnerDto.isError() ? SubmissionStatus.ACCEPTED : SubmissionStatus.DECLINED,
+        language,
+        code,
+        problem,
+        codeRunnerDto.getTestCasesPassed(),
+        problem.getTestCases().size()
+      )
     );
 
     return CreatedSubmissionDto.builder()

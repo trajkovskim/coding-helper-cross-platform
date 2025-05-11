@@ -1,0 +1,61 @@
+.searchInput {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filterContainer {
+    display: inline-flex;
+    gap: 16px;
+}
+
+.difficultySelect,
+.statusSelect {
+    flex: 1;
+    min-width: 150px;
+}
+
+.selectedFilters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.filterValue {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.clearButton {
+    width: 16px;
+    height: 16px;
+    border: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E") center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.clearButton:hover {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .filterContainer {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .difficultySelect,
+    .statusSelect {
+        width: 100%;
+    }
+}

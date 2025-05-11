@@ -1,0 +1,42 @@
+.contests-table {
+    width: 100%;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.contests-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.contests-table th {
+    background-color: #f5f5f5;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.contests-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #666;
+}
+
+.contests-table tr:hover {
+    background-color: #f8f8f8;
+}
+
+.contests-table tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .contests-table th,
+    .contests-table td {
+        padding: 8px;
+    }
+}

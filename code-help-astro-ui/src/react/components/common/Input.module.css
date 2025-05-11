@@ -1,0 +1,64 @@
+:root {
+    --input-border-color: #d1d5db;
+    --input-hover-color: #9ca3af;
+    --input-focus-color: #3b82f6;
+    --error-color: #ef4444;
+    --text-color: #374151;
+    --input-text-color: #1f2937;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: fit-content;
+    width: -moz-fit-content;
+}
+
+.input-container.full-width {
+    width: 100%;
+}
+
+.input-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.input-field {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--input-border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--input-text-color);
+    background-color: #ffffff;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.input-field:hover {
+    border-color: var(--input-hover-color);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--input-focus-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-field.input-error {
+    border-color: var(--error-color);
+}
+
+.input-field.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-field.full-width {
+    width: 100%;
+}
+
+.error-message {
+    font-size: 0.75rem;
+    color: var(--error-color);
+}

@@ -2,17 +2,24 @@ package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import mk.com.codehelp.core.domain.enums.SubmissionStatus;
+import mk.com.codehelp.core.domain.model.User;
+import mk.com.codehelp.core.domain.model.filter.SubmissionFilter;
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
+import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
+import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
-import mk.com.codehelp.core.service.exceptions.StarterCodeDoesNotExistException;
+import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.service.service.ProblemService;
+import mk.com.codehelp.core.service.service.SubmissionProblemService;
+import mk.com.codehelp.core.service.util.PageUtil;
 import mk.com.codehelp.core.service.util.ProblemUtil;
 
 import org.springframework.data.domain.Page;
@@ -30,26 +37,42 @@ public class ProblemServiceImpl implements ProblemService {
   private final CategoryService categoryService;
 
   private final ProblemUtil problemUtil;
+  private final SubmissionProblemService submissionProblemService;
 
   @Override
-  public PageInfoDto<ProblemValue> findAll(ProblemFilter filter, Pageable pageable) {
+  public PageInfoDto<ProblemDto> findAll(ProblemFilter filter, String user, Pageable pageable) {
 
     Page<ProblemValue> problemValuePage = this.problemRepository.findAll(filter, pageable);
-    return PageInfoDto.<ProblemValue>builder()
-        .items(problemValuePage.getContent())
-        .pageNumber(problemValuePage.getSize())
-        .pageSize(problemValuePage.getSize())
-        .totalElements(problemValuePage.getTotalElements())
-        .totalPages(problemValuePage.getTotalPages())
-        .build();
+
+    return PageUtil.createPageInfo(problemValuePage, pageable, problem -> {
+
+      ProblemDto.ProblemDtoBuilder<?, ?> builder = ProblemDto.builder()
+        .id(problem.getId())
+        .name(problem.getName())
+        .description(problem.getDescription())
+        .category(problem.getCategory())
+        .difficulty(problem.getDifficulty())
+        .markdown(problem.getMarkdown())
+        .likes(problem.getLikes())
+        .testCases(problem.getTestCases());
+
+      return finalize(builder, problem, user);
+    });
+  }
+
+  @Override
+  public PageInfoDto<ProblemDto> findAll(ProblemFilter filter, Pageable pageable) {
+    return this.findAll(filter, null, pageable);
   }
 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Problem create(Problem problem) throws IOException {
 
-    Category category = categoryService.getOrCreate(problem.getCategory().getName());
-    problem.setCategory(category);
+    Category category = problem.getCategory();
+    Category savedCategory = categoryService.getOrCreate(category.getName(), category.getDescription());
+
+    problem.setCategory(savedCategory);
 
     return problemRepository.save(problem);
   }
@@ -60,31 +83,59 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
-  public ProblemDto getProblem(Long id, String language) {
+  public ProblemDto getProblem(Long id, String user, String language) {
 
-    Problem problem = findById(id);
+    ProblemValue problemValue = this.problemRepository.findProblemById(id)
+        .orElseThrow(() -> new ProblemNotFoundException(id));
 
-    Problem.Code code = problemUtil.getCodeByLanguage(problem.getCodes(), language)
-        .orElseThrow(() -> new StarterCodeDoesNotExistException(id, language));
+    Problem.Code code = problemUtil.getCodeByLanguage(problemValue.getCodes(), language)
+        .orElseThrow(() -> new CodeDoesNotExistException(id, language));
 
-    return ProblemDto.builder()
-        .id(id)
-        .title(problem.getTitle())
-        .difficulty(problem.getDifficulty())
-        .markdown(problem.getMarkdown())
-        .category(problem.getCategory())
-        .code(code)
-        .likes((long) problem.getLikedBy().size())
+    ProblemDto.ProblemDtoBuilder<?, ?> builder = ProblemDto.builder()
+      .id(id)
+      .name(problemValue.getName())
+      .difficulty(problemValue.getDifficulty())
+      .markdown(problemValue.getMarkdown())
+      .category(problemValue.getCategory())
+      .code(code)
+      .likes(problemValue.getLikes())
+      .testCases(problemValue.getTestCases());
+
+    return finalize(builder, problemValue, user);
+  }
+
+  private ProblemDto finalize(ProblemDto.ProblemDtoBuilder<?, ?> builder, ProblemValue problemValue, String user) {
+
+    if (user != null) {
+      SubmissionFilter submissionFilter = new SubmissionFilter();
+      submissionFilter.setUser(user);
+      SubmissionValue latestSubmission =
+        submissionProblemService.findLatest(submissionFilter, problemValue.getId()).orElse(null);
+
+      submissionFilter.setStatus(SubmissionStatus.ACCEPTED);
+      SubmissionValue latestAcceptedSubmission =
+        submissionProblemService.findLatest(submissionFilter, problemValue.getId()).orElse(null);
+
+      return builder
+        .lastSubmission(latestSubmission)
+        .lastAcceptedSubmission(latestAcceptedSubmission)
         .build();
+    }
+
+    return builder.build();
   }
 
   @Override
-  public Problem deleteById(Long id) {
+  public ProblemDto getProblem(Long id, String language) {
+    return getProblem(id, null, language);
+  }
 
-    Problem problem = this.findById(id);
+  @Override
+  public void deleteById(Long id) {
 
-    this.problemRepository.deleteById(id);
-    return problem;
+    if (problemRepository.existsById(id)) {
+      this.problemRepository.deleteById(id);
+    }
   }
 
   @Override
@@ -95,7 +146,8 @@ public class ProblemServiceImpl implements ProblemService {
     oldProblem.setDifficulty(problemInput.getDifficulty());
     oldProblem.setCategory(category);
     oldProblem.setMarkdown(problemInput.getMarkdown());
-    oldProblem.setTitle(problemInput.getTitle());
+    oldProblem.setName(problemInput.getName());
+    oldProblem.setDescription(problemInput.getDescription());
     oldProblem.setCodes(problemInput.getCodes());
     oldProblem.setTestCases(oldProblem.getTestCases());
 
@@ -107,11 +159,13 @@ public class ProblemServiceImpl implements ProblemService {
 
     Problem problem = findById(id);
 
-    boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.equals(email));
+    boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.getUsername().equals(email));
     if (liked) {
-      problem.getLikedBy().removeIf(x -> x.equals(email));
+      problem.getLikedBy().removeIf(x -> x.getUsername().equals(email));
     } else {
-      problem.getLikedBy().add(email);
+      User user = new User();
+      user.setUsername(email);
+      problem.getLikedBy().add(user);
     }
 
     problemRepository.save(problem);
@@ -122,6 +176,6 @@ public class ProblemServiceImpl implements ProblemService {
   @Override
   public boolean isLikedBy(Long problemId, String email) {
 
-    return problemRepository.existsByIdAndLikedByContains(problemId, email);
+    return problemRepository.existsByIdAndLikedBy_UsernameContains(problemId, email);
   }
 }

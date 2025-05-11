@@ -1,0 +1,46 @@
+---
+// Import necessary components and utilities if needed
+import Layout from '../../layouts/Layout.astro';
+
+// Simulated forum data (replace with actual data fetching)
+const forumCategories = [
+  {
+    id: 1,
+    title: 'General Discussion',
+    description: 'General topics and discussions',
+    topicCount: 25,
+    lastActive: new Date().toLocaleDateString(),
+  },
+  {
+    id: 2,
+    title: 'Technical Support',
+    description: 'Get help with technical issues',
+    topicCount: 15,
+    lastActive: new Date().toLocaleDateString(),
+  },
+];
+---
+
+<Layout title="Forum Overview">
+  <main class="max-w-4xl mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6">Forum Categories</h1>
+
+    <div class="space-y-4">
+      {
+        forumCategories.map((category) => (
+          <div class="border rounded-lg p-4 hover:bg-gray-50">
+            <a href={`/forum/category/${category.id}`} class="block">
+              <h2 class="text-xl font-semibold">{category.title}</h2>
+              <p class="text-gray-600">{category.description}</p>
+              <div class="mt-2 text-sm text-gray-500">
+                <span>{category.topicCount} topics</span>
+                <span class="mx-2">•</span>
+                <span>Last active: {category.lastActive}</span>
+              </div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </main>
+</Layout>

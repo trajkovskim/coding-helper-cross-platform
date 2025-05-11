@@ -25,7 +25,7 @@ public class LinksFactory {
 
     Link self = getSelfRelLink(pageInvokableValue.apply(pageInfoDto.getPageNumber(), pageInfoDto.getPageSize()));
     Link first = getSelfRelLink(pageInvokableValue.apply(pageInfoDto.getFirstPage(), pageInfoDto.getPageSize()));
-    Link last = getSelfRelLink(pageInvokableValue.apply(pageInfoDto.getPageNumber(), pageInfoDto.getPageSize()));
+    Link last = getSelfRelLink(pageInvokableValue.apply(pageInfoDto.getLastPage(), pageInfoDto.getPageSize()));
 
     PaginationLinks paginationLinks = new PaginationLinks().self(self).first(first).last(last);
 

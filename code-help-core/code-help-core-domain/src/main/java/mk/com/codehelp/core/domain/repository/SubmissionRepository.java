@@ -3,21 +3,43 @@ package mk.com.codehelp.core.domain.repository;
 import mk.com.codehelp.core.domain.enums.Difficulty;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.Submission;
+import mk.com.codehelp.core.domain.model.filter.SubmissionFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface SubmissionRepository extends Neo4jRepository<Submission, Long> {
 
-  List<SubmissionValue> findAllByUser(String Email);
+  @Query(value = """
+    match (user:User)-[r_user:BY]-(submission:Submission)
+    where user.username = :#{#filters.user}
+      and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
+    return submission :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""",
+  countQuery = """
+    match (submission:Submission)
+    where submission.user = :#{#filters.user}
+      and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
+    return count(submission)""")
+  Page<SubmissionValue> findAll(SubmissionFilter filters, Pageable pageable);
 
-  Long countDistinctByStatusAndProblem_DifficultyAndUser(SubmissionStatus status, Difficulty problem_difficulty, String user);
+  @Query(value = """
+    match (user:User)-[r_user:BY]-(submission:Submission)-[r_problem:FOR_PROBLEM]-(problem:Problem)
+    where ID(problem) = $problemId
+      and user.username = :#{#filters.user}
+      and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
+    return submission :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""",
+    countQuery = """
+    match (user:User)-[r_user:BY]-(submission:Submission)-[r_problem:FOR_PROBLEM]-(problem:Problem)
+    where ID(problem) = $problemId
+      and user.username = :#{#filters.user}
+      and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
+    return count(submission)""")
+  Page<SubmissionValue> findAllByProblem(SubmissionFilter filters, Long problemId, Pageable pageable);
 
-  List<SubmissionValue> findAllByUserAndProblem_Id(String user_email, Long problem_id);
-
-
+  Long countDistinctByStatusAndProblem_DifficultyAndUser_Username(SubmissionStatus status, Difficulty problem_difficulty, String user);
 }

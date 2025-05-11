@@ -1,5 +1,6 @@
 package mk.com.codehelp.core.api.exceptionhandler;
 
+import mk.com.codehelp.core.api.mappers.DateTimeMapper;
 import mk.com.codehelp.core.rest.model.ErrorResponse;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -10,17 +11,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
+import lombok.RequiredArgsConstructor;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(value = RuntimeException.class)
   ResponseEntity<Object> handleUnknownException(RuntimeException ex) {
     ErrorResponse errorResponse = new ErrorResponse()
-        .message(ex.getMessage())
+        .message(ex.getMessage() != null ? ex.getMessage() : ex.getCause().getMessage())
         .status(HttpStatus.BAD_REQUEST.value())
         .code(HttpStatus.BAD_REQUEST.getReasonPhrase())
-        .timestamp(LocalDateTime.now().toString());
+        .timestamp(OffsetDateTime.now());
     return buildResponseEntity(errorResponse);
   }
 
@@ -29,7 +34,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     ErrorResponse errorResponse = new ErrorResponse()
         .message(ex.getMessage())
         .status(HttpStatus.BAD_REQUEST.value())
-        .timestamp(LocalDateTime.now().toString());
+        .timestamp(OffsetDateTime.now());
     return buildResponseEntity(errorResponse);
   }
 
@@ -38,7 +43,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     ErrorResponse errorResponse = new ErrorResponse()
         .message(ex.getMessage())
         .status(HttpStatus.NOT_FOUND.value())
-        .timestamp(LocalDateTime.now().toString());
+        .timestamp(OffsetDateTime.now());
     return buildResponseEntity(errorResponse);
   }
 

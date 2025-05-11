@@ -9,4 +9,5 @@ public class CodeRunnerDto {
 
   private String message;
   private boolean error;
+  private Integer testCasesPassed;
 }

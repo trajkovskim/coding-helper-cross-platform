@@ -16,9 +16,9 @@ public class ContestProblem {
   @TargetNode
   private Problem problem;
 
-  private Long score;
+  private Integer score;
 
-  public ContestProblem(Problem problem, Long score) {
+  public ContestProblem(Problem problem, Integer score) {
     this.problem = problem;
     this.score = score;
   }

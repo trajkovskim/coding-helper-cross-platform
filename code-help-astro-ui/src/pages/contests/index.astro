@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AllContests from '../../react/components/contests/AllContests';
+import FeaturedContests from '../../react/components/contests/FeaturedContests';
+import Rankings from '../../react/components/contests/Rankings';
+---
+
+<style>
+  .gradient-heading {
+    font-size: 2.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, #9333ea, #3b82f6);
+    padding: 0.5rem;
+  }
+
+  .content-with-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+  }
+
+  .sidebar {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<Layout title="Contests Overview">
+  <main class="container">
+    <h1 class="gradient-heading">Coding Contests</h1>
+
+    <div class="content-with-sidebar page-size centered">
+      <div class="main-content">
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Featured Contests</h2>
+          <FeaturedContests client:load />
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold mb-4">All Contests</h2>
+          <AllContests client:load />
+        </section>
+      </div>
+      <aside class="sidebar">
+        <h2 class="text-2xl font-semibold mb-4">Rankings</h2>
+        <Rankings client:load />
+      </aside>
+    </div>
+  </main>
+</Layout>

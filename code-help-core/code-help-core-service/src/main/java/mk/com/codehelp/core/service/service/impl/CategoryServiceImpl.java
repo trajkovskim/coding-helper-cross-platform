@@ -1,6 +1,8 @@
 package mk.com.codehelp.core.service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import mk.com.codehelp.core.domain.model.value.CategoryValue;
 import mk.com.codehelp.core.service.exceptions.CategoryNotFoundException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.domain.model.Category;
@@ -16,20 +18,21 @@ public class CategoryServiceImpl implements CategoryService {
   private final CategoryRepository categoryRepository;
 
   @Override
-  public Category getOrCreate(String name) {
+  public Category getOrCreate(String name, String description) {
 
     return categoryRepository.findByName(name)
         .orElseGet(() -> {
           Category category = new Category();
           category.setName(name);
+          category.setDescription(description);
 
           return categoryRepository.save(category);
         });
   }
 
   @Override
-  public List<Category> findALl() {
-    return this.categoryRepository.findAll();
+  public List<CategoryValue> findALl() {
+    return this.categoryRepository.findAllCategories();
   }
 
   @Override
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     Category oldCategory = this.findById(id);
     oldCategory.setName(category.getName());
+    oldCategory.setDescription(category.getDescription());
 
     categoryRepository.save(oldCategory);
   }

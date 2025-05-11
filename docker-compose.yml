@@ -38,6 +38,9 @@ services:
     build:
       context: code-help-astro-ui
       dockerfile: Dockerfile
+    environment:
+      - PUBLIC_CORE_API=http://localhost/core/api
+      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
     ports:
       - 4321:4321
   code-help-admin-proxy:

@@ -7,5 +7,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ContestProblemDto extends ProblemDto {
 
-  private Long score;
+  private Integer score;
 }

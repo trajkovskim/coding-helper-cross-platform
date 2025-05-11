@@ -12,17 +12,26 @@ import mk.com.codehelp.core.domain.enums.Difficulty;
 @Getter
 public class ProblemFilter {
 
+  private Long id;
   private Collection<String> categories;
   private String likedBy;
-  private String title;
+  private String name;
   private Difficulty difficulty;
 
-  public String getTitle() {
-    if (title == null) {
+  public Long getId() {
+    if (id == null) {
+      return -1L;
+    }
+
+    return id;
+  }
+
+  public String getName() {
+    if (name == null) {
       return "";
     }
 
-    return title + ".*";
+    return name + ".*";
   }
 
   public String getDifficulty() {

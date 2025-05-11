@@ -1,0 +1,42 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Categories from '../../react/components/challenges/Categories';
+import ChallengesTableOverview from '../../react/components/challenges/Challenges';
+---
+
+<style>
+  main {
+    display: grid;
+    gap: 1rem;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid gainsboro;
+    text-align: start;
+    /* font-weight: 400; */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .category {
+    border: 1px solid gainsboro;
+    border-radius: 20px;
+    padding: 7px 20px;
+  }
+</style>
+
+<Layout title="Problems - Coding Helper">
+  <main class="page-size page-padding centered page-section-gap">
+    <div>
+      <h2 class="pb-xl">Explore challenges</h2>
+      <p class="pb-xl">Practice problems organized by topic to build your skills systematically</p>
+    </div>
+    <Categories client:only="react" />
+    <ChallengesTableOverview client:only="react"/>
+  </main>
+</Layout>

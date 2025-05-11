@@ -81,6 +81,12 @@ paths:
         - $ref: "code-help-common-api.yaml#/components/parameters/Page"
         - $ref: "code-help-common-api.yaml#/components/parameters/Size"
         - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Two"
       responses:
         200:
           description: OK
@@ -182,6 +188,17 @@ paths:
         - $ref: "code-help-common-api.yaml#/components/parameters/Page"
         - $ref: "code-help-common-api.yaml#/components/parameters/Size"
         - $ref: "code-help-common-api.yaml#/components/parameters/Sort"
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Bitweekly"
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: "code-help-common-api.yaml#/components/schemas/ContestStatus"
       responses:
         200:
           description: OK. All contests
@@ -347,12 +364,16 @@ components:
                 $ref: '#/components/schemas/Problem'
     Problem:
       type: object
-      required: [ id, title, difficulty, category ]
+      required: [ id, name, description, difficulty, category ]
       properties:
         id:
           $ref: "code-help-common-api.yaml#/components/schemas/Id"
-        title:
+        name:
           type: string
+          example: "Two sum"
+        description:
+          type: string
+          example: "Problem description"
         difficulty:
           $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
         category:
@@ -410,13 +431,16 @@ components:
               $ref: "code-help-common-api.yaml#/components/schemas/Id"
     ProblemRequest:
       type: object
-      required: [ title, category, difficulty, markdown, codes, testCases ]
+      required: [ name, description, category, difficulty, markdown, codes, testCases ]
       properties:
         category:
           $ref: '#/components/schemas/CategoryRequest'
-        title:
+        name:
           type: string
           example: 'Two sum'
+        description:
+          type: string
+          example: "Problem description"
         difficulty:
           $ref: "code-help-common-api.yaml#/components/schemas/Difficulty"
         markdown:
@@ -443,7 +467,7 @@ components:
                 $ref: '#/components/schemas/Contest'
     ContestRequest:
       type: object
-      required: [ name, duration, startsOn ]
+      required: [ name, description, duration, startDate ]
       properties:
         name:
           type: string
@@ -457,8 +481,8 @@ components:
           type: string
           format: duration
           example: 1h30m
-        startsOn:
-          $ref: "code-help-common-api.yaml#/components/schemas/Date"
+        startDate:
+          $ref: "code-help-common-api.yaml#/components/schemas/DateTime"
     ContestProblemEditRequest:
       type: object
       properties:
@@ -477,7 +501,7 @@ components:
                 $ref: "#/components/schemas/ContestProblemEditRequest"
     Contest:
       type: object
-      required: [ id, name, description, status, duration, startsOn ]
+      required: [ id, name, description, status, duration, startDate ]
       properties:
         id:
           $ref: "code-help-common-api.yaml#/components/schemas/Id"
@@ -493,8 +517,8 @@ components:
           type: string
           format: duration
           example: 1h30m
-        startsOn:
-          $ref: "code-help-common-api.yaml#/components/schemas/Date"
+        startDate:
+          $ref: "code-help-common-api.yaml#/components/schemas/DateTime"
     ContestDetail:
       allOf:
         - $ref: '#/components/schemas/Contest'
@@ -525,17 +549,23 @@ components:
             $ref: '#/components/schemas/Category'
     Category:
       type: object
-      required: [ id, name ]
+      required: [ id, name, description ]
       properties:
         id:
           $ref: "code-help-common-api.yaml#/components/schemas/Id"
         name:
           type: string
           example: 'Binary trees'
+        description:
+          type: string
+          example: "Category description"
     CategoryRequest:
       type: object
-      required: [ name ]
+      required: [ name, description ]
       properties:
         name:
           type: string
           example: 'Binary trees'
+        description:
+          type: string
+          example: "Category description"

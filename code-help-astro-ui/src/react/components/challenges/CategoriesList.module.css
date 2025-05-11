@@ -1,0 +1,18 @@
+.categories {
+    display: inline-flex;
+    gap: 0.5rem;
+}
+
+.category {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.category:hover {
+    background-color: var(--primary-color-dark);
+}

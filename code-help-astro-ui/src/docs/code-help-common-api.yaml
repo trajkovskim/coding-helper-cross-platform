@@ -50,10 +50,10 @@ components:
       type: string
       format: date
       example: '2022-05-16'
-    Timestamp:
+    DateTime:
       type: string
-      format: timestamp
-      example: '2022-05-16T00:00:00'
+      format: date-time
+      example: "2022-05-16T17:32:28Z"
     ErrorResponse:
       type: object
       description: Error response
@@ -73,7 +73,7 @@ components:
           type: integer
           example: 404
         timestamp:
-          $ref: "#/components/schemas/Timestamp"
+          $ref: "#/components/schemas/DateTime"
     CreatedResponse:
       type: object
       description: Self links response

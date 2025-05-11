@@ -34,18 +34,20 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
       if (!output.getMessage().equals(expectedOutput)) {
 
         return CodeRunnerDto.builder()
-            .message(
-                "Test case %d of %d failed\nOutput: %s\nExpected: %s"
-                    .formatted(i, testCases.size(), output.getMessage(), expectedOutput))
-            .error(output.isError())
-            .build();
+          .message(
+              "Test case %d of %d failed\nOutput: %s\nExpected: %s"
+                  .formatted(i, testCases.size(), output.getMessage(), expectedOutput))
+          .error(output.isError())
+          .testCasesPassed(i)
+          .build();
       }
       ++i;
     }
     return CodeRunnerDto.builder()
-        .message("All test cases passed! Well done!")
-        .error(false)
-        .build();
+      .message("All test cases passed! Well done!")
+      .error(false)
+      .testCasesPassed(testCases.size())
+      .build();
   }
 
   @Override

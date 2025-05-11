@@ -1,8 +1,13 @@
-import { CategoryApi, Configuration, ContestsApi, Difficulty, ProblemApi, SubmissionApi } from "../generated/core-api";
-
-const configuration = new Configuration({
-  basePath: "http://localhost/core",
-});
+import {
+  CategoryApi,
+  Configuration,
+  type ConfigurationParameters,
+  ContestsApi,
+  Difficulty,
+  ProblemApi,
+  SubmissionApi,
+  UserApi
+} from "../generated/core-api";
 
 type ProblemFilters = {
   title: string;
@@ -12,22 +17,26 @@ type ProblemFilters = {
 };
 
 type Pagination = {
-  page: number;
-  size: number;
-  sortBy: string[];
+  page?: number;
+  size?: number;
+  sortBy?: string[];
 };
 
-class CoreService {
+export default class CoreService {
   private categoryApi;
   private problemApi;
   private contestApi;
   private submissionApi;
+  private userApi;
 
-  constructor() {
+  constructor(configurationParameters: ConfigurationParameters) {
+    const configuration = new Configuration(configurationParameters);
+
     this.categoryApi = new CategoryApi(configuration);
     this.problemApi = new ProblemApi(configuration);
     this.contestApi = new ContestsApi(configuration);
     this.submissionApi = new SubmissionApi(configuration);
+    this.userApi = new UserApi(configuration);
   }
 
   getCategories() {
@@ -47,10 +56,14 @@ class CoreService {
   }
 
   getContest(id: number) {
-    return this.contestApi.getContestEntry({ id });
+    return this.contestApi.getContestEntry({ id, language: "javascript" });
   }
 
   getSubmissions(problemId: number) {
     return this.submissionApi.getSubmissions({ problemId });
+  }
+
+  getRankings() {
+    return this.userApi.getRankings();
   }
 }

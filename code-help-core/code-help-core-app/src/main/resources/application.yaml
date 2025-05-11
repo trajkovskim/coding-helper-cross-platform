@@ -2,6 +2,9 @@ server:
   port: 3000
 
 spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
   mvc:
     static-path-pattern: /public/**
     hiddenmethod:

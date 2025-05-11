@@ -1,0 +1,25 @@
+.grid-by-4 {
+  display: grid;
+  grid-template: 1fr / repeat(4, 1fr);
+  gap: 20px;
+}
+
+.grid-by-2 {
+  display: grid;
+  grid-template: 1fr / repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 992px) {
+  .grid-by-4 {
+    grid-template: 1fr / repeat(2, 1fr);
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .grid-by-4, .grid-by-2 {
+    grid-template: 1fr / 1fr;
+  }
+}

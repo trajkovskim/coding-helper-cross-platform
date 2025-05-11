@@ -4,13 +4,18 @@ import lombok.RequiredArgsConstructor;
 
 import mk.com.codehelp.core.api.factory.LinksFactory;
 import mk.com.codehelp.core.api.mappers.ProblemMapper;
-import mk.com.codehelp.core.domain.model.value.ProblemValue;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.rest.api.ProblemApi;
-import mk.com.codehelp.core.rest.model.*;
+import mk.com.codehelp.core.rest.model.Difficulty;
+import mk.com.codehelp.core.rest.model.PaginationLinks;
+import mk.com.codehelp.core.rest.model.ProblemEntry;
+import mk.com.codehelp.core.rest.model.ProblemEntryBase;
+import mk.com.codehelp.core.rest.model.ProblemsResponse;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
+import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
 import mk.com.codehelp.core.service.service.ProblemService;
+import mk.com.codehelp.core.service.util.AuthenticationUtil;
 import mk.com.codehelp.core.service.util.PageUtil;
 
 import org.springframework.data.domain.Pageable;
@@ -35,7 +40,7 @@ public class ProblemController implements ProblemApi {
       Integer page,
       Integer size,
       List<String> sortBy,
-      String title,
+      String name,
       List<String> categories,
       String likedBy,
       Difficulty difficulty) {
@@ -43,20 +48,21 @@ public class ProblemController implements ProblemApi {
     Pageable pageRequest = PageUtil.createPageRequest(page, size, sortBy);
 
     ProblemFilter problemFilter = new ProblemFilter();
-    problemFilter.setTitle(title);
+    problemFilter.setName(name);
     problemFilter.setCategories(categories);
     problemFilter.setLikedBy(likedBy);
     problemFilter.setDifficulty(problemMapper.convert(difficulty));
 
-    PageInfoDto<ProblemValue> problemsPage = problemService.findAll(problemFilter, pageRequest);
-    List<ProblemEntry> problems = problemMapper.convert(problemsPage.getItems());
+    String user = AuthenticationUtil.getUser();
+    PageInfoDto<ProblemDto> problemsPage = problemService.findAll(problemFilter, user, pageRequest);
 
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
         problemsPage,
         (pageNumber, pageSize) ->
             methodOn(ProblemController.class)
-                .getProblemEntries(pageNumber, pageSize, sortBy, title, categories, likedBy, difficulty));
+                .getProblemEntries(pageNumber, pageSize, sortBy, name, categories, likedBy, difficulty));
 
+    List<ProblemEntryBase> problems = problemMapper.convert(problemsPage.getItems());
     ProblemsResponse response = new ProblemsResponse()
         .problems(problems)
         .totalElements(problemsPage.getTotalElements())
@@ -69,11 +75,11 @@ public class ProblemController implements ProblemApi {
   }
 
   @Override
-  public ResponseEntity<ProblemEntryDetail> getProblemEntry(Long id, String language) {
+  public ResponseEntity<ProblemEntry> getProblemEntry(Long id, String language, String authorization) {
 
     ProblemDto problemDto = problemService.getProblem(id, language);
 
-    ProblemEntryDetail entry = problemMapper.convert(problemDto);
+    ProblemEntry entry = problemMapper.convert(problemDto);
 
     return ResponseEntity.ok(entry);
   }

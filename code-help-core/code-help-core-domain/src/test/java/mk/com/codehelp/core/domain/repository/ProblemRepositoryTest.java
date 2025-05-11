@@ -1,8 +1,8 @@
 package mk.com.codehelp.core.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,15 +19,18 @@ import org.springframework.test.context.ContextConfiguration;
 import mk.com.codehelp.core.domain.enums.Difficulty;
 import mk.com.codehelp.core.domain.model.Category;
 import mk.com.codehelp.core.domain.model.Problem;
+import mk.com.codehelp.core.domain.model.User;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.domain.model.value.ProblemValue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataNeo4jTest
 @ActiveProfiles("test")
 @ContextConfiguration(classes = RepositoryTestConfiguration.class)
-@Disabled
 public class ProblemRepositoryTest {
 
   @Autowired
@@ -40,6 +43,7 @@ public class ProblemRepositoryTest {
 
     Category category = new Category();
     category.setName(name);
+    category.setDescription("description");
 
     return categoryRepository.save(category);
   }
@@ -47,7 +51,7 @@ public class ProblemRepositoryTest {
   private Problem createProblem(Category category) {
 
     Problem problem = new Problem();
-    problem.setTitle("title");
+    problem.setName("title");
     problem.setCategory(category);
     problem.setDifficulty(Difficulty.EASY);
     problem.setMarkdown("MARKDOWN");
@@ -58,13 +62,19 @@ public class ProblemRepositoryTest {
     code.setLanguage("javascript");
     problem.setCodes(List.of(code));
 
+    Problem.TestCase testCase = new Problem.TestCase();
+    problem.setTestCases(List.of(testCase));
+
+    User user = new User("user");
+    problem.setLikedBy(List.of(user));
+
     return problem;
   }
 
   private static Stream<Arguments> shouldGetProblemsArguments() {
 
     ProblemFilter titleFilter = new ProblemFilter();
-    titleFilter.setTitle("title1");
+    titleFilter.setName("title1");
 
     ProblemFilter categoriesFilter = new ProblemFilter();
     categoriesFilter.setCategories(List.of("test"));
@@ -103,11 +113,12 @@ public class ProblemRepositoryTest {
     long totalElementsBefore = problemRepository.findAll(filter, pageable).getTotalElements();
 
     Problem problem1 = createProblem(category);
-    problem1.setTitle("title123");
+    problem1.setName("title123");
     problemRepository.save(problem1);
 
     Problem problem2 = createProblem(category);
-    problem2.setLikedBy(List.of("test"));
+    User user = new User("test");
+    problem2.setLikedBy(List.of(user));
     problemRepository.save(problem2);
 
     Problem problem3 = createProblem(category);
@@ -119,6 +130,30 @@ public class ProblemRepositoryTest {
 
     // Then
     assertEquals(expectedTotal + totalElementsBefore, problemValuePage.getTotalElements());
+    assertFalse(problemValuePage.getContent().get(0).getTestCases().isEmpty());
+  }
+
+  @Test
+  void shouldFindProblemById() {
+
+    // Given
+    Category category = saveCategory("test");
+
+    Problem problem = createProblem(category);
+    problemRepository.save(problem);
+
+    // When
+    Optional<ProblemValue> problemById = problemRepository.findProblemById(problem.getId());
+
+    // Then
+    assertTrue(problemById.isPresent());
+    assertEquals(problemById.get().getCategory().getName(), category.getName());
+    assertEquals(problemById.get().getTestCases().size(), problem.getTestCases().size());
+    assertEquals(problemById.get().getName(), problem.getName());
+    assertEquals(problemById.get().getDescription(), problem.getDescription());
+    assertEquals(problemById.get().getDifficulty(), problem.getDifficulty());
+    assertEquals(problemById.get().getMarkdown(), problem.getMarkdown());
+    assertEquals(problemById.get().getLikes(), problem.getLikedBy().size());
   }
 
   @Test
@@ -129,7 +164,7 @@ public class ProblemRepositoryTest {
     categoryRepository.save(category);
 
     Problem problem = new Problem();
-    problem.setTitle("title");
+    problem.setName("title");
     problem.setCategory(category);
     problem.setDifficulty(Difficulty.EASY);
     problem.setMarkdown("MARKDOWN");

@@ -1,27 +1,65 @@
 package mk.com.codehelp.core.api.controller;
 
+import java.util.Collection;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
+import mk.com.codehelp.core.api.factory.LinksFactory;
 import mk.com.codehelp.core.api.mappers.UserMapper;
+import mk.com.codehelp.core.rest.model.PaginationLinks;
+import mk.com.codehelp.core.rest.model.UserRankingsResponse;
+import mk.com.codehelp.core.service.dto.PageInfoDto;
+import mk.com.codehelp.core.service.dto.UserRankingDto;
 import mk.com.codehelp.core.service.dto.UserStatisticsDto;
 import mk.com.codehelp.core.rest.api.UserApi;
 import mk.com.codehelp.core.rest.model.UserStatistics;
 import mk.com.codehelp.core.service.service.UserService;
+import mk.com.codehelp.core.service.util.AuthenticationUtil;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController implements UserApi {
 
   private final UserService userService;
-  private final UserMapper userConverter;
+  private final UserMapper userMapper;
+
+  private final LinksFactory linksFactory;
 
   @Override
-  public ResponseEntity<UserStatistics> getStatistics(String authorization) {
-    String name = SecurityContextHolder.getContext().getAuthentication().getName();
+  public ResponseEntity<UserRankingsResponse> getRankings(Integer page, Integer size, String authorization) {
+
+    String user = AuthenticationUtil.getUser();
+
+    PageInfoDto<UserRankingDto> rankingsPage = userService.getRankings(user, page, size);
+    PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
+      rankingsPage,
+      (pageNumber, pageSize) -> methodOn(UserController.class).getRankings(pageNumber, pageSize, authorization));
+
+    UserRankingsResponse userRankingsResponse = new UserRankingsResponse()
+      .rankings(userMapper.convert(rankingsPage.getItems()))
+      .totalPages(rankingsPage.getTotalPages())
+      .totalElements(rankingsPage.getTotalElements())
+      .pageNumber(rankingsPage.getPageNumber())
+      .pageSize(rankingsPage.getPageSize())
+      .links(paginationLinks);
+
+    return ResponseEntity.ok(userRankingsResponse);
+  }
+
+  @Override
+  public ResponseEntity<UserStatistics> getStatistics(String authorization, String user) {
+
+    String name = user != null ? user : AuthenticationUtil.getUser();
+
     UserStatisticsDto userStatistics = userService.getStatistics(name);
-    UserStatistics entry = userConverter.convert(userStatistics);
+    UserStatistics entry = userMapper.convert(userStatistics);
+
     return ResponseEntity.ok(entry);
   }
 }

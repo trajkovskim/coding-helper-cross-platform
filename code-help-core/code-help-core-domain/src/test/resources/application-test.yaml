@@ -6,3 +6,7 @@ spring:
     uri: bolt://localhost:7687
   jpa:
     show-sql: true
+
+logging:
+  level:
+    org.springframework.data.neo4j: DEBUG
