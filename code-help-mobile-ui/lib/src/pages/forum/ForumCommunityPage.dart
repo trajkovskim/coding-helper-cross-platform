@@ -13,7 +13,7 @@ class CommunityPageArguments {
 }
 
 class ForumCommunityPage extends StatefulWidget {
-  const ForumCommunityPage({Key? key}) : super(key: key);
+  const ForumCommunityPage({super.key});
 
   static const String routeName = "/community";
 
@@ -157,7 +157,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                               children: [
                                                 CommunityJoinButton(
                                                   communityName: snapshot.data!.name,
-                                                  isJoined: snapshot.data!.joined!,
+                                                  isJoined: snapshot.data!.joined,
                                                 ),
                                                 SizedBox.fromSize(size: const Size(2, 0)),
                                                 CommunityDeleteButton(
@@ -274,7 +274,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
 }
 
 class CommunityJoinButton extends StatefulWidget {
-  CommunityJoinButton({Key? key, required this.communityName, this.isJoined = false}) : super(key: key);
+  CommunityJoinButton({super.key, required this.communityName, this.isJoined = false});
 
   final String communityName;
   final bool isJoined;
@@ -285,7 +285,7 @@ class CommunityJoinButton extends StatefulWidget {
 }
 
 class CommunityDeleteButton extends StatelessWidget {
-  const CommunityDeleteButton({Key? key, this.onTap, required this.community}) : super(key: key);
+  const CommunityDeleteButton({super.key, this.onTap, required this.community});
 
   final Function()? onTap;
   final Community community;

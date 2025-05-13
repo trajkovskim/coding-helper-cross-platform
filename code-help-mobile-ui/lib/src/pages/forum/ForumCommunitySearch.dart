@@ -10,7 +10,7 @@ import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 
 class ForumCommunitySearchPage extends StatefulWidget {
-  const ForumCommunitySearchPage({Key? key}) : super(key: key);
+  const ForumCommunitySearchPage({super.key});
 
   static const String routeName = "/community-search";
 
@@ -143,7 +143,7 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
 }
 
 class ViewList extends StatelessWidget {
-  const ViewList({Key? key, required this.view, required this.communities}) : super(key: key);
+  const ViewList({super.key, required this.view, required this.communities});
 
   final ViewProfile view;
   final ShortCommunities communities;
@@ -194,7 +194,7 @@ class ViewList extends StatelessWidget {
 }
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
-  SearchAppBar({Key? key, required this.title, this.onSearch}) : super(key: key);
+  SearchAppBar({super.key, required this.title, this.onSearch});
   final String title;
   final Function(String term)? onSearch;
 
@@ -256,7 +256,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
 }
 
 class TagChip extends StatelessWidget {
-  const TagChip({Key? key, required this.category}) : super(key: key);
+  const TagChip({super.key, required this.category});
 
   final Category category;
 

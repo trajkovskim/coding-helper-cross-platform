@@ -52,6 +52,7 @@ public class ProblemRepositoryTest {
 
     Problem problem = new Problem();
     problem.setName("title");
+    problem.setDescription("description");
     problem.setCategory(category);
     problem.setDifficulty(Difficulty.EASY);
     problem.setMarkdown("MARKDOWN");

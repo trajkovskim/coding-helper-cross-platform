@@ -17,9 +17,9 @@ class ProblemsService {
         .then((response) => response.data!.problems.toList());
   }
 
-  Future<ProblemEntry> getProblemEntry(int id) {
+  Future<ProblemEntry> getProblemEntry(int id, String language) {
     return PROBLEMS_API
-        .getProblemEntry(id: id, language: '')
+        .getProblemEntry(id: id, language: language)
         .then((response) => response.data!);
   }
 

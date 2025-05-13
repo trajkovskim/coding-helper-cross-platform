@@ -1,3 +1,3 @@
 // exports
 
-export './shared.dart';
+export 'shared.dart';

@@ -87,6 +87,5 @@ class _ModalState extends State<Modal> {
         ),
       ],
     );
-    ;
   }
 }

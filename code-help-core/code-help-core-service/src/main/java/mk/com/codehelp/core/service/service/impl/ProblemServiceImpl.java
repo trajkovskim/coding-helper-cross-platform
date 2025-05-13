@@ -94,6 +94,7 @@ public class ProblemServiceImpl implements ProblemService {
     ProblemDto.ProblemDtoBuilder<?, ?> builder = ProblemDto.builder()
       .id(id)
       .name(problemValue.getName())
+      .description(problemValue.getDescription())
       .difficulty(problemValue.getDifficulty())
       .markdown(problemValue.getMarkdown())
       .category(problemValue.getCategory())
@@ -143,10 +144,11 @@ public class ProblemServiceImpl implements ProblemService {
     Category category = categoryService.findByName(problemInput.getCategory().getName());
 
     Problem oldProblem = this.findById(id);
+    oldProblem.setName(problemInput.getName());
+    oldProblem.setDescription(problemInput.getDescription());
     oldProblem.setDifficulty(problemInput.getDifficulty());
     oldProblem.setCategory(category);
     oldProblem.setMarkdown(problemInput.getMarkdown());
-    oldProblem.setName(problemInput.getName());
     oldProblem.setDescription(problemInput.getDescription());
     oldProblem.setCodes(problemInput.getCodes());
     oldProblem.setTestCases(oldProblem.getTestCases());

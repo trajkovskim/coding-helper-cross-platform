@@ -68,11 +68,12 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
     final id = int.parse(idParam);
     return FutureBuilder(
         future: Future.wait([
-          problemsService.getProblemEntry(id),
+          problemsService.getProblemEntry(id, selectedLanguage),
           submissionsService.getSubmissionEntries(id),
         ]),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            print(snapshot.error);
             throw ErrorCode.PROBLEM_OVERVIEW;
           }
 

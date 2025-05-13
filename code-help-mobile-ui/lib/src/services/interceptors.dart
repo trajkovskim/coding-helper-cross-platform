@@ -52,6 +52,7 @@ class BearerInterceptor extends Interceptor {
       final user = Credential.fromJson(userJson);
       final tokenResponse = await user.getTokenResponse(true);
       await storage.setString(tokenKey, tokenResponse.accessToken!);
+      print(err);
       _setAuthorizationHeader(err.requestOptions, tokenResponse.accessToken);
 
       final response = await dio.fetch(err.requestOptions);
@@ -66,8 +67,8 @@ class BearerInterceptor extends Interceptor {
 }
 
 class UserTokenData {
-  var _hasToken = false;
-  String? _username;
+  final _hasToken;
+  final String? _username;
 
   UserTokenData(this._username, this._hasToken);
 
@@ -139,6 +140,8 @@ class UserToken {
   }
 
   static _notify(UserTokenData newData) {
-    _subscribers.forEach((handlers) => handlers(newData));
+    for (var handlers in _subscribers) {
+      handlers(newData);
+    }
   }
 }

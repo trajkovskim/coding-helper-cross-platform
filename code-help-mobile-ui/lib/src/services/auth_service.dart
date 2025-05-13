@@ -12,6 +12,7 @@ class AuthService {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
+      print(await canLaunchUrl(uri));
       throw 'Could not launch $uri';
     }
   }
@@ -20,6 +21,7 @@ class AuthService {
     final uri = Uri.parse(ISSUER_URI);
     final issuer = await Issuer.discover(uri);
     final client = Client(issuer, CLIENT_ID);
+    print(issuer.metadata.issuer);
 
     final authenticator = Authenticator(
       client,

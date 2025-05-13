@@ -28,7 +28,7 @@ enum Language {
 final ACCENT_COLORS = ['purple', 'blue', 'red'];
 final APPLICATION_LANGUAGES = ['en', 'de', 'mk'];
 final THEMES = ['light', 'dark', 'system'];
-final DEFAULT_LANGUAGES = ['java', 'javascript'];
+final DEFAULT_LANGUAGES = ['javascript', 'java'];
 
 class UserData {
   String? username;

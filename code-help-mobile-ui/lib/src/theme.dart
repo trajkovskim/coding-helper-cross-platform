@@ -15,7 +15,7 @@ defaultShadow(double radius) {
 }
 
 class ShadowContainer extends StatelessWidget {
-  const ShadowContainer({Key? key, required this.radius, this.child}) : super(key: key);
+  const ShadowContainer({super.key, required this.radius, this.child});
 
   final double radius;
   final Widget? child;

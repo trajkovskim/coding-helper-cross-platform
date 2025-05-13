@@ -198,7 +198,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                                 onTap: () {
                                   codeController.text = submission.code;
                                   DefaultTabController.of(context)
-                                      ?.animateTo(1);
+                                      .animateTo(1);
                                 },
                               ),
                             )

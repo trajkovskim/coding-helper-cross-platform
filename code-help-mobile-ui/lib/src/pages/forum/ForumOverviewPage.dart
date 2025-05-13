@@ -7,7 +7,7 @@ import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 
 class ForumOverviewPage extends StatelessWidget {
-  ForumOverviewPage({Key? key}) : super(key: key);
+  ForumOverviewPage({super.key});
 
   final postService = PostService.getInstance();
 
@@ -52,7 +52,7 @@ class ForumOverviewPage extends StatelessWidget {
             );
           }
           return PaddedList<ShortPost>(
-            items: snapshot.data?.posts?.toList() ?? [],
+            items: snapshot.data?.posts.toList() ?? [],
             builder: (context, item) => ForumPostCard(
               post: item,
               tapDelete: () => handlePostDelete(context, item.uid),
@@ -66,12 +66,12 @@ class ForumOverviewPage extends StatelessWidget {
 
 class PaddedWidgetList extends StatelessWidget {
   const PaddedWidgetList({
-    Key? key,
+    super.key,
     required this.children,
     this.spacing = 15,
     this.padding = const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
     this.controller,
-  }) : super(key: key);
+  });
 
   final List<Widget> children;
   final double spacing;
@@ -92,13 +92,13 @@ class PaddedWidgetList extends StatelessWidget {
 
 class PaddedList<T> extends StatelessWidget {
   const PaddedList({
-    Key? key,
+    super.key,
     required this.items,
     required this.builder,
     this.spacing = 15,
     this.padding = const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
     this.controller,
-  }) : super(key: key);
+  });
 
   final List<T> items;
   final Widget Function(BuildContext context, T item) builder;
@@ -122,7 +122,7 @@ class PaddedList<T> extends StatelessWidget {
 }
 
 class ForumPostCard extends StatelessWidget {
-  const ForumPostCard({Key? key, required this.post, this.tapDelete}) : super(key: key);
+  const ForumPostCard({super.key, required this.post, this.tapDelete});
 
   final ShortPost post;
   final Function()? tapDelete;
@@ -147,11 +147,10 @@ class ForumPostCard extends StatelessWidget {
 
 class ForumCard extends StatelessWidget {
   const ForumCard(
-      {Key? key,
+      {super.key,
       this.onTap,
       required this.child,
-      this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 10)})
-      : super(key: key);
+      this.padding = const EdgeInsets.symmetric(horizontal: 15, vertical: 10)});
 
   final Function()? onTap;
   final EdgeInsets padding;
@@ -194,8 +193,7 @@ class ForumCard extends StatelessWidget {
 
 class ForumCardPostData extends StatelessWidget {
   const ForumCardPostData(
-      {Key? key, required this.title, required this.content, required this.username, this.tapDelete})
-      : super(key: key);
+      {super.key, required this.title, required this.content, required this.username, this.tapDelete});
 
   final String title;
   final String content;

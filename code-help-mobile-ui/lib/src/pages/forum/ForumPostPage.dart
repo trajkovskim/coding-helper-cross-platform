@@ -14,7 +14,7 @@ class PostPageArguments {
 }
 
 class ForumPostPage extends StatefulWidget {
-  const ForumPostPage({Key? key}) : super(key: key);
+  const ForumPostPage({super.key});
 
   static const routeName = "/post";
 
@@ -152,8 +152,7 @@ class _ForumPostPageState extends State<ForumPostPage> {
 
 class ForumCardCommentData extends StatelessWidget {
   const ForumCardCommentData(
-      {Key? key, required this.comment, this.onTap, required this.onReply, required this.onDelete})
-      : super(key: key);
+      {super.key, required this.comment, this.onTap, required this.onReply, required this.onDelete});
 
   final Comment comment;
 
@@ -260,14 +259,14 @@ class ForumCardCommentData extends StatelessWidget {
 
 class CommentWithReplies extends StatefulWidget {
   CommentWithReplies({
-    Key? key,
+    super.key,
     this.scrollController,
     required this.comment,
     this.level = 1,
     this.replies = false,
     required this.onReply,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   final ScrollController? scrollController;
   final Comment comment;

@@ -8,9 +8,9 @@ ENV JAVA_PROPERTIES ''
 
 WORKDIR /code-help
 
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt install -y nodejs
+RUN apt update -y && \
+    apt upgrade -y && \
+    apt install -y nodejs
 
 COPY $JAR_PATH core-app.jar
 

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:coding_helper_cross_platform/src/pages/error.dart';
 import 'package:coding_helper_cross_platform/src/routes.dart';
@@ -39,7 +38,7 @@ class _CodingHelperLayoutState extends State<CodingHelperLayout> {
   List<String> actualRoutes = [];
   bool hasToken = false;
 
-  Function()? unsub = null;
+  Function()? unsub;
 
   @override
   void initState() {

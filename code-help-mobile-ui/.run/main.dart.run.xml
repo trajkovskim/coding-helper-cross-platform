@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define CODING_HELPER_API_URL=http://10.0.2.2:3000 --dart-define CODING_HELPER_FORUM_API_URL=http://localhost:3001" />
-    <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+    <option name="additionalArgs" value="--dart-define AUTH_ISSUER_URL=http://10.0.2.2/iam/realms/code-help --dart-define CODING_HELPER_API_URL=http://10.0.2.2:3000 --dart-define CODING_HELPER_FORUM_API_URL=http://10.0.2.2:3001" />
+    <option name="filePath" value="$PROJECT_DIR$/code-help-mobile-ui/lib/main.dart" />
     <method v="2" />
   </configuration>
 </component>

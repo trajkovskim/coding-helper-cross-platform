@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -27,11 +29,9 @@ migrate_working_dir/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.packages
 .pub-cache/
 .pub/
 /build/
-.flutter
 
 # Symbolication related
 app.*.symbols
@@ -43,15 +43,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Apis
-api/*
-!api/*
-api/*/*
-!api/*/pubspec.yaml
-!api/*/pubspec.lock
-!api/*/.gitignore
-
-
-# other
-.fvm

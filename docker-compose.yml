@@ -8,7 +8,7 @@ services:
       - 80:80
       - 433:433
     depends_on:
-      - code-help-astro-ui
+#      - code-help-astro-ui
       - code-help-admin-proxy
       - code-help-admin-ui
       - code-help-core
@@ -27,22 +27,22 @@ services:
       - start-dev
       - --http-relative-path=/iam
       - --proxy=edge
-      - --hostname-url=http://localhost/iam
-      - --hostname-admin-url=http://localhost/iam
+      - --hostname-url=http://10.0.2.2/iam
+      - --hostname-admin-url=http://10.0.2.2/iam
       - --import-realm
     volumes:
       - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
-  code-help-astro-ui:
-    image: code-help-astro-ui
-    container_name: code-help-astro-ui
-    build:
-      context: code-help-astro-ui
-      dockerfile: Dockerfile
-    environment:
-      - PUBLIC_CORE_API=http://localhost/core/api
-      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
-    ports:
-      - 4321:4321
+#  code-help-astro-ui:
+#    image: code-help-astro-ui
+#    container_name: code-help-astro-ui
+#    build:
+#      context: code-help-astro-ui
+#      dockerfile: Dockerfile
+#    environment:
+#      - PUBLIC_CORE_API=http://localhost/core/api
+#      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
+#    ports:
+#      - 4321:4321
   code-help-admin-proxy:
     image: code-help-admin-proxy
     container_name: code-help-admin-proxy
@@ -77,6 +77,8 @@ services:
       context: code-help-core
       args:
         - VERSION=0.0.1-SNAPSHOT
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://10.0.2.2/iam/realms/code-help
     ports:
       - 3000:3000
     depends_on:
@@ -88,6 +90,8 @@ services:
       context: code-help-forum
       args:
         - VERSION=0.0.1-SNAPSHOT
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://10.0.2.2/iam/realms/code-help
     ports:
       - 3001:3001
     depends_on:

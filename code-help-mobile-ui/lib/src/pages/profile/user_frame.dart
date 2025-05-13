@@ -10,9 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../context/index.dart';
 import '../../i18n/i18n.dart';
 
-const String DEFAULT_IMAGE_URL = 'https://media.istockphoto.com/id/1300845620' +
-    '/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.webp' +
-    '?s=612x612&w=is&k=20&c=PJjJWl0njGyow3AefY7KVNuhkbw5r2skqFiCFM5kyic=';
+const String DEFAULT_IMAGE_URL = 'https://media.istockphoto.com/id/1300845620' '/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.webp' '?s=612x612&w=is&k=20&c=PJjJWl0njGyow3AefY7KVNuhkbw5r2skqFiCFM5kyic=';
 
 class UserFrame extends StatelessWidget {
   final authService = const AuthService();

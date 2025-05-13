@@ -10,12 +10,11 @@ enum ViewProfile {
 
 class SearchSettingsRow extends StatelessWidget {
   SearchSettingsRow(
-      {Key? key,
+      {super.key,
       required this.handleFilterSubmit,
       required this.handleSortSubmit,
       required this.handleViewModeChange,
-      this.viewMode = ViewProfile.LIST})
-      : super(key: key);
+      this.viewMode = ViewProfile.LIST});
 
   final Function(List<String>) handleFilterSubmit;
   final Function(List<String>) handleSortSubmit;

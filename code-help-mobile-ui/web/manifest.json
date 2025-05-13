@@ -1,6 +1,6 @@
 {
-    "name": "coding_helper_cross_platform",
-    "short_name": "coding_helper_cross_platform",
+    "name": "app",
+    "short_name": "app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

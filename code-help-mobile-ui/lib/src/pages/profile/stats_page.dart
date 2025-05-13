@@ -95,7 +95,7 @@ class StatsPage extends StatelessWidget {
                           ),
                         ),
                       )
-                      .toList()
+                      
                 ],
               ),
             ),
