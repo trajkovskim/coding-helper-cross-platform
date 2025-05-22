@@ -27,7 +27,7 @@ public interface ProblemService {
 
   Problem update(Long id, Problem problem);
 
-  boolean likeToggle(Long id, String email);
+  boolean likeToggle(Long id);
 
   boolean isLikedBy(Long problemId, String email);
 }

@@ -13,7 +13,6 @@ import mk.com.codehelp.core.rest.model.ProblemEntryBase;
 import mk.com.codehelp.core.rest.model.ProblemsResponse;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
-import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.util.AuthenticationUtil;
 import mk.com.codehelp.core.service.util.PageUtil;
@@ -35,6 +34,7 @@ public class ProblemController implements ProblemApi {
   private final ProblemMapper problemMapper;
   private final LinksFactory linksFactory;
 
+  private final AuthenticationUtil authenticationUtil;
   @Override
   public ResponseEntity<ProblemsResponse> getProblemEntries(
       Integer page,
@@ -53,7 +53,7 @@ public class ProblemController implements ProblemApi {
     problemFilter.setLikedBy(likedBy);
     problemFilter.setDifficulty(problemMapper.convert(difficulty));
 
-    String user = AuthenticationUtil.getUser();
+    String user = authenticationUtil.getUserId();
     PageInfoDto<ProblemDto> problemsPage = problemService.findAll(problemFilter, user, pageRequest);
 
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
@@ -89,7 +89,7 @@ public class ProblemController implements ProblemApi {
 
     String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    problemService.likeToggle(id, user);
+    problemService.likeToggle(id);
 
     return ResponseEntity.noContent().build();
   }

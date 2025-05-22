@@ -49,7 +49,7 @@ public class SubmissionRepositoryTest {
     // Then
     assertNotNull(saved.getId());
     assertNotNull(saved.getCreatedDate());
-    assertEquals("user", saved.getUser().getUsername());
+    assertEquals("user", saved.getUser().getUserId());
     assertEquals(SubmissionStatus.ACCEPTED, saved.getStatus());
   }
 

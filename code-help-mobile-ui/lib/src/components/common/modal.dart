@@ -24,6 +24,11 @@ class _ModalState extends State<Modal> {
 
     final t = getTranslation(context, 'modal');
 
+    final options = widget.options.map((key, value) => MapEntry(key, ['-', ...value]));
+    widget.options.forEach((key, value) {
+      values.putIfAbsent(key, () => '-');
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -32,14 +37,14 @@ class _ModalState extends State<Modal> {
             mainAxisSize: MainAxisSize.min,
             children: values.entries
                 .map((entry) => Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(entry.key),
                           Dropdown(
                             value: entry.value,
-                            items: widget.options[entry.key]!
+                            items: options[entry.key]!
                                 .map((value) => DropdownItem(value, value))
                                 .toList(),
                             onChange: (value) => setState(() {
@@ -53,22 +58,6 @@ class _ModalState extends State<Modal> {
           ),
         ),
         const Spacer(),
-        showOptionsDropdown
-            ? Dropdown(
-                items: widget.options.keys
-                    .map((option) => DropdownItem(option, option))
-                    .toList(),
-                onChange: (value) => setState(() {
-                  values.putIfAbsent(value!, () => null);
-                  showOptionsDropdown = false;
-                }),
-              )
-            : IconButton(
-                onPressed: () => setState(() {
-                  showOptionsDropdown = true;
-                }),
-                icon: const Icon(Icons.add),
-              ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -78,13 +67,14 @@ class _ModalState extends State<Modal> {
             ),
             ElevatedButton(
               onPressed: () {
-                values.removeWhere((key, value) => value == null);
+                values.removeWhere((key, value) => value == null || value == '-');
                 navigator.pop(values);
               },
               child: Text(widget.submitButton),
             )
           ],
         ),
+        SizedBox(height: 10)
       ],
     );
   }

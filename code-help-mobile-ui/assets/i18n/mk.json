@@ -40,6 +40,7 @@
     },
     "home": {
       "title": "Дома",
+      "explore": "Explore",
       "activeContests": "Започнати натпревари",
       "top10Problems": "Топ 10 рангирани проблеми"
     },
@@ -80,6 +81,8 @@
       "status": "Статус"
     },
     "forum": {
+      "communities": "Заедници",
+      "recentPosts": "Recent posts",
       "title": "Форум",
       "comment": {
         "edited": "Променето"

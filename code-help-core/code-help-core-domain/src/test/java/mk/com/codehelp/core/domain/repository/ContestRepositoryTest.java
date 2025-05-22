@@ -37,9 +37,15 @@ public class ContestRepositoryTest {
   @Autowired
   private ContestRepository contestRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   private Contest createContest() {
 
-    User user = new User("test");
+    User user = new User();
+    user.setUsername("user");
+    user.setUserId("347239-2345-2435");
+    userRepository.save(user);
 
     Contest contest = new Contest();
     contest.setName("title");

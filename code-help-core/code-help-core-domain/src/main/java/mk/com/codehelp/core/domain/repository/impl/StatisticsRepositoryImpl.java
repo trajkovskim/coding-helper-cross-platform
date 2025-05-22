@@ -63,7 +63,7 @@ public class StatisticsRepositoryImpl implements StatisticsRepository {
   private UserRankingValue map(Record record) {
 
     User user = new User();
-    user.setUsername(record.get("user").get("username").asString());
+    user.setUserId(record.get("user").get("userId").asString());
 
     return new UserRankingValue(
       user,

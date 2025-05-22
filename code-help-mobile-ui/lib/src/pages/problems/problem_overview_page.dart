@@ -2,6 +2,7 @@ import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/text.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_like_button.dart';
 import 'package:coding_helper_cross_platform/src/theme.dart';
+import 'package:coding_helper_cross_platform/src/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,10 +42,10 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
   void handleTapStart(ProblemEntry entry) {
     final navigator = Navigator.of(context);
-    navigator.pushNamed('/problem-arena', arguments: {
-      'problem': entry,
-      'language': selectedLanguage,
-    });
+    navigator.pushNamed(
+      '/problem-arena',
+      arguments: {'problem': entry, 'language': selectedLanguage},
+    );
   }
 
   void handleChangeLanguage(String? language) {
@@ -67,37 +68,40 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
 
     final id = int.parse(idParam);
     return FutureBuilder(
-        future: Future.wait([
-          problemsService.getProblemEntry(id, selectedLanguage),
-          submissionsService.getSubmissionEntries(id),
-        ]),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-            throw ErrorCode.PROBLEM_OVERVIEW;
-          }
+      future: Future.wait([
+        problemsService.getProblemEntry(id, selectedLanguage),
+        submissionsService.getSubmissionEntries(id),
+      ]),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          throw ErrorCode.PROBLEM_OVERVIEW;
+        }
 
-          if (!snapshot.hasData) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text(''),
-              ),
-              body: const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            );
-          }
-
-          final entry = snapshot.data![0] as ProblemEntry;
-          final entries = snapshot.data![1] as List<SubmissionEntry>;
-          final navigator = Navigator.of(context);
-
+        if (!snapshot.hasData) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(entry.name),
-              actions: [ProblemLikeButton(id: idParam)],
-            ),
-            body: LayoutBuilder(builder: (context, constraints) {
+            appBar: AppBar(title: const Text('')),
+            body: const Center(child: CircularProgressIndicator.adaptive()),
+          );
+        }
+
+        final entry = snapshot.data![0] as ProblemEntry;
+        final entries = snapshot.data![1] as List<SubmissionEntry>;
+        final navigator = Navigator.of(context);
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(entry.name),
+            actions: [
+              Row(
+                children: [
+                  Text(entry.likes.toString()),
+                  ProblemLikeButton(id: idParam),
+                ],
+              ),
+            ],
+          ),
+          body: LayoutBuilder(
+            builder: (context, constraints) {
               if (!snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator.adaptive(),
@@ -120,7 +124,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                           child: Card(
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             shadowColor: Colors.black.withOpacity(0.65),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
@@ -145,12 +150,21 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              '${t('difficulty')} ${entry.difficulty.name.toLowerCase()}'),
-                                          Text('${t('duration')} ${'1h30m'}'),
-                                          Text('${t('participants')} ${0}'),
-                                          Text('${t('reviews')} ${0}'),
+                                            entry.difficulty.name.toUpperCase(),
+                                            style: TextStyle(
+                                              color: getDifficultyColor(entry.difficulty),
+                                            ),
+                                          ),
+                                          Text(
+                                            getSubmissionStatusText(entry),
+                                            style: TextStyle(
+                                              color:
+                                                  getSubmissionStatusColor(entry),
+                                            ),
+                                          ),
+                                          Text(entry.category.name),
                                         ],
-                                      )
+                                      ),
                                     ],
                                   ),
                                   Text(
@@ -166,26 +180,28 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                     children: [
                                       Dropdown(
                                         value: selectedLanguage,
-                                        items: CodeEditor.EDITOR_LANGUAGES.keys
-                                            .map(
-                                              (language) => DropdownItem(
-                                                language,
-                                                language,
-                                              ),
-                                            )
-                                            .toList(),
+                                        items:
+                                            CodeEditor.EDITOR_LANGUAGES.keys
+                                                .map(
+                                                  (language) => DropdownItem(
+                                                    language,
+                                                    language,
+                                                  ),
+                                                )
+                                                .toList(),
                                         onChange: handleChangeLanguage,
                                       ),
                                       ElevatedButton(
                                         onPressed: () => handleTapStart(entry),
                                         style: ElevatedButton.styleFrom(
-                                          shadowColor:
-                                              Colors.black.withOpacity(0.25),
+                                          shadowColor: Colors.black.withOpacity(
+                                            0.25,
+                                          ),
                                         ),
                                         child: Text(t('start')),
-                                      )
+                                      ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -198,11 +214,14 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                         child: Card(
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           shadowColor: Colors.black.withOpacity(0.5),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 10),
+                              vertical: 15,
+                              horizontal: 10,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -214,9 +233,10 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                   ),
                                 ),
                                 SizedBox.fromSize(
-                                    size: const Size.fromHeight(5)),
+                                  size: const Size.fromHeight(5),
+                                ),
                                 CustomText(
-                                  entry.markdown ?? t('noDescription'),
+                                  entry.description ?? t('noDescription'),
                                   maxLength: 100,
                                 ),
                               ],
@@ -226,30 +246,35 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                       ),
                       SizedBox.fromSize(size: const Size.fromHeight(10)),
                       VerticalListView(
-                        children: entries
-                            .map((submission) => ListItem(
-                                  title: '${t('attempt')} ${submission.id}',
-                                  subtitle:
-                                      '${t('status')} ${submission.status.name}',
-                                  onTap: () {
-                                    navigator.pushNamed(
-                                      '/problem-arena',
-                                      arguments: {
-                                        'language': submission.language,
-                                        'problem': entry,
-                                        'code': submission.code
-                                      },
-                                    );
-                                  },
-                                ))
-                            .toList(),
+                        children:
+                            entries
+                                .map(
+                                  (submission) => ListItem(
+                                    title: '${t('attempt')} ${submission.id}',
+                                    subtitle:
+                                        '${t('status')} ${submission.status.name}',
+                                    onTap: () {
+                                      navigator.pushNamed(
+                                        '/problem-arena',
+                                        arguments: {
+                                          'language': submission.language,
+                                          'problem': entry,
+                                          'code': submission.code,
+                                        },
+                                      );
+                                    },
+                                  ),
+                                )
+                                .toList(),
                       ),
                     ],
                   ),
                 ),
               );
-            }),
-          );
-        });
+            },
+          ),
+        );
+      },
+    );
   }
 }

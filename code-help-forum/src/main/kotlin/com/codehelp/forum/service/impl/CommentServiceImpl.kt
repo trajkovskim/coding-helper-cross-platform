@@ -27,7 +27,7 @@ class CommentServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getPostComments(postUid: String, pageable: Pageable): PageInfoDto<Comment> {
-        val commentsPage = commentRepository.findAllByPostUid(UUID.fromString(postUid), pageable)
+        val commentsPage = commentRepository.findAllByPostUidAndParentIsNull(UUID.fromString(postUid), pageable)
 
         return PageInfoDto<Comment>().apply {
             totalElements = commentsPage.totalElements

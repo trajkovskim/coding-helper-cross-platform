@@ -11,14 +11,18 @@ enum ViewProfile {
 class SearchSettingsRow extends StatelessWidget {
   SearchSettingsRow(
       {super.key,
-      required this.handleFilterSubmit,
-      required this.handleSortSubmit,
-      required this.handleViewModeChange,
+      this.filterOptions,
+      this.sortOptions,
+      this.handleFilterSubmit,
+      this.handleSortSubmit,
+      this.handleViewModeChange,
       this.viewMode = ViewProfile.LIST});
 
-  final Function(List<String>) handleFilterSubmit;
-  final Function(List<String>) handleSortSubmit;
-  final Function(ViewProfile view) handleViewModeChange;
+  final Map<String, List<String>>? filterOptions;
+  final Map<String, List<String>>? sortOptions;
+  final Function(List<String>)? handleFilterSubmit;
+  final Function(List<String>)? handleSortSubmit;
+  final Function(ViewProfile view)? handleViewModeChange;
 
   ViewProfile viewMode;
 
@@ -42,9 +46,9 @@ class SearchSettingsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Expanded(
+        if(filterOptions != null && handleFilterSubmit != null) Expanded(
           child: ElevatedButton.icon(
-            onPressed: () => createFilterModal(context, handleFilterSubmit),
+            onPressed: () => createFilterModal(context, handleFilterSubmit!, filterOptions!),
             icon: const Icon(Icons.filter_alt),
             label: Text(tListOptions('filters'),
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -53,9 +57,9 @@ class SearchSettingsRow extends StatelessWidget {
             style: getSearchSettingsButtonStyle(),
           ),
         ),
-        Expanded(
+        if(sortOptions != null && handleSortSubmit != null) Expanded(
           child: ElevatedButton.icon(
-            onPressed: () => createSortModal(context, handleSortSubmit),
+            onPressed: () => createSortModal(context, handleSortSubmit!, sortOptions!),
             icon: const Icon(Icons.sort),
             label: Text(tListOptions('sort'),
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -64,9 +68,9 @@ class SearchSettingsRow extends StatelessWidget {
             style: getSearchSettingsButtonStyle(),
           ),
         ),
-        Expanded(
+        if (handleViewModeChange != null) Expanded(
           child: ElevatedButton.icon(
-            onPressed: () => handleViewModeChange(changeViewMode()),
+            onPressed: () => handleViewModeChange!(changeViewMode()),
             icon: const Icon(Icons.settings),
             label: Text(tListOptions('view'),
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -81,18 +85,16 @@ class SearchSettingsRow extends StatelessWidget {
 }
 
 createFilterModal(
-    BuildContext context, Function(List<String>) handleSubmit) async {
+    BuildContext context, Function(List<String>) handleSubmit, Map<String, List<String>> options) async {
   final t = getTranslation(context, 'modal');
   createBottomModal(
     context,
-    {
-      'language': ['java', 'javascript']
-    },
+    options,
     t('filter'),
     (values) {
       final commands = values.entries
           .map((entry) =>
-              createCommand(Command.FILTER, '${entry.key}-${entry.value}'))
+              createCommand(Command.FILTER, '${entry.key}: ${entry.value}'))
           .toList();
       handleSubmit(commands);
     },
@@ -100,18 +102,16 @@ createFilterModal(
 }
 
 createSortModal(
-    BuildContext context, Function(List<String>) handleSubmit) async {
+    BuildContext context, Function(List<String>) handleSubmit, Map<String, List<String>> options) async {
   final t = getTranslation(context, 'modal');
   createBottomModal(
     context,
-    {
-      'difficulty': ['ascending', 'descending']
-    },
+    options,
     t('sort'),
     (values) {
       final commands = values.entries
           .map((entry) =>
-              createCommand(Command.SORT, '${entry.key}-${entry.value}'))
+              createCommand(Command.SORT, '${entry.key}: ${entry.value}'))
           .toList();
       handleSubmit(commands);
     },
@@ -133,4 +133,19 @@ createBottomModal(BuildContext context, Map<String, List<String>> options,
   if (values != null) {
     handleSubmit(values);
   }
+}
+
+Map<String, String> transformFilterOptionsListToMap(List<String> options) {
+  return options.asMap().map((index, element) {
+    final parts = element.split(':');
+    return MapEntry(parts[0].trim().toLowerCase(), parts[1].trim());
+  });
+}
+
+List<String> transformSortOptions(List<String> options) {
+  return options.map((element) {
+    final parts = element.split(':');
+    final value = parts[1].trim().toLowerCase();
+    return '${parts[0].trim().toLowerCase()}=${value == 'ascending' ? 'asc' : 'desc'}';
+  }).toList();
 }

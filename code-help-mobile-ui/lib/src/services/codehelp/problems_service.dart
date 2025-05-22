@@ -6,14 +6,31 @@ import 'api.dart';
 class ProblemsService {
   const ProblemsService();
 
-  Future<List<ProblemEntryBase>> getProblemEntries() {
+  Future<List<Category>> getCategories() {
+    return CATEGORIES_API.getCategories().then(
+      (response) => response.data!.categories.toList(),
+    );
+  }
+
+  Future<List<ProblemEntryBase>> getProblemEntries({
+    String? name,
+    String? category,
+    Difficulty? difficulty,
+    List<String>? sortBy,
+  }) {
     return PROBLEMS_API
-        .getProblemEntries()
+        .getProblemEntries(
+          categories: category == null ? null : BuiltList([category]),
+          name: name,
+          difficulty: difficulty,
+          sortBy: sortBy == null ? null : BuiltList(sortBy),
+        )
         .then((response) => response.data!.problems.toList());
   }
 
   Future<List<ProblemEntryBase>> getTop10ProblemEntries() {
-    return PROBLEMS_API.getProblemEntries(size: 10, sortBy: BuiltList.of(["likes=asc"]))
+    return PROBLEMS_API
+        .getProblemEntries(size: 10, sortBy: BuiltList.of(["likes=asc"]))
         .then((response) => response.data!.problems.toList());
   }
 

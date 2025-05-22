@@ -26,6 +26,7 @@ fun Community.toShortDto(): ShortCommunityDto = ShortCommunityDto()
 fun Post.toShortDto(): ShortPostDto = ShortPostDto()
     .uid(this.uid.toString())
     .title(this.title)
+    .content(this.content)
     .user(this.user.toDto())
     .created(this.created.truncatedTo(ChronoUnit.SECONDS))
 

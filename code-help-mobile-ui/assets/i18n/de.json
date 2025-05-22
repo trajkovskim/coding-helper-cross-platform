@@ -12,7 +12,7 @@
     },
     "languages": {
       "en": "English",
-      "de": "Deutsch",
+      "de": "German",
       "mk": "Macedonian"
     },
     "themes": {
@@ -40,6 +40,7 @@
     },
     "home": {
       "title": "Home",
+      "explore": "Explore",
       "activeContests": "Active Contests",
       "top10Problems": "Top 10 Ranked Problems"
     },
@@ -68,7 +69,7 @@
       "duration": "Duration",
       "participants": "Participants",
       "reviews": "Reviews",
-      "description": "description",
+      "description": "Description",
       "noDescription": "No description!",
       "attempt": "attempt",
       "testCases": "Test cases",
@@ -81,6 +82,8 @@
     },
     "forum": {
       "title": "Forum",
+      "recentPosts": "Recent posts",
+      "communities": "Explore Communities",
       "comment": {
         "edited": "edited"
       },

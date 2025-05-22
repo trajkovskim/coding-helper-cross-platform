@@ -18,7 +18,7 @@ class ProblemsOverviewPage extends StatelessWidget {
     final t = getTranslation(context, 'problems');
     final tContests = getTranslation(context, 'contests');
 
-    const listHeightFactor = 0.25;
+    const listHeightFactor = 0.23;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +74,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                       SizedBox.fromSize(size: const Size.fromHeight(20)),
                     if (problems.isNotEmpty)
                       SizedBox(
-                        height: constraints.maxHeight * 0.25,
+                        height: constraints.maxHeight * listHeightFactor,
                         child: HorizontalListView(
                           items: problems
                               .map(

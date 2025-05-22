@@ -30,6 +30,41 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: constraints.maxHeight * 0.20,
                   child: FutureBuilder(
+                    future: problemsService.getCategories(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        throw ErrorCode.HOME;
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Card(
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        );
+                      }
+                      final entries = snapshot.data!;
+
+                      return HorizontalListView(
+                        title: t('explore'),
+                        items: entries
+                            .map(
+                              (entry) => Item(
+                                title: entry.name,
+                            onTap: () => navigator.pushNamed(
+                              '/problems-discover',
+                              arguments: {'category': entry.name},
+                            ),
+                          ),
+                        ).toList(),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: constraints.maxHeight * 0.20,
+                  child: FutureBuilder(
                     future: contestsService.getContestEntries(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {

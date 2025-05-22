@@ -39,14 +39,14 @@ public class SubmissionController implements SubmissionApi {
   private final SubmissionProblemService submissionProblemService;
   private final SubmissionMapper submissionMapper;
   private final LinksFactory linksFactory;
+  private final AuthenticationUtil authenticationUtil;
 
   @Override
   @SneakyThrows
   public ResponseEntity<CreatedSubmissionResponse> createSubmissionsEntry(
     Long problemId, String authorization, SubmissionBaseEntry body) {
 
-    String user = AuthenticationUtil.getUser();
-    CreatedSubmissionDto createdSubmissionDto = submissionService.create(user, problemId, body.getCode(), body.getLanguage());
+    CreatedSubmissionDto createdSubmissionDto = submissionService.create(problemId, body.getCode(), body.getLanguage());
 
     Link getSubmissionsLink = linksFactory.getSelfRelLink(
         methodOn(SubmissionController.class)
@@ -73,7 +73,7 @@ public class SubmissionController implements SubmissionApi {
     SubmissionFilter submissionFilter = new SubmissionFilter();
     submissionFilter.setStatus(submissionMapper.convert(status));
 
-    String filterUser = user == null ? AuthenticationUtil.getUser() : user;
+    String filterUser = user == null ? authenticationUtil.getUserId() : user;
     submissionFilter.setUser(filterUser);
 
     PageInfoDto<SubmissionValue> submissionPage =

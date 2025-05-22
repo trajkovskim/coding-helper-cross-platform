@@ -72,7 +72,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
   }
 
   handlePostDelete(BuildContext context, String postUid) async {
-    // await _postService.deletePost(postUid);
+    await _postService.deletePost(postUid);
     triggerRebuild();
   }
 
@@ -109,7 +109,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                 );
               }
 
-              return PaddedWidgetList(
+              return SingleChildScrollView(child: PaddedWidgetList(
                 padding: const EdgeInsets.all(10),
                 children: [
                   Container(
@@ -247,7 +247,6 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                             icon: const Icon(Icons.add),
                             style: IconButton.styleFrom(
                               padding: EdgeInsets.zero,
-                              maximumSize: const Size(20, 20),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                           )
@@ -264,7 +263,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                           .toList()) ??
                       []),
                 ],
-              );
+              ));
             },
           ),
         ),

@@ -1,72 +1,35 @@
 package mk.com.codehelp.core.service.service.impl;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import mk.com.codehelp.core.domain.model.value.SubmissionByCategoryCountPairsValue;
-import mk.com.codehelp.core.domain.model.value.SubmissionByLanguageCountPairsValue;
-import mk.com.codehelp.core.domain.model.value.UserRankingValue;
-import mk.com.codehelp.core.domain.repository.StatisticsRepository;
-import mk.com.codehelp.core.service.dto.PageInfoDto;
-import mk.com.codehelp.core.service.dto.UserRankingDto;
-import mk.com.codehelp.core.service.dto.UserStatisticsDto;
-import mk.com.codehelp.core.domain.enums.Difficulty;
-import mk.com.codehelp.core.domain.enums.SubmissionStatus;
-import mk.com.codehelp.core.domain.repository.SubmissionRepository;
+import mk.com.codehelp.core.domain.model.User;
+import mk.com.codehelp.core.domain.repository.UserRepository;
 import mk.com.codehelp.core.service.service.UserService;
-import mk.com.codehelp.core.service.util.PageUtil;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  private final SubmissionRepository submissionRepository;
-  private final StatisticsRepository statisticsRepository;
+  private final UserRepository userRepository;
 
   @Override
-  public UserStatisticsDto getStatistics(String user) {
-
-    final Long easySolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.EASY, user);
-    final Long mediumSolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.MEDIUM, user);
-    final Long hardSolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.HARD, user);
-
-    List<SubmissionByLanguageCountPairsValue> solvedByLanguageCount = statisticsRepository.getCountsByLanguagePairs(
-      user, SubmissionStatus.ACCEPTED);
-
-    List<SubmissionByCategoryCountPairsValue> solvedByCategoryCount = statisticsRepository.getCountsByCategoryPairs(
-      user, SubmissionStatus.ACCEPTED);
-
-    return UserStatisticsDto.builder()
-      .solved(easySolved + mediumSolved + hardSolved)
-      .easy(easySolved)
-      .medium(mediumSolved)
-      .hard(hardSolved)
-      .languageCounts(solvedByLanguageCount)
-      .categoryCounts(solvedByCategoryCount)
-      .build();
+  public User getByUserId(String id) {
+    return userRepository.findById(id).orElseThrow();
   }
 
   @Override
-  public PageInfoDto<UserRankingDto> getRankings(String user, Integer page, Integer size) {
+  public User getOrCreate(String id, String username) {
 
-    Pageable pageable = PageRequest.of(page, size);
-    Page<UserRankingValue> userRankingsPage = statisticsRepository.getUserRankings(pageable);
+    synchronized (userRepository) {
+      return userRepository.findById(id).orElseGet(() -> {
+        User newUser = new User();
+        newUser.setUserId(id);
+        newUser.setUsername(username);
 
-    AtomicLong atomicLong = new AtomicLong(page.longValue() * size.longValue());
-    return PageUtil.createPageInfo(userRankingsPage, pageable, userRanking -> UserRankingDto.builder()
-      .user(userRanking.getUser())
-      .score(userRanking.getScore())
-      .ranking(atomicLong.getAndIncrement())
-      .build());
+        return userRepository.save(newUser);
+      });
+    }
   }
 }

@@ -66,7 +66,9 @@ public class ProblemRepositoryTest {
     Problem.TestCase testCase = new Problem.TestCase();
     problem.setTestCases(List.of(testCase));
 
-    User user = new User("user");
+    User user = new User();
+    user.setUsername("user");
+    user.setUserId("347239-2345-2435");
     problem.setLikedBy(List.of(user));
 
     return problem;
@@ -118,7 +120,11 @@ public class ProblemRepositoryTest {
     problemRepository.save(problem1);
 
     Problem problem2 = createProblem(category);
-    User user = new User("test");
+
+    User user = new User();
+    user.setUsername("user");
+    user.setUserId("347239-2345-2435");
+
     problem2.setLikedBy(List.of(user));
     problemRepository.save(problem2);
 

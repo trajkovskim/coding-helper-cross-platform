@@ -27,7 +27,7 @@ class HorizontalListView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (title != null) Text(title!, style: const TextStyle(fontWeight: FontWeight.bold)),
+              if (title != null) Text(title!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -39,7 +39,7 @@ class HorizontalListView extends StatelessWidget {
                             elevation: 2,
                             child: ListTile(
                               key: item.key,
-                              title: item.title != null ? Center(child: Text(item.title!, textAlign: TextAlign.center,)) : null,
+                              title: item.title != null ? Center(child: Text(item.title!, textAlign: TextAlign.center, style: TextStyle(fontSize: 14))) : null,
                               onTap: item.onTap,
                               tileColor: Colors.grey.withOpacity(0.15),
                             ),

@@ -1,4 +1,6 @@
 import 'package:coding_helper_cross_platform/src/context/index.dart';
+import 'package:coding_helper_cross_platform/src/services/codehelp/contests_service.dart';
+import 'package:coding_helper_cross_platform/src/services/forum/CommunityService.dart';
 import 'package:coding_helper_cross_platform/src/services/forum/PostService.dart';
 import 'package:coding_helper_cross_platform/src/i18n/i18n.dart';
 import 'package:coding_helper_cross_platform/src/pages/forum/ForumCommunitySearch.dart';
@@ -6,10 +8,14 @@ import 'package:coding_helper_cross_platform/src/pages/forum/ForumPostPage.dart'
 import 'package:coding_helper_forum_api/coding_helper_forum_api.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/common/horizontal_list_view.dart';
+import 'ForumCommunityPage.dart';
+
 class ForumOverviewPage extends StatelessWidget {
   ForumOverviewPage({super.key});
 
   final postService = PostService.getInstance();
+  final communityService = CommunityService.getInstance();
 
   handlePostDelete(BuildContext context, String postUid) async {
     await postService.deletePost(postUid);
@@ -23,6 +29,7 @@ class ForumOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
 
@@ -40,26 +47,68 @@ class ForumOverviewPage extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder<ShortPosts?>(
-        future: postService.getAllPosts(),
-        builder: (BuildContext context, AsyncSnapshot<ShortPosts?> snapshot) {
-          if (snapshot.hasError) {
-            throw ErrorCode.FORUM_OVERVIEW;
-          }
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          }
-          return PaddedList<ShortPost>(
-            items: snapshot.data?.posts.toList() ?? [],
-            builder: (context, item) => ForumPostCard(
-              post: item,
-              tapDelete: () => handlePostDelete(context, item.uid),
-            ),
-          );
-        },
-      ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+              height: constraints.maxHeight * 0.20,
+                child: FutureBuilder(
+                  future: communityService.getAllCommunities(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      throw ErrorCode.HOME;
+                    }
+
+                    if (!snapshot.hasData) {
+                      return const Card(
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+                    final entries = snapshot.data!;
+
+                    return HorizontalListView(
+                      title: ft('communities'),
+                      items: entries.communities
+                          .map(
+                            (entry) => Item(
+                          onTap: () => ForumCommunityPage.navigate(context, CommunityPageArguments(communityName: entry.name)),
+                        ),
+                      )
+                          .toList(),
+                    );
+                  },
+                )),
+                Padding(padding: EdgeInsets.only(left: 20, top: 10),
+                    child: Text(ft('recentPosts'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                FutureBuilder<ShortPosts?>(
+                  future: postService.getAllPosts(),
+                  builder: (BuildContext context, AsyncSnapshot<ShortPosts?> snapshot) {
+                    if (snapshot.hasError) {
+                      throw ErrorCode.FORUM_OVERVIEW;
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    return PaddedList<ShortPost>(
+                      items: snapshot.data?.posts.toList() ?? [],
+                      builder: (context, item) => ForumPostCard(
+                        post: item,
+                        tapDelete: () => handlePostDelete(context, item.uid),
+                      ),
+                    );
+                  },
+                ),
+            ],
+          ),
+        ));
+      })
     );
   }
 }
@@ -108,16 +157,24 @@ class PaddedList<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: const AlwaysScrollableScrollPhysics(),
-      controller: controller,
-      itemCount: items.length,
-      scrollDirection: Axis.vertical,
+    return Padding(
       padding: padding,
-      shrinkWrap: true,
-      itemBuilder: (context, index) => builder(context, items[index]),
-      separatorBuilder: (BuildContext context, int index) => SizedBox(height: spacing),
+      child: Column(
+        children: items.map((item) {
+          return [builder(context, item), SizedBox(height: spacing)];
+        }).expand((element) => element).toList()
+      ),
     );
+    // ListView.separated(
+    //   physics: const AlwaysScrollableScrollPhysics(),
+    //   controller: controller,
+    //   itemCount: items.length,
+    //   scrollDirection: Axis.vertical,
+    //   padding: padding,
+    //   shrinkWrap: true,
+    //   itemBuilder: (context, index) => builder(context, items[index]),
+    //   separatorBuilder: (BuildContext context, int index) => SizedBox(height: spacing),
+    // );
   }
 }
 

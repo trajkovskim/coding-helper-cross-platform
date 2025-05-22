@@ -13,5 +13,5 @@ interface CommentRepository : JpaRepository<Comment, Long> {
 
     fun findByParentUid(parentUid: UUID, pageable: Pageable): Page<Comment>
 
-    fun findAllByPostUid(postUID: UUID, pageable: Pageable): Page<Comment>
+    fun findAllByPostUidAndParentIsNull(postUID: UUID, pageable: Pageable): Page<Comment>
 }

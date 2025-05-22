@@ -44,7 +44,7 @@ public class SubmissionServiceImpl implements SubmissionService {
   }
 
   @Override
-  public CreatedSubmissionDto create(String email, Long problemId, String code, String language)
+  public CreatedSubmissionDto create(Long problemId, String code, String language)
     throws IOException, InterruptedException {
 
     Problem problem = problemService.findById(problemId);

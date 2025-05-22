@@ -14,12 +14,12 @@ enum Command {
 }
 
 String createCommand(Command command, String value) {
-  return '${command.value}: $value';
+  return value;
 }
 
 class ListOptions extends StatelessWidget {
   final List<String> options;
-  final void Function(int index)? onRemove;
+  final void Function(String option)? onRemove;
 
   const ListOptions({super.key, required this.options, this.onRemove});
 
@@ -60,7 +60,7 @@ class ListOptions extends StatelessWidget {
                           .map(
                             (option) => ClosingButton(
                               label: option,
-                              onTap: () => onRemove != null ? onRemove!(index++) : null,
+                              onTap: () => onRemove != null ? onRemove!(option) : null,
                             ),
                           )
                           .toList(),

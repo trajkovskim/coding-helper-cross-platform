@@ -16,5 +16,5 @@ public interface SubmissionService {
 
   PageInfoDto<SubmissionValue> findAll(SubmissionFilter submissionFilter, Pageable pageable);
 
-  CreatedSubmissionDto create(String email, Long problemId, String code, String language) throws IOException, InterruptedException;
+  CreatedSubmissionDto create(Long problemId, String code, String language) throws IOException, InterruptedException;
 }

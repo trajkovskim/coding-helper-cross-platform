@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="CodingHelperApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="android" />
     <module name="code-help-core-app" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="mk.com.codehelp.core.CodingHelperApplication" />
     <extension name="coverage">

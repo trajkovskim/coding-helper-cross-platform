@@ -11,6 +11,7 @@ import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
+import mk.com.codehelp.core.domain.repository.UserRepository;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
@@ -19,6 +20,8 @@ import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.service.SubmissionProblemService;
+import mk.com.codehelp.core.service.service.UserService;
+import mk.com.codehelp.core.service.util.AuthenticationUtil;
 import mk.com.codehelp.core.service.util.PageUtil;
 import mk.com.codehelp.core.service.util.ProblemUtil;
 
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,8 @@ public class ProblemServiceImpl implements ProblemService {
 
   private final ProblemUtil problemUtil;
   private final SubmissionProblemService submissionProblemService;
+  private final AuthenticationUtil authenticationUtil;
+  private final UserService userService;
 
   @Override
   public PageInfoDto<ProblemDto> findAll(ProblemFilter filter, String user, Pageable pageable) {
@@ -157,21 +163,23 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
-  public boolean likeToggle(Long id, String email) {
+  public boolean likeToggle(Long id) {
 
     Problem problem = findById(id);
 
-    boolean liked = problem.getLikedBy().stream().anyMatch(user -> user.getUsername().equals(email));
+    String userId = authenticationUtil.getUserId();
+    User currentUser = userService.getByUserId(userId);
+
+    boolean liked = problem.getLikedBy().stream()
+      .anyMatch(user -> currentUser.getUserId().equals(user.getUserId()));
+
     if (liked) {
-      problem.getLikedBy().removeIf(x -> x.getUsername().equals(email));
+      problem.getLikedBy().removeIf(user -> currentUser.getUserId().equals(user.getUserId()));
     } else {
-      User user = new User();
-      user.setUsername(email);
-      problem.getLikedBy().add(user);
+      problem.getLikedBy().add(currentUser);
     }
 
     problemRepository.save(problem);
-
     return liked;
   }
 

@@ -11,6 +11,7 @@ import '../../i18n/i18n.dart';
 import '../../services/codehelp/index.dart';
 
 class ContestsDiscoverPage extends StatefulWidget {
+
   const ContestsDiscoverPage({super.key});
 
   @override
@@ -26,7 +27,18 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   bool loading = false;
   ViewProfile view = ViewProfile.LIST;
 
-  List<String> options = [];
+  final Map<String, List<String>> filterOptionsMap = {
+    'language': ['java', 'javascript'],
+    'status': ['OPEN', 'STARTED', 'CLOSED'],
+  };
+
+  final Map<String, List<String>> sortOptionsMap = {
+    'Start date': ['ascending', 'descending'],
+    'Status': ['ascending', 'descending'],
+  };
+
+  List<String> filterOptions = [];
+  List<String> sortOptions = [];
 
   void handleTapSearch() {
     if (searchController.text.isEmpty) {
@@ -35,9 +47,9 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
 
     String command =
         createCommand(Command.SEARCH, searchController.text.trim());
-    options.removeWhere((element) => element == command);
+    filterOptions.removeWhere((element) => element == command);
     setState(() {
-      options.add(command);
+      filterOptions.add(command);
       showSearch = false;
     });
     searchController.clear();
@@ -49,78 +61,42 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
     });
   }
 
-  void handleRemoveOption(int index) {
+  void handleRemoveFilterOption(String option) {
     setState(() {
-      options.removeAt(index);
+      filterOptions.remove(option);
     });
   }
 
-  void showFiltersModal(BuildContext context) async {
-    final t = getTranslation(context, 'modal');
-
-    final Map<String, String?>? values = await showModalBottomSheet(
-      context: context,
-      builder: (context) => Modal(
-        options: const {
-          'language': ['java', 'javascript'],
-          'status': ['OPEN', 'STARTED', 'CLOSED'],
-        },
-        submitButton: t('filter'),
-      ),
-    );
-
-    if (values != null) {
-      final commands = values.entries
-          .map(
-            (entry) => createCommand(
-              Command.FILTER,
-              '${entry.key}-${entry.value}',
-            ),
-          )
-          .toList();
-      setState(() {
-        options.removeWhere((element) => commands.contains(element));
-        options.addAll(commands);
-      });
-    }
+  void handleRemoveSortOption(String option) {
+    setState(() {
+      sortOptions.remove(option);
+    });
   }
 
-  void showSortModal(BuildContext context) async {
-    final t = getTranslation(context, 'modal');
+  void handleFilterSubmit(List<String> commands) {
+    setState(() {
+      filterOptions.removeWhere((element) => commands.contains(element));
+      filterOptions.addAll(commands);
+    });
+  }
 
-    final Map<String, String?>? values = await showModalBottomSheet(
-      context: context,
-      builder: (context) => Modal(
-        options: const {
-          'difficulty': ['ascending', 'descending'],
-          'status': ['ascending', 'descending'],
-        },
-        submitButton: t('sort'),
-      ),
-    );
+  void handleSortSubmit(List<String> commands) {
+    setState(() {
+      sortOptions.removeWhere((element) => commands.contains(element));
+      sortOptions.addAll(commands);
+    });
+  }
 
-    if (values != null) {
-      final commands = values.entries
-          .map(
-            (entry) => createCommand(
-              Command.SORT,
-              '${entry.key}-${entry.value}',
-            ),
-          )
-          .toList();
-      setState(() {
-        options.removeWhere((element) => commands.contains(element));
-        options.addAll(commands);
-      });
-    }
+  void handleViewModeChange(ViewProfile newViewMode) {
+    setState(() {
+      view = newViewMode;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
-
     final t = getTranslation(context, 'contests');
-    final tListOptions = getTranslation(context, 'listOptions');
 
     return Scaffold(
       appBar: AppBar(
@@ -167,33 +143,21 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => showSortModal(context),
-                          icon: const Icon(Icons.more_horiz_rounded),
-                          label: Text(
-                            tListOptions('sort'),
-                            softWrap: false,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton.icon(
-                          onPressed: () => setState(() {
-                            view = view == ViewProfile.GRID ? ViewProfile.LIST : ViewProfile.GRID;
-                          }),
-                          icon: const Icon(Icons.settings),
-                          label: Text(
-                            tListOptions('view'),
-                            softWrap: false,
-                          ),
-                        ),
-                      ],
+                    SearchSettingsRow(
+                      filterOptions: filterOptionsMap,
+                      sortOptions: sortOptionsMap,
+                      handleFilterSubmit: handleFilterSubmit,
+                      handleSortSubmit: handleSortSubmit,
+                      handleViewModeChange: handleViewModeChange,
+                      viewMode: view,
                     ),
                     ListOptions(
-                      options: options,
-                      onRemove: handleRemoveOption,
+                      options: filterOptions,
+                      onRemove: handleRemoveFilterOption,
+                    ),
+                    ListOptions(
+                      options: sortOptions,
+                      onRemove: handleRemoveSortOption,
                     ),
                     SizedBox.fromSize(size: const Size.fromHeight(15)),
                     if (view == ViewProfile.LIST)

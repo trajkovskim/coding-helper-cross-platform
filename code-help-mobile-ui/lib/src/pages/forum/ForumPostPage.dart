@@ -99,7 +99,7 @@ class _ForumPostPageState extends State<ForumPostPage> {
           final post = snapshot.data!.post;
           final comments = snapshot.data!.comments;
 
-          return PaddedWidgetList(
+          return SingleChildScrollView(child: PaddedWidgetList(
             controller: controller,
             spacing: 25,
             children: [
@@ -143,7 +143,7 @@ class _ForumPostPageState extends State<ForumPostPage> {
                 ),
               )
             ],
-          );
+          ));
         },
       ),
     );

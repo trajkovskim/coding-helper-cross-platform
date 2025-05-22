@@ -26,6 +26,19 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   String? searchTerm;
   ViewProfile view = ViewProfile.LIST;
   List<String> options = [];
+
+  List<String> filterOptions = [];
+  List<String> sortOptions = [];
+
+  final filterOptionsMap = {
+    'Category': ['Arrays', 'Hash'],
+    'Difficulty': ['EASY', 'MEDIUM', 'HARD'],
+  };
+
+  final sortOptionsMap = {
+    'Difficulty': ['ascending', 'descending']
+  };
+
   final _communityService = CommunityService.getInstance();
 
   handleSearch(String term) {
@@ -37,23 +50,29 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
     });
   }
 
-  void handleRemoveOption(int index) {
+  void handleRemoveFilterOption(String option) {
     setState(() {
-      options.removeAt(index);
+      filterOptions.remove(option);
+    });
+  }
+
+  void handleRemoveSortOption(String option) {
+    setState(() {
+      sortOptions.remove(option);
     });
   }
 
   void handleFilterSubmit(List<String> commands) {
     setState(() {
-      options.removeWhere((element) => commands.contains(element));
-      options.addAll(commands);
+      filterOptions.removeWhere((element) => commands.contains(element));
+      filterOptions.addAll(commands);
     });
   }
 
   void handleSortSubmit(List<String> commands) {
     setState(() {
-      options.removeWhere((element) => commands.contains(element));
-      options.addAll(commands);
+      sortOptions.removeWhere((element) => commands.contains(element));
+      sortOptions.addAll(commands);
     });
   }
 
@@ -101,6 +120,8 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SearchSettingsRow(
+                filterOptions: filterOptionsMap,
+                sortOptions: sortOptionsMap,
                 handleFilterSubmit: handleFilterSubmit,
                 handleSortSubmit: handleSortSubmit,
                 handleViewModeChange: handleViewModeChange,
@@ -108,8 +129,12 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
               ),
               SizedBox.fromSize(size: const Size.fromHeight(15)),
               ListOptions(
-                options: options,
-                onRemove: handleRemoveOption,
+                options: filterOptions,
+                onRemove: handleRemoveFilterOption,
+              ),
+              ListOptions(
+                options: sortOptions,
+                onRemove: handleRemoveSortOption,
               ),
               SizedBox.fromSize(size: const Size.fromHeight(15)),
               FutureBuilder<ShortCommunities?>(
