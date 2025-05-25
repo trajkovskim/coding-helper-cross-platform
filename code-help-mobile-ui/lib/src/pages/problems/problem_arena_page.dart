@@ -1,5 +1,6 @@
 import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/code_test_input_modal.dart';
+import 'package:coding_helper_cross_platform/src/components/common/flash_message.dart';
 import 'package:coding_helper_cross_platform/src/components/common/vertical_list_view.dart';
 import 'package:coding_helper_cross_platform/src/context/index.dart';
 import 'package:coding_helper_cross_platform/src/pages/problems/problem_like_button.dart';
@@ -66,7 +67,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   }
 
   void handleSubmit() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final params = useParams();
 
     $SubmissionBaseEntryBuilder builder = $SubmissionBaseEntryBuilder()
@@ -74,7 +74,7 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       ..language = params.language;
 
     submissionsService.submit(params.entry!.id, builder.build()).then<void>((value) {
-      showSnackBar(scaffoldMessenger, value.message);
+      createMessage(context, value.message, "info");
       setState(() {});
     }).onError(
       (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
@@ -82,7 +82,6 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
   }
 
   void handleTest() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final params = useParams();
 
     final String input = await showModalBottomSheet(
@@ -97,19 +96,10 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
 
     codeRunnerService
         .runCode(params.entry!.id, builder.build())
-        .then((value) => showSnackBar(scaffoldMessenger, value))
+        .then((value) => createMessage(context, value, "info"))
         .onError(
           (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
         );
-  }
-
-  void showSnackBar(ScaffoldMessengerState scaffoldMessenger, String value) {
-    final snackBar = SnackBar(
-      content: Text(value),
-      duration: const Duration(seconds: 5),
-      dismissDirection: DismissDirection.startToEnd,
-    );
-    scaffoldMessenger.showSnackBar(snackBar);
   }
 
   @override
@@ -127,7 +117,15 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(params.entry?.name ?? ''),
-          actions: [ProblemLikeButton(id: params.entry!.id.toString())],
+          actions: [
+            Row(
+              children: [
+                Text(params.entry!.likes.toString()),
+                ProblemLikeButton(id: params.entry!.id.toString()),
+              ],
+            ),
+
+          ],
           bottom: TabBar(
             tabs: [
               Tab(
@@ -187,24 +185,26 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                   }
 
                   final entries = snapshot.data!;
-                  return Column(
-                    children: [
-                      VerticalListView(
-                        children: entries
-                            .map(
-                              (submission) => ListItem(
-                                title: submission.createdDate.toString(),
-                                subtitle: submission.status.name,
-                                onTap: () {
-                                  codeController.text = submission.code;
-                                  DefaultTabController.of(context)
-                                      .animateTo(1);
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                  return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          VerticalListView(
+                            children: entries
+                                .map(
+                                  (submission) => ListItem(
+                                    title: submission.createdDate.toString(),
+                                    subtitle: submission.status.name,
+                                    onTap: () {
+                                      codeController.text = submission.code;
+                                      DefaultTabController.of(context)
+                                          .animateTo(1);
+                                    },
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      )
                   );
                 },
               ),
