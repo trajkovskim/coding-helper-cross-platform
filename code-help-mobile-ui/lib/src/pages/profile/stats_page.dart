@@ -54,6 +54,8 @@ class StatsPage extends StatelessWidget {
               'comments': '35',
               'posts': '12',
             },
+            Map.fromEntries(statistics.solvedByLanguageCount.map((element) => MapEntry(element.language, element.count.toString()))),
+            Map.fromEntries(statistics.solvedByCategoryCount?.map((element) => MapEntry(element.category, element.count.toString())) ?? []),
           ];
 
           return SingleChildScrollView(
