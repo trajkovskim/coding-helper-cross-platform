@@ -14,7 +14,6 @@ import mk.com.codehelp.core.domain.repository.ProblemRepository;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
-import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.CategoryService;
 import mk.com.codehelp.core.service.service.ProblemService;
 import mk.com.codehelp.core.service.service.SubmissionProblemService;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -92,7 +92,7 @@ public class ProblemServiceImpl implements ProblemService {
         .orElseThrow(() -> new ProblemNotFoundException(id));
 
     Problem.Code code = problemUtil.getCodeByLanguage(problemValue.getCodes(), language)
-        .orElseThrow(() -> new CodeDoesNotExistException(id, language));
+      .orElse(null);
 
     ProblemDto.ProblemDtoBuilder<?, ?> builder = ProblemDto.builder()
       .id(id)
@@ -109,6 +109,9 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   private ProblemDto finalize(ProblemDto.ProblemDtoBuilder<?, ?> builder, ProblemValue problemValue, String user) {
+
+    List<String> languages = problemValue.getCodes().stream().map(Problem.Code::getLanguage).toList();
+    builder = builder.languages(languages);
 
     if (user != null) {
       SubmissionFilter submissionFilter = new SubmissionFilter();

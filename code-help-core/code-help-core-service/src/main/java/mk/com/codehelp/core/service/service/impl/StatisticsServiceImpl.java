@@ -31,20 +31,20 @@ public class StatisticsServiceImpl implements StatisticsService {
   private final StatisticsRepository statisticsRepository;
 
   @Override
-  public UserStatisticsDto getStatistics(String user) {
+  public UserStatisticsDto getStatistics(String username) {
 
     final Long easySolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.EASY, user);
+        SubmissionStatus.ACCEPTED, Difficulty.EASY, username);
     final Long mediumSolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.MEDIUM, user);
+        SubmissionStatus.ACCEPTED, Difficulty.MEDIUM, username);
     final Long hardSolved = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
-        SubmissionStatus.ACCEPTED, Difficulty.HARD, user);
+        SubmissionStatus.ACCEPTED, Difficulty.HARD, username);
 
     List<SubmissionByLanguageCountPairsValue> solvedByLanguageCount = statisticsRepository.getCountsByLanguagePairs(
-      user, SubmissionStatus.ACCEPTED);
+      username, SubmissionStatus.ACCEPTED);
 
     List<SubmissionByCategoryCountPairsValue> solvedByCategoryCount = statisticsRepository.getCountsByCategoryPairs(
-      user, SubmissionStatus.ACCEPTED);
+      username, SubmissionStatus.ACCEPTED);
 
     return UserStatisticsDto.builder()
       .solved(easySolved + mediumSolved + hardSolved)

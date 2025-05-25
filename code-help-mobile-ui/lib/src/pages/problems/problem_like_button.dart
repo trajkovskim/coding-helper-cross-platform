@@ -1,5 +1,8 @@
+import 'package:coding_helper_cross_platform/src/components/common/flash_message.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../context/index.dart';
 import '../../services/codehelp/index.dart';
 
 class ProblemLikeButton extends StatefulWidget {
@@ -16,14 +19,17 @@ class _ProblemLikeButtonState extends State<ProblemLikeButton> {
 
   @override
   Widget build(BuildContext context) {
+    final sharedContext = Provider.of<SharedContext>(context, listen: false);
+
     return FutureBuilder(
-        future: problemsService.isLiked(widget.id),
+        future: problemsService.isLiked(widget.id).catchError((error) => createMessage(context, "You must be logged in first!\n$error", "error")),
         builder: (context, snapshot) {
           return IconButton(
             onPressed: () {
               problemsService
                   .toggleLike(widget.id)
-                  .whenComplete(() => setState(() {}));
+                  .whenComplete(() => setState(() {}))
+                  .catchError((error) => createMessage(context, "You must be logged in first!\n$error", "error"));
             },
             icon: snapshot.hasData && snapshot.data!
                 ? const Icon(Icons.favorite)

@@ -41,5 +41,5 @@ public interface SubmissionRepository extends Neo4jRepository<Submission, Long> 
     return count(submission)""")
   Page<SubmissionValue> findAllByProblem(SubmissionFilter filters, Long problemId, Pageable pageable);
 
-  Long countDistinctByStatusAndProblem_DifficultyAndUser_Username(SubmissionStatus status, Difficulty problem_difficulty, String user);
+  Long countDistinctByStatusAndProblem_DifficultyAndUser_Username(SubmissionStatus status, Difficulty problem_difficulty, String username);
 }

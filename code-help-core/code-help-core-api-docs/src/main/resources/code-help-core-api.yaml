@@ -79,13 +79,17 @@ components:
         - type: object
           required:
             - markdown
-            - starterCode
+            - languages
           properties:
             markdown:
               type: string
               example: '## Two Sum... problem description'
             starterCode:
               $ref: 'code-help-common-api.yaml#/components/schemas/Code'
+            languages:
+              type: array
+              items:
+                $ref: "code-help-common-api.yaml#/components/schemas/CodeLanguage"
     SubmissionStatus:
       type: string
       enum: [ ACCEPTED, DECLINED ]

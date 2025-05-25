@@ -11,7 +11,6 @@ import mk.com.codehelp.core.domain.repository.impl.ContestProblemRepository;
 import mk.com.codehelp.core.service.dto.ContestDto;
 import mk.com.codehelp.core.service.dto.ContestProblemDto;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
-import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.exceptions.ContestNotFoundException;
 import mk.com.codehelp.core.service.exceptions.ContestStatusException;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
@@ -135,7 +134,7 @@ public class ContestServiceImpl implements ContestService {
     Problem problem = contestProblem.getProblem();
 
     Problem.Code code = problemUtil.getCodeByLanguage(problem.getCodes(), language)
-        .orElseThrow(() -> new CodeDoesNotExistException(problemId, language));
+        .orElse(null);
 
     return ContestProblemDto.builder()
         .id(problemId)

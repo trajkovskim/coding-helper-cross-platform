@@ -6,7 +6,7 @@ import mk.com.codehelp.core.service.dto.UserStatisticsDto;
 
 public interface StatisticsService {
 
-  UserStatisticsDto getStatistics(String user);
+  UserStatisticsDto getStatistics(String username);
 
-  PageInfoDto<UserRankingDto> getRankings(String user, Integer page, Integer size);
+  PageInfoDto<UserRankingDto> getRankings(String userId, Integer page, Integer size);
 }

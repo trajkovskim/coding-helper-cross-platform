@@ -59,6 +59,11 @@ class SharedContext extends ChangeNotifier {
 
   String get locale => _settings.locale ?? Language.EN.value;
 
+  void setErrorCode(int? errorCode) {
+    _errorCode = errorCode;
+    notifyListeners();
+  }
+
   void setLocale(String? language) {
     _settings.locale = language;
     notifyListeners();

@@ -32,9 +32,9 @@ public class UserController implements UserApi {
   @Override
   public ResponseEntity<UserRankingsResponse> getRankings(Integer page, Integer size, String authorization) {
 
-    String user = authenticationUtil.getUserId();
+    String userId = authenticationUtil.getUserId();
 
-    PageInfoDto<UserRankingDto> rankingsPage = statisticsService.getRankings(user, page, size);
+    PageInfoDto<UserRankingDto> rankingsPage = statisticsService.getRankings(userId, page, size);
     PaginationLinks paginationLinks = linksFactory.createPaginationLinks(
       rankingsPage,
       (pageNumber, pageSize) -> methodOn(UserController.class).getRankings(pageNumber, pageSize, authorization));
@@ -53,7 +53,7 @@ public class UserController implements UserApi {
   @Override
   public ResponseEntity<UserStatistics> getStatistics(String authorization, String user) {
 
-    String name = user != null ? user : authenticationUtil.getUserId();
+    String name = user != null ? user : authenticationUtil.getUsername();
 
     UserStatisticsDto userStatistics = statisticsService.getStatistics(name);
     UserStatistics entry = userMapper.convert(userStatistics);

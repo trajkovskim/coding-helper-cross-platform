@@ -1,7 +1,9 @@
 package mk.com.codehelp.core.domain.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -55,7 +57,7 @@ public class StatisticsRepositoryTest {
 
     String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
     user.setUserId(currentUser);
-    user.setUsername("username");
+    user.setUsername(currentUser);
 
     userRepository.save(user);
   }
@@ -115,9 +117,10 @@ public class StatisticsRepositoryTest {
     Submission submission3 = createSubmission(problem3);
     submissionRepository.save(submission3);
 
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
     // When
-    List<SubmissionByCategoryCountPairsValue> counts = statisticsRepository.getCountsByCategoryPairs("user", SubmissionStatus.ACCEPTED);
+    List<SubmissionByCategoryCountPairsValue> counts = statisticsRepository.getCountsByCategoryPairs(currentUser, SubmissionStatus.ACCEPTED);
 
     // Then
     assertEquals(2, counts.get(0).getCount());
@@ -128,6 +131,11 @@ public class StatisticsRepositoryTest {
   void shouldCountLanguageSolved() {
 
     // Given
+
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    List<SubmissionByLanguageCountPairsValue> statisticsBefore =
+      statisticsRepository.getCountsByLanguagePairs(currentUser, SubmissionStatus.ACCEPTED);
+
     Category category1 = createCategory("category1");
     Problem problem1 = createProblem(category1);
     Submission submission1 = createSubmission(problem1);
@@ -152,13 +160,26 @@ public class StatisticsRepositoryTest {
     submission6.setLanguage("c++");
     submissionRepository.save(submission6);
 
+    Problem problem2 = createProblem(category1);
+    Submission submission7 = createSubmission(problem2);
+    submission7.setLanguage("java");
+    submissionRepository.save(submission7);
+
     // When
-    List<SubmissionByLanguageCountPairsValue> languageCountPairs = statisticsRepository.getCountsByLanguagePairs("user", SubmissionStatus.ACCEPTED);
+    List<SubmissionByLanguageCountPairsValue> languageCountPairs = statisticsRepository.getCountsByLanguagePairs(currentUser, SubmissionStatus.ACCEPTED);
+
+    Map<String, Long> byLanguageBefore = statisticsBefore.stream()
+      .collect(Collectors.toMap(
+        SubmissionByLanguageCountPairsValue::getLanguage, SubmissionByLanguageCountPairsValue::getCount));
+
+    Map<String, Long> byLanguageAfter = languageCountPairs.stream()
+      .collect(Collectors.toMap(
+        SubmissionByLanguageCountPairsValue::getLanguage, SubmissionByLanguageCountPairsValue::getCount));
 
     // Then
-    assertEquals(2, languageCountPairs.get(0).getCount());
-    assertEquals(2, languageCountPairs.get(1).getCount());
-    assertEquals(1, languageCountPairs.get(2).getCount());
+    assertEquals(byLanguageBefore.getOrDefault("java", 0L) + 2, byLanguageAfter.get("java"));
+    assertEquals(byLanguageBefore.getOrDefault("javascript", 0L) + 1, byLanguageAfter.get("javascript"));
+    assertEquals(byLanguageBefore.getOrDefault("c++", 0L) + 1, byLanguageAfter.get("c++"));
   }
 
   @Test

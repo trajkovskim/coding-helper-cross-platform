@@ -186,14 +186,9 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                       Dropdown(
                                         value: selectedLanguage,
                                         items:
-                                            CodeEditor.EDITOR_LANGUAGES.keys
-                                                .map(
-                                                  (language) => DropdownItem(
-                                                    language,
-                                                    language,
-                                                  ),
-                                                )
-                                                .toList(),
+                                            entry.languages.where((language) => CodeEditor.EDITOR_LANGUAGES.containsKey(language))
+                                            .map((language) => DropdownItem(language,language,))
+                                            .toList(),
                                         onChange: handleChangeLanguage,
                                       ),
                                       ElevatedButton(

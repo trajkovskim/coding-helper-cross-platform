@@ -35,7 +35,7 @@ public class CategoryRepositoryTest {
     List<CategoryValue> categories = categoryRepository.findAllCategories();
 
     // Then
-    assertTrue(!CollectionUtils.isEmpty(categories));
+    assertFalse(CollectionUtils.isEmpty(categories));
   }
 
   @Test
