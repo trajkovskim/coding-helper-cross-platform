@@ -195,7 +195,8 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
                                     title: submission.createdDate.toString(),
                                     subtitle: submission.status.name,
                                     onTap: () {
-                                      codeController.text = submission.code;
+                                      codeController.language = CodeEditor.EDITOR_LANGUAGES[submission.language];
+                                      codeController.fullText = submission.code;
                                       DefaultTabController.of(context)
                                           .animateTo(1);
                                     },
