@@ -18,7 +18,7 @@ class Dropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(50),
         boxShadow: [
@@ -33,21 +33,18 @@ class Dropdown extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       constraints: BoxConstraints.loose(const Size.fromHeight(30)),
       child: DropdownButton(
+        underline: SizedBox(),
         value: value,
         onChanged: onChange,
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.bold,
-        ),
-        iconDisabledColor: Theme.of(context).primaryColor,
-        iconEnabledColor: Theme.of(context).primaryColor,
         items: items
             .map(
               (item) => DropdownMenuItem(
                 value: item.value,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minWidth: 100),
-                  child: Text(item.label),
+                  child: Text(item.label,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             )

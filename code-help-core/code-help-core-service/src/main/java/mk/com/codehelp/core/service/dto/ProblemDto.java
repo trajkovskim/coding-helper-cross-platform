@@ -21,6 +21,7 @@ public class ProblemDto {
   private Difficulty difficulty;
   private String markdown;
   private Long likes;
+  private List<String> languages;
   private Problem.Code code;
   private List<Problem.TestCase> testCases;
   private SubmissionValue lastSubmission;

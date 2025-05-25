@@ -1,6 +1,8 @@
 package mk.com.codehelp.core.domain.repository;
 
 import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.core.Neo4jTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,9 +46,20 @@ public class StatisticsRepositoryTest {
   private ProblemRepository problemRepository;
 
   @Autowired
-  private Neo4jTemplate neo4jTemplate;
-  @Autowired
   private UserRepository userRepository;
+
+  @BeforeEach
+  public void setUp() {
+
+    User user = new User();
+
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    user.setUserId(currentUser);
+    user.setUsername("username");
+
+    userRepository.save(user);
+  }
+
 
   private Submission createSubmission(Problem problem) {
     return createSubmission(problem, 1);
@@ -170,20 +184,22 @@ public class StatisticsRepositoryTest {
     contest.setProblems(List.of(contestProblem));
     contestRepository.save(contest);
 
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
     Pageable pageable = PageRequest.of(0, 10);
     // When
     Page<UserRankingValue> userRankings = statisticsRepository.getUserRankings(pageable);
 
     UserRankingValue ranking = userRankings.getContent()
       .stream()
-      .filter(x -> "user".equals(x.getUser().getUsername()))
+      .filter(x -> currentUser.equals(x.getUser().getUserId()))
       .findAny()
       .orElse(null);
 
     // Then
-    assertEquals(usersSizeBefore + 1, userRankings.getTotalElements());
+    assertEquals(usersSizeBefore, userRankings.getTotalElements());
     assertEquals(50, ranking.getScore());
-    assertEquals("user", ranking.getUser().getUsername());
+    assertEquals(currentUser, ranking.getUser().getUserId());
   }
 
   @Test
@@ -193,17 +209,26 @@ public class StatisticsRepositoryTest {
     List<User> all = userRepository.findAll();
     int usersSizeBefore = all.size();
 
+    String currentUser = UUID.randomUUID().toString();
+
     User user = new User();
-    user.setUsername("user");
-    neo4jTemplate.save(user);
+    user.setUserId(currentUser);
+    userRepository.save(user);
 
     Pageable pageable = PageRequest.of(0, 10);
     // When
     Page<UserRankingValue> userRankings = statisticsRepository.getUserRankings(pageable);
 
     // Then
+
+    UserRankingValue ranking = userRankings.getContent()
+      .stream()
+      .filter(x -> currentUser.equals(x.getUser().getUserId()))
+      .findAny()
+      .orElse(null);
+
     assertEquals(usersSizeBefore + 1, userRankings.getTotalElements());
-    assertEquals(0, userRankings.getContent().get(0).getScore());
-    assertEquals("user", userRankings.getContent().get(0).getUser().getUsername());
+    assertEquals(0, ranking.getScore());
+    assertEquals(currentUser, ranking.getUser().getUserId());
   }
 }

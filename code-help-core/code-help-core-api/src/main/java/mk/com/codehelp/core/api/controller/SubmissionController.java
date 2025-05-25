@@ -74,7 +74,7 @@ public class SubmissionController implements SubmissionApi {
     submissionFilter.setStatus(submissionMapper.convert(status));
 
     String filterUser = user == null ? authenticationUtil.getUserId() : user;
-    submissionFilter.setUser(filterUser);
+    submissionFilter.setUserId(filterUser);
 
     PageInfoDto<SubmissionValue> submissionPage =
       problemId == null

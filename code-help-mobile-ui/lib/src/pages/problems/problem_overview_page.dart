@@ -146,33 +146,38 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                         ),
                                       ),
                                       Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
                                           Text(
                                             entry.difficulty.name.toUpperCase(),
-                                            style: TextStyle(
-                                              color: getDifficultyColor(entry.difficulty),
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: getDifficultyColor(entry.difficulty),
+                                                fontWeight: FontWeight.bold
                                             ),
                                           ),
                                           Text(
                                             getSubmissionStatusText(entry),
-                                            style: TextStyle(
-                                              color:
-                                                  getSubmissionStatusColor(entry),
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: getSubmissionStatusColor(entry),
+                                                fontWeight: FontWeight.bold
                                             ),
                                           ),
-                                          Text(entry.category.name),
                                         ],
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    entry.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
+                                  Padding(padding: EdgeInsets.all(3), child:
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          entry.name,
+                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(entry.category.name, style: Theme.of(context).textTheme.bodySmall),
+                                    ])
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -194,9 +199,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                       ElevatedButton(
                                         onPressed: () => handleTapStart(entry),
                                         style: ElevatedButton.styleFrom(
-                                          shadowColor: Colors.black.withOpacity(
-                                            0.25,
-                                          ),
+                                          shadowColor: Colors.black.withOpacity(0.25),
                                         ),
                                         child: Text(t('start')),
                                       ),
@@ -227,9 +230,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                               children: [
                                 Text(
                                   t('description'),
-                                  style: const TextStyle(
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14,
                                   ),
                                 ),
                                 SizedBox.fromSize(

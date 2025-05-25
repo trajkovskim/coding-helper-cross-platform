@@ -22,7 +22,6 @@ class ClosingButton extends StatelessWidget {
       ),
       child: Card(
         shadowColor: Colors.transparent,
-        color: const Color.fromRGBO(226, 233, 255, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),

@@ -2,6 +2,7 @@ package mk.com.codehelp.core.domain.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,11 +67,6 @@ public class ProblemRepositoryTest {
     Problem.TestCase testCase = new Problem.TestCase();
     problem.setTestCases(List.of(testCase));
 
-    User user = new User();
-    user.setUsername("user");
-    user.setUserId("347239-2345-2435");
-    problem.setLikedBy(List.of(user));
-
     return problem;
   }
 
@@ -83,7 +79,7 @@ public class ProblemRepositoryTest {
     categoriesFilter.setCategories(List.of("test"));
 
     ProblemFilter likedByFilter = new ProblemFilter();
-    likedByFilter.setLikedBy("test");
+    likedByFilter.setLikedBy("347239-2345-2435");
 
     ProblemFilter difficultyFilter = new ProblemFilter();
     difficultyFilter.setDifficulty(Difficulty.HARD);
@@ -122,8 +118,8 @@ public class ProblemRepositoryTest {
     Problem problem2 = createProblem(category);
 
     User user = new User();
+    user.setUserId(filter.getLikedBy());
     user.setUsername("user");
-    user.setUserId("347239-2345-2435");
 
     problem2.setLikedBy(List.of(user));
     problemRepository.save(problem2);
@@ -147,6 +143,11 @@ public class ProblemRepositoryTest {
     Category category = saveCategory("test");
 
     Problem problem = createProblem(category);
+
+    User user = new User();
+    user.setUserId(UUID.randomUUID().toString());
+
+    problem.setLikedBy(List.of(user));
     problemRepository.save(problem);
 
     // When

@@ -34,7 +34,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
   };
 
   final sortOptionsMap = {
-    'Difficulty': ['ascending', 'descending']
+    'Difficulty': ['Ascending', 'Descending']
   };
 
   void handleTapSearch() {
@@ -42,11 +42,9 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
       return;
     }
 
-    String command = createCommand(
-      Command.SEARCH,
-      searchController.text.trim(),
-    );
-    filterOptions.removeWhere((element) => element == command);
+    String command =
+      createCommand(Command.SEARCH, 'Search: ${searchController.text.trim()}');
+    filterOptions.removeWhere((element) => element.startsWith("Search: "));
     setState(() {
       filterOptions.add(command);
       showSearch = false;
@@ -60,29 +58,16 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
     });
   }
 
-  void handleRemoveFilterOption(String option) {
+  void handleRemoveOption(List<String> options, String option) {
     setState(() {
-      filterOptions.remove(option);
+      options.remove(option);
     });
   }
 
-  void handleRemoveSortOption(String option) {
+  void handleSubmit(List<String> options, List<String> commands) {
     setState(() {
-      sortOptions.remove(option);
-    });
-  }
-
-  void handleFilterSubmit(List<String> commands) {
-    setState(() {
-      filterOptions.removeWhere((element) => commands.contains(element));
-      filterOptions.addAll(commands);
-    });
-  }
-
-  void handleSortSubmit(List<String> commands) {
-    setState(() {
-      sortOptions.removeWhere((element) => commands.contains(element));
-      sortOptions.addAll(commands);
+      options.removeWhere((element) => commands.contains(element));
+      options.addAll(commands);
     });
   }
 
@@ -145,7 +130,7 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
       ),
       body: FutureBuilder(
         future: problemsService.getProblemEntries(
-          name: filters['name'],
+          name: filters['search'],
           category: filters['category'],
           difficulty:
               filters['difficulty'] != null
@@ -174,19 +159,19 @@ class _ProblemsDiscoverPageState extends State<ProblemsDiscoverPage> {
                   SearchSettingsRow(
                     filterOptions: filterOptionsMap,
                     sortOptions: sortOptionsMap,
-                    handleFilterSubmit: handleFilterSubmit,
-                    handleSortSubmit: handleSortSubmit,
+                    handleFilterSubmit: (options) => handleSubmit(filterOptions, options),
+                    handleSortSubmit: (options) => handleSubmit(sortOptions, options),
                     handleViewModeChange: handleViewModeChange,
                     viewMode: view,
                   ),
                   SizedBox.fromSize(size: const Size.fromHeight(15)),
                   ListOptions(
                     options: filterOptions,
-                    onRemove: handleRemoveFilterOption,
+                    onRemove: (option) => handleRemoveOption(filterOptions, option),
                   ),
                   ListOptions(
                     options: sortOptions,
-                    onRemove: handleRemoveSortOption,
+                    onRemove: (option) => handleRemoveOption(sortOptions, option),
                   ),
                   SizedBox.fromSize(size: const Size.fromHeight(15)),
                   if (view == ViewProfile.LIST)

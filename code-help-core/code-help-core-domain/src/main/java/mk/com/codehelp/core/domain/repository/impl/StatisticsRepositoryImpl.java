@@ -25,17 +25,17 @@ public class StatisticsRepositoryImpl implements StatisticsRepository {
 
   private final Neo4jClient neo4jClient;
 
-  public List<SubmissionByCategoryCountPairsValue> getCountsByCategoryPairs(String username, SubmissionStatus status) {
+  public List<SubmissionByCategoryCountPairsValue> getCountsByCategoryPairs(String userId, SubmissionStatus status) {
 
     return neo4jClient.query("""
       match (user:User)-[r_user:BY]-(submission:Submission)-[r_problem:FOR_PROBLEM]-(problem)
-      where user.username = $username and submission.status = $status
+      where user.userId = $userId and submission.status = $status
       with distinct submission.status as status, problem
       match (problem:Problem)-[r_category:IN_CATEGORY]-(category:Category)
       with status, problem, category
       return category.name as category, count(problem) as count
       """)
-      .bindAll(Map.of("username", username, "status", status.toString()))
+      .bindAll(Map.of("userId", userId, "status", status.toString()))
       .fetchAs(SubmissionByCategoryCountPairsValue.class)
       .mappedBy((typeSystem, record) ->
         new SubmissionByCategoryCountPairsValue(
@@ -44,14 +44,14 @@ public class StatisticsRepositoryImpl implements StatisticsRepository {
       .all().stream().toList();
   }
 
-  public List<SubmissionByLanguageCountPairsValue> getCountsByLanguagePairs(String username, SubmissionStatus status) {
+  public List<SubmissionByLanguageCountPairsValue> getCountsByLanguagePairs(String userId, SubmissionStatus status) {
 
     return neo4jClient.query("""
       match (user:User)-[r_user:BY]-(submission:Submission)
-      where user.username = $username and submission.status = $status
+      where user.userId = $userId and submission.status = $status
       return distinct submission.language as language, count(submission.status = $status) as count
       """)
-      .bindAll(Map.of("username", username, "status", status.toString()))
+      .bindAll(Map.of("userId", userId, "status", status.toString()))
       .fetchAs(SubmissionByLanguageCountPairsValue.class)
       .mappedBy((typeSystem, record) ->
         new SubmissionByLanguageCountPairsValue(
@@ -64,6 +64,7 @@ public class StatisticsRepositoryImpl implements StatisticsRepository {
 
     User user = new User();
     user.setUserId(record.get("user").get("userId").asString());
+    user.setUsername(record.get("user").get("username").asString());
 
     return new UserRankingValue(
       user,

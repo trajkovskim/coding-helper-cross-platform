@@ -11,10 +11,8 @@ import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.filter.ProblemFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 import mk.com.codehelp.core.domain.repository.ProblemRepository;
-import mk.com.codehelp.core.domain.repository.UserRepository;
 import mk.com.codehelp.core.service.dto.PageInfoDto;
 import mk.com.codehelp.core.service.dto.ProblemDto;
-import mk.com.codehelp.core.service.dto.ProblemEmbeddedDto;
 import mk.com.codehelp.core.service.exceptions.ProblemNotFoundException;
 import mk.com.codehelp.core.service.exceptions.CodeDoesNotExistException;
 import mk.com.codehelp.core.service.service.CategoryService;
@@ -31,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -115,7 +112,7 @@ public class ProblemServiceImpl implements ProblemService {
 
     if (user != null) {
       SubmissionFilter submissionFilter = new SubmissionFilter();
-      submissionFilter.setUser(user);
+      submissionFilter.setUserId(user);
       SubmissionValue latestSubmission =
         submissionProblemService.findLatest(submissionFilter, problemValue.getId()).orElse(null);
 
@@ -184,8 +181,8 @@ public class ProblemServiceImpl implements ProblemService {
   }
 
   @Override
-  public boolean isLikedBy(Long problemId, String email) {
+  public boolean isLikedBy(Long problemId, String userId) {
 
-    return problemRepository.existsByIdAndLikedBy_UsernameContains(problemId, email);
+    return problemRepository.existsByIdAndLikedBy_UserIdContains(problemId, userId);
   }
 }

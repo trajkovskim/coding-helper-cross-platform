@@ -30,7 +30,11 @@ const Map<String, ThemeMode> THEMES_MAP = {
   'system': ThemeMode.system,
 };
 
-const Map<String, MaterialColor> COLORS_MAP = {'purple': Colors.purple, 'blue': Colors.blue, 'red': Colors.red};
+const Map<String, MaterialColor> COLORS_MAP = {
+  'purple': Colors.purple,
+  'blue': Colors.blue,
+  'red': Colors.red,
+};
 
 class MyApp extends StatelessWidget {
   final authService = const AuthService();
@@ -105,10 +109,15 @@ class MyApp extends StatelessWidget {
                   return MaterialApp(
                     title: 'CodingHelper',
                     darkTheme: ThemeData(
-                      primarySwatch: COLORS_MAP[accentColor],
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: COLORS_MAP[accentColor]!,
+                        brightness: Brightness.dark,
+                      ),
                     ),
                     theme: ThemeData(
-                      primarySwatch: COLORS_MAP[accentColor],
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: COLORS_MAP[accentColor]!,
+                      ),
                     ),
                     themeMode: THEMES_MAP[theme],
                     localizationsDelegates: [

@@ -9,7 +9,7 @@ import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 @Setter
 public class SubmissionFilter {
 
-  private String user;
+  private String userId;
   private SubmissionStatus status;
 
   public String getStatus() {

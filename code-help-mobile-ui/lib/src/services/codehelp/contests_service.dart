@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:coding_helper_api/coding_helper_api.dart';
 
 import 'api.dart';
@@ -5,9 +6,12 @@ import 'api.dart';
 class ContestsService {
   const ContestsService();
 
-  Future<List<ContestEntry>> getContestEntries() {
-    return CONTESTS_API
-        .getContestEntries()
+  Future<List<ContestEntry>> getContestEntries({
+    String? name, ContestStatus? status, List<String>? sortBy}) {
+    return CONTESTS_API.getContestEntries(
+        name: name,
+        status: status,
+        sortBy: sortBy != null ? BuiltList(sortBy) : null)
         .then((value) => value.data!.contests.toList());
   }
 

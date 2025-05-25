@@ -60,17 +60,6 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
     }
   }
 
-  handleCommunityDelete(BuildContext context, String communityName) async {
-    final confirmation = await showCommunityDeleteDialog(context);
-
-    if (!confirmation) {
-      return;
-    }
-
-    await _communityService.deleteCommunity(communityName);
-    return goBack(context);
-  }
-
   handlePostDelete(BuildContext context, String postUid) async {
     await _postService.deletePost(postUid);
     triggerRebuild();
@@ -86,6 +75,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
+    final fc = getTranslation(context, 'forum.community');
 
     final CommunityPageArguments args = ModalRoute.of(context)!.settings.arguments as CommunityPageArguments;
 
@@ -140,7 +130,6 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                               Container(
                                 height: innerConstraints.maxHeight * 0.5,
                                 decoration: const BoxDecoration(
-                                  color: Colors.white,
                                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
                                 ),
                                 child: Padding(
@@ -159,36 +148,31 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                                   communityName: snapshot.data!.name,
                                                   isJoined: snapshot.data!.joined,
                                                 ),
-                                                SizedBox.fromSize(size: const Size(2, 0)),
-                                                CommunityDeleteButton(
-                                                  community: snapshot.data!,
-                                                  onTap: () => handleCommunityDelete(context, snapshot.data!.name),
-                                                )
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 35).copyWith(bottom: 5),
+                                            padding: const EdgeInsets.symmetric(horizontal: 15).copyWith(bottom: 5),
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   snapshot.data!.name,
-                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                                                 )
                                               ],
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                                            padding: const EdgeInsets.symmetric(horizontal: 15),
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   snapshot.data!.description,
-                                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                                                 )
                                               ],
                                             ),
@@ -196,10 +180,10 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                                         ],
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                                        padding: const EdgeInsets.symmetric(horizontal: 15),
                                         child: Row(
                                           children: [
-                                            const Text("Tags: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                            Text(fc("tags"), style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
                                             Wrap(
                                               alignment: WrapAlignment.start,
                                               crossAxisAlignment: WrapCrossAlignment.end,
@@ -224,7 +208,6 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                             width: 90,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
@@ -238,9 +221,9 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Posts",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          Text(
+                            fc('posts'),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           IconButton(
                             onPressed: () => handlePost(context, args.communityName),
@@ -342,10 +325,11 @@ class _CommunityJoinButtonState extends State<CommunityJoinButton> {
 
   @override
   Widget build(BuildContext context) {
+    final t = getTranslation(context, 'forum.community');
     return ElevatedButton(
       onPressed: joined ? () => handleLeave() : () => handleJoin(),
       child: Text(
-        !joined ? "Join" : "Leave",
+        !joined ? t('join') : t('leave'),
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
@@ -355,6 +339,8 @@ class _CommunityJoinButtonState extends State<CommunityJoinButton> {
 createModalDialog(context) {
   final textController = TextEditingController();
   final titleController = TextEditingController();
+  final t = getTranslation(context, 'forum.community');
+  final tm = getTranslation(context, 'modal');
 
   return Dialog(
     child: Container(
@@ -367,23 +353,20 @@ createModalDialog(context) {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                child: const Text(
-                  "New post",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Text(
+                  t('newPost'),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox.fromSize(size: const Size.fromHeight(20)),
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Post title', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: t('postTitleInput'), border: OutlineInputBorder()),
               ),
               TextFormField(
                 controller: textController,
                 maxLines: 3,
-                decoration: const InputDecoration(labelText: 'Post content', border: UnderlineInputBorder()),
+                decoration: InputDecoration(labelText: t('postContentInput'), border: UnderlineInputBorder()),
               ),
             ],
           ),
@@ -397,14 +380,14 @@ createModalDialog(context) {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.error.withAlpha(150),
                 ),
-                child: const Text("cancel"),
+                child: Text(tm("cancel")),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(
                       context, PostModalData(text: textController.value.text, title: titleController.value.text));
                 },
-                child: const Text("Submit"),
+                child: Text(tm("submit")),
               )
             ],
           )

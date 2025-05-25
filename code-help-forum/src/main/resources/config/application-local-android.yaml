@@ -7,9 +7,9 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://10.0.2.2/iam/realms/code-help
-          jwk-set-uri: http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8080/iam/realms/code-help/protocol/openid-connect/certs
 
   datasource:
-    url: jdbc:postgresql://code-help-forum-postgres:5432/code_help
+    url: jdbc:postgresql://localhost:5432/code_help
     username: user
     password: password

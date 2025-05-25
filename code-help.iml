@@ -3,14 +3,6 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/build" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/build" />
-      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/build" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/bin/cache/dart-sdk/lib/_internal/js_runtime/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/bin/cache/dart-sdk/lib/_internal/js_runtime/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/bin/cache/dart-sdk/lib/_internal/js_runtime/build" />
@@ -410,6 +402,14 @@
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/packages/integration_test/integration_test_macos/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/packages/integration_test/integration_test_macos/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.flutter/packages/integration_test/integration_test_macos/build" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_api/build" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/api/coding_helper_forum_api/build" />
+      <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/build" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/code-help-mobile-ui/linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux/build" />

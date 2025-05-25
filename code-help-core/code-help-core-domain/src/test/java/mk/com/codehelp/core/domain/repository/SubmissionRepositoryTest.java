@@ -1,6 +1,7 @@
 package mk.com.codehelp.core.domain.repository;
 
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.Problem;
 import mk.com.codehelp.core.domain.model.Submission;
+import mk.com.codehelp.core.domain.model.User;
 import mk.com.codehelp.core.domain.model.filter.SubmissionFilter;
 import mk.com.codehelp.core.domain.model.value.SubmissionValue;
 
@@ -33,8 +36,23 @@ public class SubmissionRepositoryTest {
   @Autowired
   private SubmissionRepository submissionRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   private Submission createSubmission() {
     return new Submission(SubmissionStatus.ACCEPTED, "javascript", "code", new Problem(), 0, 0);
+  }
+
+  @BeforeEach
+  public void setUp() {
+
+    User user = new User();
+
+    String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+    user.setUserId(currentUser);
+    user.setUsername("username");
+
+    userRepository.save(user);
   }
 
   @Test
@@ -56,14 +74,14 @@ public class SubmissionRepositoryTest {
   private static Stream<Arguments> shouldGetSubmissionsArguments() {
 
     SubmissionFilter userFilter = new SubmissionFilter();
-    userFilter.setUser("user");
+    userFilter.setUserId("user");
 
     SubmissionFilter userAndStatusFilter = new SubmissionFilter();
-    userAndStatusFilter.setUser("user");
+    userAndStatusFilter.setUserId("user");
     userAndStatusFilter.setStatus(SubmissionStatus.DECLINED);
 
     SubmissionFilter anotherUserFilter = new SubmissionFilter();
-    anotherUserFilter.setUser("user1");
+    anotherUserFilter.setUserId("user1");
 
     Pageable pageRequest = PageRequest.of(0, 10);
 

@@ -25,14 +25,12 @@ class ForumCommunitySearchPage extends StatefulWidget {
 class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   String? searchTerm;
   ViewProfile view = ViewProfile.LIST;
-  List<String> options = [];
 
   List<String> filterOptions = [];
   List<String> sortOptions = [];
 
   final filterOptionsMap = {
     'Category': ['Arrays', 'Hash'],
-    'Difficulty': ['EASY', 'MEDIUM', 'HARD'],
   };
 
   final sortOptionsMap = {
@@ -42,37 +40,23 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
   final _communityService = CommunityService.getInstance();
 
   handleSearch(String term) {
-    final option = createCommand(Command.SEARCH, term);
-    options.removeWhere((element) => element == option);
+    filterOptions.removeWhere((element) => element.startsWith("Search: "));
     setState(() {
       searchTerm = term;
-      options.add(createCommand(Command.SEARCH, term));
+      filterOptions.add(createCommand(Command.SEARCH, 'Search: ${term.trim()}'));
     });
   }
 
-  void handleRemoveFilterOption(String option) {
+  void handleRemoveOption(List<String> options, String option) {
     setState(() {
-      filterOptions.remove(option);
+      options.remove(option);
     });
   }
 
-  void handleRemoveSortOption(String option) {
+  void handleSubmit(List<String> options, List<String> commands) {
     setState(() {
-      sortOptions.remove(option);
-    });
-  }
-
-  void handleFilterSubmit(List<String> commands) {
-    setState(() {
-      filterOptions.removeWhere((element) => commands.contains(element));
-      filterOptions.addAll(commands);
-    });
-  }
-
-  void handleSortSubmit(List<String> commands) {
-    setState(() {
-      sortOptions.removeWhere((element) => commands.contains(element));
-      sortOptions.addAll(commands);
+      options.removeWhere((element) => commands.contains(element));
+      options.addAll(commands);
     });
   }
 
@@ -122,19 +106,19 @@ class _ForumCommunitySearchPageState extends State<ForumCommunitySearchPage> {
               SearchSettingsRow(
                 filterOptions: filterOptionsMap,
                 sortOptions: sortOptionsMap,
-                handleFilterSubmit: handleFilterSubmit,
-                handleSortSubmit: handleSortSubmit,
+                handleFilterSubmit: (options) => handleSubmit(filterOptions, options),
+                handleSortSubmit: (options) => handleSubmit(sortOptions, options),
                 handleViewModeChange: handleViewModeChange,
                 viewMode: view,
               ),
               SizedBox.fromSize(size: const Size.fromHeight(15)),
               ListOptions(
                 options: filterOptions,
-                onRemove: handleRemoveFilterOption,
+                onRemove: (option) => handleRemoveOption(filterOptions, option),
               ),
               ListOptions(
                 options: sortOptions,
-                onRemove: handleRemoveSortOption,
+                onRemove: (option) => handleRemoveOption(sortOptions, option),
               ),
               SizedBox.fromSize(size: const Size.fromHeight(15)),
               FutureBuilder<ShortCommunities?>(
@@ -301,7 +285,6 @@ class TagChip extends StatelessWidget {
       ),
       child: Card(
         shadowColor: Colors.transparent,
-        color: const Color.fromRGBO(226, 233, 255, 1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),

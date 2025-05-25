@@ -1,3 +1,4 @@
+import 'package:coding_helper_api/coding_helper_api.dart';
 import 'package:coding_helper_cross_platform/src/components/common/SearchSettings.dart';
 import 'package:flutter/material.dart';
 
@@ -28,13 +29,12 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   ViewProfile view = ViewProfile.LIST;
 
   final Map<String, List<String>> filterOptionsMap = {
-    'language': ['java', 'javascript'],
     'status': ['OPEN', 'STARTED', 'CLOSED'],
   };
 
   final Map<String, List<String>> sortOptionsMap = {
-    'Start date': ['ascending', 'descending'],
-    'Status': ['ascending', 'descending'],
+    'Start Date': ['Ascending', 'Descending'],
+    'Status': ['Ascending', 'Descending'],
   };
 
   List<String> filterOptions = [];
@@ -46,8 +46,8 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
     }
 
     String command =
-        createCommand(Command.SEARCH, searchController.text.trim());
-    filterOptions.removeWhere((element) => element == command);
+      createCommand(Command.SEARCH, 'Search: ${searchController.text.trim()}');
+    filterOptions.removeWhere((element) => element.startsWith("Search: "));
     setState(() {
       filterOptions.add(command);
       showSearch = false;
@@ -61,29 +61,16 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
     });
   }
 
-  void handleRemoveFilterOption(String option) {
+  void handleRemoveOption(List<String> options, String option) {
     setState(() {
-      filterOptions.remove(option);
+      options.remove(option);
     });
   }
 
-  void handleRemoveSortOption(String option) {
+  void handleSubmit(List<String> options, List<String> commands) {
     setState(() {
-      sortOptions.remove(option);
-    });
-  }
-
-  void handleFilterSubmit(List<String> commands) {
-    setState(() {
-      filterOptions.removeWhere((element) => commands.contains(element));
-      filterOptions.addAll(commands);
-    });
-  }
-
-  void handleSortSubmit(List<String> commands) {
-    setState(() {
-      sortOptions.removeWhere((element) => commands.contains(element));
-      sortOptions.addAll(commands);
+      options.removeWhere((element) => commands.contains(element));
+      options.addAll(commands);
     });
   }
 
@@ -97,6 +84,9 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     final t = getTranslation(context, 'contests');
+
+    final filters = transformFilterOptionsListToMap(filterOptions);
+    final sorters = transformSortOptions(sortOptions).map((e) => 'contest.$e').toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -123,7 +113,12 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
         ],
       ),
       body: FutureBuilder(
-          future: contestsService.getContestEntries(),
+          future: contestsService.getContestEntries(
+              name: filters['search'],
+              status: filters['status'] != null
+                  ? ContestStatus.valueOf(filters['status']!.toUpperCase())
+                  : null,
+              sortBy: sorters),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               throw ErrorCode.CONTESTS_DISCOVER;
@@ -146,18 +141,19 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                     SearchSettingsRow(
                       filterOptions: filterOptionsMap,
                       sortOptions: sortOptionsMap,
-                      handleFilterSubmit: handleFilterSubmit,
-                      handleSortSubmit: handleSortSubmit,
+                      handleFilterSubmit: (options) => handleSubmit(filterOptions, options),
+                      handleSortSubmit: (options) => handleSubmit(sortOptions, options),
                       handleViewModeChange: handleViewModeChange,
                       viewMode: view,
                     ),
+                    SizedBox.fromSize(size: const Size.fromHeight(15)),
                     ListOptions(
                       options: filterOptions,
-                      onRemove: handleRemoveFilterOption,
+                      onRemove: (option) => handleRemoveOption(filterOptions, option),
                     ),
                     ListOptions(
                       options: sortOptions,
-                      onRemove: handleRemoveSortOption,
+                      onRemove: (option) => handleRemoveOption(sortOptions, option),
                     ),
                     SizedBox.fromSize(size: const Size.fromHeight(15)),
                     if (view == ViewProfile.LIST)

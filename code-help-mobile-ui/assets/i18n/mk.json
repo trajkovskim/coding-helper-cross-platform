@@ -1,6 +1,7 @@
 {
   "codehelp": {
     "error": "Грешка",
+    "empty": "Празно",
     "camera": "Камера",
     "gallery": "Галерија",
     "pick": "Изберете",
@@ -40,7 +41,7 @@
     },
     "home": {
       "title": "Дома",
-      "explore": "Explore",
+      "explore": "Истражи",
       "activeContests": "Започнати натпревари",
       "top10Problems": "Топ 10 рангирани проблеми"
     },
@@ -82,13 +83,20 @@
     },
     "forum": {
       "communities": "Заедници",
-      "recentPosts": "Recent posts",
+      "recentPosts": "Постови",
       "title": "Форум",
       "comment": {
         "edited": "Променето"
       },
       "community": {
-        "search": "Пребарувај заедници"
+        "search": "Пребарувај заедници",
+        "leave": "Излези",
+        "join": "Влези",
+        "tags": "Тагови: ",
+        "posts": "Постови",
+        "newPost": "Креирај нов пост",
+        "postTitleInput": "Наслов",
+        "postContentInput": "Текст"
       }
     },
     "profile": {

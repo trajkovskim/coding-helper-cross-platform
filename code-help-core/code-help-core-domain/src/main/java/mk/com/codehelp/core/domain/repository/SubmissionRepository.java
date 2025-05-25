@@ -17,12 +17,12 @@ public interface SubmissionRepository extends Neo4jRepository<Submission, Long> 
 
   @Query(value = """
     match (user:User)-[r_user:BY]-(submission:Submission)
-    where user.username = :#{#filters.user}
+    where user.userId = :#{#filters.userId}
       and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
     return submission :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""",
   countQuery = """
-    match (submission:Submission)
-    where submission.user = :#{#filters.user}
+    match (user:User)-[r_user:BY]-(submission:Submission)
+    where user.userId = :#{#filters.userId}
       and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
     return count(submission)""")
   Page<SubmissionValue> findAll(SubmissionFilter filters, Pageable pageable);
@@ -30,13 +30,13 @@ public interface SubmissionRepository extends Neo4jRepository<Submission, Long> 
   @Query(value = """
     match (user:User)-[r_user:BY]-(submission:Submission)-[r_problem:FOR_PROBLEM]-(problem:Problem)
     where ID(problem) = $problemId
-      and user.username = :#{#filters.user}
+      and user.userId = :#{#filters.userId}
       and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
     return submission :#{orderBy(#pageable)} SKIP $skip LIMIT $limit""",
     countQuery = """
     match (user:User)-[r_user:BY]-(submission:Submission)-[r_problem:FOR_PROBLEM]-(problem:Problem)
     where ID(problem) = $problemId
-      and user.username = :#{#filters.user}
+      and user.userId = :#{#filters.userId}
       and (:#{#filters.status.length} = 0 or submission.status = :#{#filters.status})
     return count(submission)""")
   Page<SubmissionValue> findAllByProblem(SubmissionFilter filters, Long problemId, Pageable pageable);

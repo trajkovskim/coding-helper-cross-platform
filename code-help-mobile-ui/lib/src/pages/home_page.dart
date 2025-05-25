@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'home');
+    final tRoot = getTranslation(context);
     final navigator = Navigator.of(context);
 
     return Scaffold(
@@ -47,6 +48,7 @@ class HomePage extends StatelessWidget {
 
                       return HorizontalListView(
                         title: t('explore'),
+                        empty: tRoot('empty'),
                         items: entries
                             .map(
                               (entry) => Item(
@@ -82,6 +84,7 @@ class HomePage extends StatelessWidget {
 
                       return HorizontalListView(
                         title: t('activeContests'),
+                        empty: tRoot('empty'),
                         items: entries
                             .map(
                               (entry) => Item(
@@ -117,6 +120,7 @@ class HomePage extends StatelessWidget {
 
                       return HorizontalListView(
                         title: t('top10Problems'),
+                        empty: tRoot('empty'),
                         items: entries
                             .map(
                               (entry) => Item(

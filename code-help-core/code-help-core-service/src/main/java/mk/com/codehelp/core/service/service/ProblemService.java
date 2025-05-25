@@ -29,5 +29,5 @@ public interface ProblemService {
 
   boolean likeToggle(Long id);
 
-  boolean isLikedBy(Long problemId, String email);
+  boolean isLikedBy(Long problemId, String userId);
 }

@@ -1,5 +1,6 @@
 {
   "codehelp": {
+    "empty": "Empty",
     "error": "Error",
     "camera": "Camera",
     "gallery": "Gallery",
@@ -88,7 +89,15 @@
         "edited": "edited"
       },
       "community": {
-        "search": "Search communities"
+        "search": "Search communities",
+        "leave": "Leave",
+        "join": "Join",
+        "tags": "Tags: ",
+        "posts": "Posts",
+        "newPost": "Create new post",
+        "postTitleInput": "Post title",
+        "postContentInput": "Post content"
+      }
       }
     },
     "profile": {

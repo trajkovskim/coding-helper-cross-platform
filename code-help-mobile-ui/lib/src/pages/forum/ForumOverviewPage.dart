@@ -217,11 +217,10 @@ class ForumCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.3),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -295,7 +294,7 @@ class ForumCardPostData extends StatelessWidget {
                       PopupMenuItem(
                         onTap: tapDelete,
                         child: Container(
-                          alignment: Alignment.centerRight,
+                          alignment: Alignment.center,
                           child: const Icon(Icons.delete),
                         ),
                       )

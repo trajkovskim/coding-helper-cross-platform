@@ -22,6 +22,7 @@ class UserFrame extends StatelessWidget {
     final userData = sharedContext.userData;
     SharedPreferences.getInstance().then((storage) {
       if (!storage.containsKey('user') && userData != null) {
+        print(userData);
         sharedContext.setUserData(null, null);
       }
     });
@@ -42,7 +43,7 @@ class UserFrame extends StatelessWidget {
       final userInfo = await user.getUserInfo();
       sharedContext.setUserData(
         userInfo.preferredUsername,
-        userInfo.picture.toString(),
+        userInfo.picture != null ? userInfo.picture.toString() : DEFAULT_IMAGE_URL,
       );
 
       UserToken.initialize();
