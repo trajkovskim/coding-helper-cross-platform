@@ -57,6 +57,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'problem');
+    final theme = Theme.of(context);
 
     final params =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
@@ -150,14 +151,14 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                         children: [
                                           Text(
                                             entry.difficulty.name.toUpperCase(),
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            style: theme.textTheme.bodySmall?.copyWith(
                                                 color: getDifficultyColor(entry.difficulty),
                                                 fontWeight: FontWeight.bold
                                             ),
                                           ),
                                           Text(
                                             getSubmissionStatusText(entry),
-                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            style: theme.textTheme.bodySmall?.copyWith(
                                                 color: getSubmissionStatusColor(entry),
                                                 fontWeight: FontWeight.bold
                                             ),
@@ -172,11 +173,11 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                       children: [
                                         Text(
                                           entry.name,
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          style: theme.textTheme.bodyMedium?.copyWith(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(entry.category.name, style: Theme.of(context).textTheme.bodySmall),
+                                        Text(entry.category.name, style: theme.textTheme.bodySmall),
                                     ])
                                   ),
                                   Row(
@@ -225,7 +226,7 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                               children: [
                                 Text(
                                   t('description'),
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: theme.textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
