@@ -1,0 +1,36 @@
+{
+  "category": {
+    "name": "Hash table",
+    "description": "Arrays description"
+  },
+  "name": "Longest Substring Without Repeating Characters",
+  "description": "Given a string s, find the length of the longest substring without duplicate characters.",
+  "difficulty": "MEDIUM",
+  "markdown": "Given a string s, find the length of the longest substring without duplicate characters.\n\n**Example 1:**\nInput: s = \"abcabcbb\"\nOutput: 3\nExplanation: The answer is \"abc\", with the length of 3.\n\n**Example 2:**\nInput: s = \"bbbbb\"\nOutput: 1\nExplanation: The answer is \"b\", with the length of 1.\n\n**Example 3:**\nInput: s = \"pwwkew\"\nOutput: 3\nExplanation: The answer is \"wke\", with the length of 3.\nNotice that the answer must be a substring, \"pwke\" is a subsequence and not a substring.\n\n**Constraints:**\n0 <= s.length <= 5 * 104\n**s** consists of English letters, digits, symbols and spaces.",
+  "codes": [
+    {
+      "starter": "//returns array\nconst longestSubstringWithoutRepeatingCharacters = (s) => {\n\n};\n",
+      "runner": "console.log(longestSubstringWithoutRepeatingCharacters(...process.argv.slice(1).map(arg => JSON.parse(arg))));",
+      "language": "javascript"
+    },
+    {
+      "starter": "//returns array\nconst reverseInteger = (x) => {\n\n};\n",
+      "runner": "console.log(reverseInteger(...process.argv.slice(1).map(arg => JSON.parse(arg))));",
+      "language": "java"
+    }
+  ],
+  "testCases": [
+    {
+      "in": "abcabcbb",
+      "out": "3"
+    },
+    {
+      "in": "bbbbb",
+      "out": "1"
+    },
+    {
+      "in": "pwwkew",
+      "out": "3"
+    }
+  ]
+}

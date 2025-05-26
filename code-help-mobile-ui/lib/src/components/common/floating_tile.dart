@@ -16,31 +16,38 @@ class FloatingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      splashColor: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              shadowColor: Colors.black.withOpacity(0.85),
-              elevation: 2,
-              child: Center(
-                child: Padding(
-                  padding: padding,
-                  child: image,
+            child: InkWell(
+              onTap: onTap,
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                shadowColor: theme.primaryColor,
+                elevation: 2,
+                child: Center(
+                  child: Padding(
+                    padding: padding,
+                    child: image,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(title)
+          const SizedBox(height: 10),
+          Text(title),
         ],
       ),
     );

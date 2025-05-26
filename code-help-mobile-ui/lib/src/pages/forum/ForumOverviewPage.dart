@@ -218,32 +218,16 @@ class ForumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.3),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: Card(
-            color: Colors.transparent,
-            shadowColor: Colors.transparent,
-            child: Container(
-              padding: padding,
-              color: Colors.transparent,
-              child: child,
-            ),
-          ),
+    final theme = Theme.of(context);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      child: Card(
+        shadowColor: theme.primaryColor,
+        child: Container(
+          padding: padding,
+          child: child,
         ),
       ),
     );

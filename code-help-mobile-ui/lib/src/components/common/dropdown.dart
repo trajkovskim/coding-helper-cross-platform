@@ -16,17 +16,19 @@ class Dropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        // color: Colors.white,
+            color: theme.cardColor,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(50),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 2,
-            spreadRadius: 1,
-            offset: const Offset(0, 1),
+            color: theme.primaryColor,
+            blurRadius: 0.3,
+            spreadRadius: 0.2,
+            offset: const Offset(0, 0),
           ),
         ],
       ),

@@ -26,7 +26,7 @@ class HorizontalListView extends StatelessWidget {
         elevation: 2,
         shadowColor: Colors.black.withValues(alpha: 0.5),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class HorizontalListView extends StatelessWidget {
                   padding: EdgeInsets.only(left: 3),
                   child: Text(title!, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold))
               ),
-              SizedBox(height: 7),
+              SizedBox(height: 9),
               Expanded(
                 child: items.isEmpty && empty != null && empty!.isNotEmpty
                     ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text(empty!)])
@@ -46,7 +46,9 @@ class HorizontalListView extends StatelessWidget {
                               (item) => SizedBox(
                                 width: constraints.maxWidth * 0.25,
                                 child: Card(
-                                  elevation: 20,
+                                  clipBehavior: Clip.antiAlias,
+                                  elevation: 1,
+                                  shadowColor: theme.primaryColor,
                                   child: InkWell(
                                     onTap: item.onTap,
                                     child: GridTile(

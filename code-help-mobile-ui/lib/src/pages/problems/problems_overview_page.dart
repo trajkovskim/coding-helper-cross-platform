@@ -45,7 +45,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: constraints.maxHeight * 0.17,
+                      height: constraints.maxHeight * 0.16,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -71,7 +71,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                       ),
                     ),
                     if (problems.isNotEmpty)
-                      SizedBox.fromSize(size: const Size.fromHeight(20)),
+                      const SizedBox(height: 10),
                     if (problems.isNotEmpty)
                       SizedBox(
                         height: constraints.maxHeight * listHeightFactor,
@@ -94,7 +94,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                         ),
                       ),
                     if (problems.isNotEmpty)
-                      SizedBox.fromSize(size: const Size.fromHeight(20)),
+                      const SizedBox(height: 10),
                     if (problems.isNotEmpty)
                       SizedBox(
                         height: constraints.maxHeight * listHeightFactor,

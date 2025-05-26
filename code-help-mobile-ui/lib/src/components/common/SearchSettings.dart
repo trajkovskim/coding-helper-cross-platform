@@ -30,6 +30,7 @@ class SearchSettingsRow extends StatelessWidget {
         shadowColor: Colors.black.withOpacity(0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         elevation: 2,
+    padding: EdgeInsets.zero
       );
 
   changeViewMode() {
@@ -42,6 +43,8 @@ class SearchSettingsRow extends StatelessWidget {
     final theme = Theme.of(context);
     final tListOptions = getTranslation(context, 'listOptions');
 
+    final textStyle = theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -50,7 +53,7 @@ class SearchSettingsRow extends StatelessWidget {
             onPressed: () => createFilterModal(context, handleFilterSubmit!, filterOptions!),
             icon: const Icon(Icons.filter_alt),
             label: Text(tListOptions('filters'),
-                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: textStyle,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),
@@ -62,7 +65,7 @@ class SearchSettingsRow extends StatelessWidget {
             onPressed: () => createSortModal(context, handleSortSubmit!, sortOptions!),
             icon: const Icon(Icons.sort),
             label: Text(tListOptions('sort'),
-                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: textStyle,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),
@@ -74,7 +77,7 @@ class SearchSettingsRow extends StatelessWidget {
             onPressed: () => handleViewModeChange!(changeViewMode()),
             icon: const Icon(Icons.settings),
             label: Text(tListOptions('view'),
-                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: textStyle,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),

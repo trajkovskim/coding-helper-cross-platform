@@ -1,1 +1,0 @@
-console.log(twoSum(...process.argv.slice(2).map(arg => JSON.parse(arg))));

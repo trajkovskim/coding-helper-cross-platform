@@ -1,0 +1,36 @@
+{
+  "category": {
+    "name": "Math",
+    "description": "Math description"
+  },
+  "name": "Reverse Integer",
+  "description": "Given a signed 32-bit integer x, return x with its digits reversed.",
+  "difficulty": "MEDIUM",
+  "markdown": "Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.\\nAssume the environment does not allow you to store 64-bit integers (signed or unsigned).\\n\\n**Example 1:**\\nInput: x = 123\\nOutput: 321\\n\\n**Example 2:**\\nInput: x = -123\\nOutput: -321\\n\\n**Example 3:**\\nInput: x = 120\\nOutput: 21\\n\\n**Constraints:**\\n-231 <= x <= 231 - 1",
+  "codes": [
+    {
+      "starter": "//returns array\nconst reverseInteger = (x) => {\n\n};\n",
+      "runner": "console.log(reverseInteger(...process.argv.slice(1).map(arg => JSON.parse(arg))));",
+      "language": "javascript"
+    },
+    {
+      "starter": "//returns array\nconst reverseInteger = (x) => {\n\n};\n",
+      "runner": "console.log(reverseInteger(...process.argv.slice(1).map(arg => JSON.parse(arg))));",
+      "language": "java"
+    }
+  ],
+  "testCases": [
+    {
+      "in": "123",
+      "out": "321"
+    },
+    {
+      "in": "-123",
+      "out": "-321"
+    },
+    {
+      "in": "120",
+      "out": "21"
+    }
+  ]
+}

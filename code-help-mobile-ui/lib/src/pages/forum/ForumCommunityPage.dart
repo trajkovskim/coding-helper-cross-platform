@@ -76,6 +76,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
     final t = getTranslation(context, 'message.forum');
     final ft = getTranslation(context, 'forum');
     final fc = getTranslation(context, 'forum.community');
+    final theme = Theme.of(context);
 
     final CommunityPageArguments args = ModalRoute.of(context)!.settings.arguments as CommunityPageArguments;
 
@@ -102,117 +103,112 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
               return SingleChildScrollView(child: PaddedWidgetList(
                 padding: const EdgeInsets.all(10),
                 children: [
-                  Container(
-                    height: constraints.maxHeight * 0.5,
-                    width: constraints.maxWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 4,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 0))
-                      ],
-                    ),
-                    child: LayoutBuilder(
-                      builder: (context, innerConstraints) => Stack(
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: innerConstraints.maxHeight * 0.5,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.25),
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                                ),
-                              ),
-                              Container(
-                                height: innerConstraints.maxHeight * 0.5,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 15),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                CommunityJoinButton(
-                                                  communityName: snapshot.data!.name,
-                                                  isJoined: snapshot.data!.joined,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 15).copyWith(bottom: 5),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  snapshot.data!.name,
-                                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  snapshot.data!.description,
-                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                                        child: Row(
-                                          children: [
-                                            Text(fc("tags"), style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
-                                            Wrap(
-                                              alignment: WrapAlignment.start,
-                                              crossAxisAlignment: WrapCrossAlignment.end,
-                                              children: snapshot.data?.categories
-                                                      ?.map((tag) => TagChip(category: tag))
-                                                      .toList() ??
-                                                  [],
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                  Card(
+                    child: Container(
+                      height: constraints.maxHeight * 0.5,
+                      width: constraints.maxWidth,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, innerConstraints) => Stack(
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  height: innerConstraints.maxHeight * 0.5,
+                                  decoration: BoxDecoration(
+                                    color: theme.primaryColor,
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            top: (innerConstraints.maxHeight * 0.5) - 45,
-                            left: 30,
-                            height: 90,
-                            width: 90,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                                Container(
+                                  height: innerConstraints.maxHeight * 0.5,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 15),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  CommunityJoinButton(
+                                                    communityName: snapshot.data!.name,
+                                                    isJoined: snapshot.data!.joined,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 15).copyWith(bottom: 5),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    snapshot.data!.name,
+                                                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    snapshot.data!.description,
+                                                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                                          child: Row(
+                                            children: [
+                                              Text(fc("tags"), style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+                                              Wrap(
+                                                alignment: WrapAlignment.start,
+                                                crossAxisAlignment: WrapCrossAlignment.end,
+                                                children: snapshot.data?.categories
+                                                        ?.map((tag) => TagChip(category: tag))
+                                                        .toList() ??
+                                                    [],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: (innerConstraints.maxHeight * 0.5) - 45,
+                              left: 30,
+                              height: 90,
+                              width: 90,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -223,7 +219,7 @@ class _ForumCommunityPageState extends State<ForumCommunityPage> {
                         children: [
                           Text(
                             fc('posts'),
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           IconButton(
                             onPressed: () => handlePost(context, args.communityName),
@@ -342,6 +338,8 @@ createModalDialog(context) {
   final t = getTranslation(context, 'forum.community');
   final tm = getTranslation(context, 'modal');
 
+  final theme = Theme.of(context);
+
   return Dialog(
     child: Container(
       padding: const EdgeInsets.all(20),
@@ -355,7 +353,7 @@ createModalDialog(context) {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   t('newPost'),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox.fromSize(size: const Size.fromHeight(20)),
@@ -378,7 +376,7 @@ createModalDialog(context) {
                   Navigator.pop(context, null);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error.withAlpha(150),
+                  backgroundColor: theme.colorScheme.error.withAlpha(150),
                 ),
                 child: Text(tm("cancel")),
               ),
