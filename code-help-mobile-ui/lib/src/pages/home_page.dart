@@ -58,9 +58,10 @@ class HomePage extends StatelessWidget {
                             .map(
                               (entry) => Item(
                                 title: entry.name,
-                            onTap: () => navigator.pushNamed(
-                              '/problems-discover',
-                              arguments: {'category': entry.name},
+                                image: Icon(Icons.abc),
+                                onTap: () => navigator.pushNamed(
+                                  '/problems-discover',
+                                  arguments: {'category': entry.name},
                             ),
                           ),
                         ).toList(),
@@ -94,6 +95,7 @@ class HomePage extends StatelessWidget {
                             .map(
                               (entry) => Item(
                                 title: entry.name,
+                                image: Icon(Icons.hourglass_bottom),
                                 onTap: () => navigator.pushNamed(
                                   '/contest-overview',
                                   arguments: {'id': entry.id.toString()},
@@ -131,6 +133,7 @@ class HomePage extends StatelessWidget {
                             .map(
                               (entry) => Item(
                                 title: entry.name,
+                                image: Icon(Icons.abc),
                                 onTap: () => navigator.pushNamed(
                                   '/problem-overview',
                                   arguments: {'id': entry.id.toString()},
@@ -176,6 +179,7 @@ class HomePage extends StatelessWidget {
                                 (entry) =>
                                 Item(
                                   title: entry.name,
+                                  image: Icon(Icons.book),
                                   onTap: () =>
                                       ForumCommunityPage.navigate(context,
                                           CommunityPageArguments(

@@ -163,6 +163,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                             .map(
                               (entry) => ListItem(
                                 title: entry.name,
+                                image: Icon(Icons.hourglass_bottom),
                                 onTap: () => navigator.pushNamed(
                                   '/contest-overview',
                                   arguments: {'id': entry.id.toString()},

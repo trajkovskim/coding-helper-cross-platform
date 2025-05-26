@@ -70,13 +70,13 @@ class ProfilePage extends StatelessWidget {
             SizedBox.fromSize(size: const Size.fromHeight(10)),
             VerticalListView(
               children: [
-                ListItem(
+                if (sharedContext.isAuthenticated) ListItem(
                     title: t('stats.title'),
                     onTap: () => navigator.pushNamed('/stats')),
-                ListItem(
+                if (sharedContext.isAuthenticated)  ListItem(
                     title: t('saved.title'),
                     onTap: () => navigator.pushNamed('/saved')),
-                ListItem(
+                if (sharedContext.isAuthenticated)  ListItem(
                     title: t('history.title'),
                     onTap: () => navigator.pushNamed('/history')),
                 ListItem(

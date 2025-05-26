@@ -80,6 +80,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                               .map(
                                 (entry) => Item(
                                   title: entry.name,
+                                  image: Icon(Icons.abc_sharp),
                                   onTap: () {
                                     navigator.pushNamed(
                                       '/problem-overview',
@@ -102,6 +103,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                               .map(
                                 (entry) => Item(
                                   title: entry.name,
+                                  image: Icon(Icons.abc),
                                   onTap: () {
                                     navigator.pushNamed(
                                       '/problem-overview',

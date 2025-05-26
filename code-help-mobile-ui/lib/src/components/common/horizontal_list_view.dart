@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class Item {
   Key? key;
   String? title;
+  Widget? image;
   void Function()? onTap;
 
-  Item({this.key, this.title, this.onTap});
+  Item({this.key, this.title, this.image, this.onTap});
 }
 
 class HorizontalListView extends StatelessWidget {
@@ -17,6 +18,8 @@ class HorizontalListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return LayoutBuilder(builder: (context, constraints) {
       return Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
@@ -30,7 +33,7 @@ class HorizontalListView extends StatelessWidget {
             children: [
               if (title != null) Padding(
                   padding: EdgeInsets.only(left: 3),
-                  child: Text(title!, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold))
+                  child: Text(title!, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold))
               ),
               SizedBox(height: 7),
               Expanded(
@@ -43,28 +46,27 @@ class HorizontalListView extends StatelessWidget {
                               (item) => SizedBox(
                                 width: constraints.maxWidth * 0.25,
                                 child: Card(
-                                  elevation: 2,
-                                  color: Colors.transparent.withValues(alpha: 0.03),
+                                  elevation: 20,
                                   child: InkWell(
                                     onTap: item.onTap,
                                     child: GridTile(
                                       key: item.key,
                                       footer: item.title != null ? Column(
                                         children: [
-                                          Center(child: Text(item.title!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall)),
+                                          Center(child: Text(item.title!, textAlign: TextAlign.center, style: theme.textTheme.bodySmall)),
                                           SizedBox(height: 3)
                                         ],
                                       ) : null,
-                                      child: Padding(
+                                      child: item.image != null ? Padding(
                                           padding: EdgeInsets.only(bottom: 20),
                                           child: Padding(
                                               padding: EdgeInsets.all(23),
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(10),
-                                                child: const Icon(Icons.hourglass_empty_rounded),
+                                                child: item.image,
                                               )
                                           )
-                                      ),
+                                      ) : SizedBox(),
                                     ),
                                   ),
                                 ),

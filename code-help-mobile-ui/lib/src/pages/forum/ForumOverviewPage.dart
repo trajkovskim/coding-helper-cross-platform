@@ -77,6 +77,7 @@ class ForumOverviewPage extends StatelessWidget {
                             .map(
                               (entry) => Item(
                                 title: entry.name,
+                                image: Icon(Icons.book),
                                 onTap: () => ForumCommunityPage.navigate(context, CommunityPageArguments(communityName: entry.name)),
                               ),
                         )
@@ -224,7 +225,7 @@ class ForumCard extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.3),
             spreadRadius: 1,
-            blurRadius: 4,
+            blurRadius: 1,
             offset: const Offset(0, 2),
           ),
         ],

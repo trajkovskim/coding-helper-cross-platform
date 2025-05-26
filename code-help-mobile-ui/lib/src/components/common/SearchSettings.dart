@@ -27,8 +27,6 @@ class SearchSettingsRow extends StatelessWidget {
   ViewProfile viewMode;
 
   getSearchSettingsButtonStyle() => ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         shadowColor: Colors.black.withOpacity(0.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         elevation: 2,
@@ -41,6 +39,7 @@ class SearchSettingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final tListOptions = getTranslation(context, 'listOptions');
 
     return Row(
@@ -51,29 +50,31 @@ class SearchSettingsRow extends StatelessWidget {
             onPressed: () => createFilterModal(context, handleFilterSubmit!, filterOptions!),
             icon: const Icon(Icons.filter_alt),
             label: Text(tListOptions('filters'),
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),
           ),
         ),
+        SizedBox(width: 5),
         if(sortOptions != null && handleSortSubmit != null) Expanded(
           child: ElevatedButton.icon(
             onPressed: () => createSortModal(context, handleSortSubmit!, sortOptions!),
             icon: const Icon(Icons.sort),
             label: Text(tListOptions('sort'),
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),
           ),
         ),
+        SizedBox(width: 5),
         if (handleViewModeChange != null) Expanded(
           child: ElevatedButton.icon(
             onPressed: () => handleViewModeChange!(changeViewMode()),
             icon: const Icon(Icons.settings),
             label: Text(tListOptions('view'),
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 softWrap: false,
                 overflow: TextOverflow.ellipsis),
             style: getSearchSettingsButtonStyle(),
