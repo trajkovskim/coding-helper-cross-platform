@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.diff.Diff;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
@@ -19,6 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import mk.com.codehelp.core.domain.enums.Difficulty;
 import mk.com.codehelp.core.domain.enums.SubmissionStatus;
 import mk.com.codehelp.core.domain.model.*;
 import mk.com.codehelp.core.domain.model.relations.ContestProblem;
@@ -82,6 +84,7 @@ public class StatisticsRepositoryTest {
   private Problem createProblem(Category category) {
 
     Problem problem = new Problem();
+    problem.setDifficulty(Difficulty.EASY);
     problem.setCategory(category);
 
     Problem.TestCase testCase = new Problem.TestCase();
@@ -251,5 +254,41 @@ public class StatisticsRepositoryTest {
     assertEquals(usersSizeBefore + 1, userRankings.getTotalElements());
     assertEquals(0, ranking.getScore());
     assertEquals(currentUser, ranking.getUser().getUserId());
+  }
+
+  @Test
+  void shouldCountDistinctByStatusAndProblem_DifficultyAndUser_Username() {
+
+    // Given
+    Category category1 = createCategory("category1");
+    Problem problem1 = createProblem(category1);
+
+    Submission submission1 = createSubmission(problem1);
+    submissionRepository.save(submission1);
+
+    Submission submission2 = createSubmission(problem1);
+    submissionRepository.save(submission2);
+
+    Submission submission3 = createSubmission(problem1);
+    submission3.setStatus(SubmissionStatus.DECLINED);
+    submissionRepository.save(submission3);
+
+    Problem problem2 = createProblem(category1);
+    Submission submission4 = createSubmission(problem2);
+    submissionRepository.save(submission4);
+
+    Problem problem3 = createProblem(category1);
+    Submission submission5 = createSubmission(problem3);
+    submission5.setStatus(SubmissionStatus.DECLINED);
+    submissionRepository.save(submission5);
+
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    // When
+    Long count = submissionRepository.countDistinctByStatusAndProblem_DifficultyAndUser_Username(
+      SubmissionStatus.ACCEPTED, Difficulty.EASY, username);
+
+    // Then
+    assertEquals(2L, count);
   }
 }

@@ -1,5 +1,10 @@
 {
   "codehelp": {
+    "contestStatus": {
+      "OPEN": "Отворен",
+      "STARTED": "Започнат",
+      "CLOSED": "Завршен"
+    },
     "info": "Инфо",
     "error": "Грешка",
     "empty": "Празно",
@@ -44,7 +49,8 @@
       "title": "Дома",
       "explore": "Истражи",
       "activeContests": "Започнати натпревари",
-      "top10Problems": "Топ 10 рангирани проблеми"
+      "top10Problems": "Топ 10 рангирани проблеми",
+      "communities": "Заедници"
     },
     "contests": {
       "title": "Натпревари",
@@ -64,7 +70,8 @@
         "title": "Истражи"
       },
       "active": "Активни",
-      "recommended": "Препорачани"
+      "recommended": "Препорачани",
+      "top10Problems": "Топ 10 рангирани проблеми"
     },
     "problem": {
       "difficulty": "Тежина",

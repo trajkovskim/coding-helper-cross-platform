@@ -25,7 +25,7 @@ public interface ContestService {
 
   Contest update(Long id, Contest contest);
 
-  ContestProblem addProblemToContest(Long id, Problem problem) throws IOException;
+  ContestProblem addProblemToContest(Long id, Integer score, Problem problem) throws IOException;
 
   ContestProblemDto getContestProblem(Long contestId, Long problemId, String language);
 

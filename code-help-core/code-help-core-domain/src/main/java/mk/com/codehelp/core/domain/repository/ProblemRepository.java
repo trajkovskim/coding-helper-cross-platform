@@ -90,7 +90,7 @@ public interface ProblemRepository extends Neo4jRepository<Problem, Long> {
       optional match (problem)-[r_test_case:TEST_CASES]->(test_case)
       with problem, code, test_case, submission
       where ID(problem)=$id
-      detach delete problem, starter_code, runner_code, test_case, submission""")
+      detach delete problem, code, test_case, submission""")
   void deleteById(@NonNull Long id);
 
   boolean existsByIdAndLikedBy_UserIdContains(Long id, String userId);

@@ -82,7 +82,7 @@ public class ContestServiceImpl implements ContestService {
           .orElse(null);
 
         return ContestProblemDto.builder()
-          .id(contestProblem.getId())
+          .id(problemValue.getId())
           .name(problemValue.getName())
           .description(problemValue.getDescription())
           .difficulty(problemValue.getDifficulty())
@@ -108,7 +108,7 @@ public class ContestServiceImpl implements ContestService {
   }
 
   @Override
-  public ContestProblem addProblemToContest(Long id, Problem problem) throws IOException {
+  public ContestProblem addProblemToContest(Long id, Integer score, Problem problem) throws IOException {
 
     Contest contest = contestRepository.findById(id).orElseThrow(() -> new ContestNotFoundException(id));
 
@@ -116,7 +116,7 @@ public class ContestServiceImpl implements ContestService {
       throw new ContestStatusException(id, ContestStatus.OPEN);
 
     Problem createdProblem = problemService.create(problem);
-    ContestProblem contestProblem = new ContestProblem(createdProblem, 0);
+    ContestProblem contestProblem = new ContestProblem(createdProblem, score);
     contest.getProblems().add(contestProblem);
     contestRepository.save(contest);
     return contestProblem;

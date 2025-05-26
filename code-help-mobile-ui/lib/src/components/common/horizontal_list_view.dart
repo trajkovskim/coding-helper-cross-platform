@@ -44,12 +44,28 @@ class HorizontalListView extends StatelessWidget {
                                 width: constraints.maxWidth * 0.25,
                                 child: Card(
                                   elevation: 2,
-                                  child: ListTile(
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-                                    key: item.key,
-                                    title: item.title != null ? Center(child: Text(item.title!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall)) : null,
+                                  color: Colors.grey.withValues(alpha: 0.5),
+                                  child: InkWell(
                                     onTap: item.onTap,
-                                    tileColor: Colors.grey.withOpacity(0.15),
+                                    child: GridTile(
+                                      key: item.key,
+                                      footer: item.title != null ? Column(
+                                        children: [
+                                          Center(child: Text(item.title!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall)),
+                                          SizedBox(height: 3)
+                                        ],
+                                      ) : null,
+                                      child: Padding(
+                                          padding: EdgeInsets.only(bottom: 20),
+                                          child: Padding(
+                                              padding: EdgeInsets.all(23),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: const Icon(Icons.hourglass_empty_rounded),
+                                              )
+                                          )
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

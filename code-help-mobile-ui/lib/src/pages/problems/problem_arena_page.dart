@@ -77,7 +77,11 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
       createMessage(context, value.message, "info");
       setState(() {});
     }).onError(
-      (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
+      (error, stackTrace) {
+        print(error.toString());
+        createMessage(context, error.toString(), "error");
+        throw ErrorCode.PROBLEM_ARENA;
+      },
     );
   }
 
@@ -98,7 +102,10 @@ class _ProblemArenaPageState extends State<ProblemArenaPage> {
         .runCode(params.entry!.id, builder.build())
         .then((value) => createMessage(context, value, "info"))
         .onError(
-          (error, stackTrace) => throw ErrorCode.PROBLEM_ARENA,
+          (error, stackTrace) {
+            createMessage(context, error.toString(), "error");
+            throw ErrorCode.PROBLEM_ARENA;
+          },
         );
   }
 

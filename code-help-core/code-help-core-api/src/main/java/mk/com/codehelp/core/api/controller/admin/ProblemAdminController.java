@@ -44,7 +44,7 @@ public class ProblemAdminController implements ProblemApi {
 
     @Override
     @SneakyThrows
-    public ResponseEntity<CreatedResponse> createProblem(Long contestId, ProblemRequest problemRequest) {
+    public ResponseEntity<CreatedResponse> createProblem(Long contestId, Integer score, ProblemRequest problemRequest) {
 
         Problem problem = problemMapper.convert(problemRequest);
 
@@ -53,7 +53,7 @@ public class ProblemAdminController implements ProblemApi {
             Problem created = problemService.create(problem);
             createdId = created.getId();
         } else {
-            ContestProblem created = contestService.addProblemToContest(contestId, problem);
+            ContestProblem created = contestService.addProblemToContest(contestId, score, problem);
             createdId = created.getId();
         }
 

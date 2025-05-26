@@ -79,27 +79,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                           items: problems
                               .map(
                                 (entry) => Item(
-                                  onTap: () {
-                                    navigator.pushNamed(
-                                      '/problem-overview',
-                                      arguments: {'id': entry.id.toString()},
-                                    );
-                                  },
-                                ),
-                              )
-                              .toList(),
-                          title: t('active'),
-                        ),
-                      ),
-                    if (problems.isNotEmpty)
-                      SizedBox.fromSize(size: const Size.fromHeight(20)),
-                    if (problems.isNotEmpty)
-                      SizedBox(
-                        height: constraints.maxHeight * listHeightFactor,
-                        child: HorizontalListView(
-                          items: problems
-                              .map(
-                                (entry) => Item(
+                                  title: entry.name,
                                   onTap: () {
                                     navigator.pushNamed(
                                       '/problem-overview',
@@ -131,7 +111,7 @@ class ProblemsOverviewPage extends StatelessWidget {
                                 ),
                               )
                               .toList(),
-                          title: t('recommended'),
+                          title: t('top10Problems'),
                         ),
                       )
                   ],

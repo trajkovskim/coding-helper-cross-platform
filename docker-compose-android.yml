@@ -1,0 +1,135 @@
+version: '3'
+services:
+  code-help-ingress:
+    image: code-help-ingress
+    container_name: code-help-ingress
+    build: code-help-ingress
+    ports:
+      - 80:80
+      - 433:433
+    depends_on:
+#      - code-help-astro-ui
+      - code-help-admin-proxy
+      - code-help-admin-ui
+      - code-help-core
+      - code-help-forum
+      - code-help-keycloak-iam
+  code-help-keycloak-iam:
+    image: keycloak/keycloak:21.0
+    container_name: code-help-keycloak-iam
+    ports:
+      - 8443:8443
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command:
+      - start-dev
+      - --http-relative-path=/iam
+      - --proxy=edge
+      - --hostname-url=http://10.0.2.2/iam
+      - --hostname-admin-url=http://10.0.2.2/iam
+      - --import-realm
+    volumes:
+      - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
+#  code-help-astro-ui:
+#    image: code-help-astro-ui
+#    container_name: code-help-astro-ui
+#    build:
+#      context: code-help-astro-ui
+#      dockerfile: Dockerfile
+#    environment:
+#      - PUBLIC_CORE_API=http://localhost/core/api
+#      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
+#    ports:
+#      - 4321:4321
+  code-help-admin-proxy:
+    image: code-help-admin-proxy
+    container_name: code-help-admin-proxy
+    build:
+      context: code-help-admin/code-help-admin-proxy
+      dockerfile: ./@global/deploy/Dockerfile
+    environment:
+      - PROXY_MAPPINGS=.*/admin/api/v1/forum->http://code-help-forum:8080/api/v1,.*/admin/api/v1->http://code-help-core:8080/api
+      - OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://localhost/iam/realms/code-help
+      - OAUTH2_RESOURCESERVER_JWT__DISCOVERYISSUERURI=http://code-help-keycloak-iam:8080/iam/realms/code-help
+      - OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+    ports:
+      - 4000:4000
+    depends_on:
+      - code-help-keycloak-iam
+  code-help-admin-ui:
+    image: code-help-admin-ui
+    container_name: code-help-admin-ui
+    build:
+      context: code-help-admin/code-help-admin-ui
+      dockerfile: Dockerfile
+      args:
+        - VITE_ADMIN_API_URL=http://localhost/admin/api/v1
+        - VITE_KEYCLOAK_URL=http://localhost/iam
+        - VITE_KEYCLOAK_REALM=code-help
+        - VITE_KEYCLOAK_CLIENTID=code-help-flutter
+        - VITE_BASE_ROUTE=/admin-ui
+  code-help-core:
+    image: code-help-core
+    container_name: code-help-core
+    build:
+      context: code-help-core
+      args:
+        - VERSION=0.0.1-SNAPSHOT
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://10.0.2.2/iam/realms/code-help
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI: http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+      SPRING_NEO4J_URI: bolt://code-help-core-neo4j:7687
+      SPRING_NEO4J_AUTHENTICATION_USERNAME: neo4j
+      SPRING_NEO4J_AUTHENTICATION_PASSWORD: password
+    ports:
+      - 3000:8080
+    depends_on:
+      - code-help-core-neo4j
+  code-help-forum:
+    image: code-help-forum
+    container_name: code-help-forum
+    build:
+      context: code-help-forum
+      args:
+        - VERSION=0.0.1-SNAPSHOT
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://10.0.2.2/iam/realms/code-help
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI: http://code-help-keycloak-iam:8080/iam/realms/code-help/protocol/openid-connect/certs
+      SPRING_DATASOURCE_URL: jdbc:postgresql://code-help-forum-postgres:5432/code_help
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - 3001:8080
+    depends_on:
+      - code-help-forum-postgres
+  code-help-forum-postgres:
+    image: postgres:15.1-alpine
+    container_name: code-help-forum-postgres
+    environment:
+      - POSTGRES_DB=code_help
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    volumes:
+      - code-help-forum-postgres-data:/var/lib/postgresql/data
+  code-help-core-neo4j:
+    image: neo4j:5.2.0
+    hostname: neo4j
+    container_name: code-help-core-neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    volumes:
+      - code-help-core-neo4j-data:/data
+      - code-help-core-neo4j-plugins:/plugins
+      - code-help-core-neo4j-logs:/logs
+volumes:
+  code-help-forum-postgres-data:
+  code-help-core-neo4j-data:
+  code-help-core-neo4j-logs:
+  code-help-core-neo4j-plugins:

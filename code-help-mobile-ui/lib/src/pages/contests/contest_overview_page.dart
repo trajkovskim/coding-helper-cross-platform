@@ -24,13 +24,14 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
   void handleTapProblem(ContestProblem problem) {
     ProblemEntryBuilder problemBuilder = problem.toBuilder();
     $ProblemEntryBuilder builder = $ProblemEntryBuilder()
-      ..id = problemBuilder.id
-      ..category = problemBuilder.category
-      ..markdown = problemBuilder.markdown
-      ..starterCode = problemBuilder.starterCode
+      ..id = problem.id
       ..name = problem.name
+      ..description = problem.description
+      ..category = problem.category
+      ..markdown = problem.markdown
+      ..starterCode = problem.starterCode
       ..difficulty = problem.difficulty
-      ..likes = 0;
+      ..likes = problem.likes;
 
     final navigator = Navigator.of(context);
     navigator.pushNamed(
@@ -51,8 +52,11 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
   @override
   Widget build(BuildContext context) {
     final t = getTranslation(context, 'contests');
+    final tGlobal = getTranslation(context);
+
     final params = ModalRoute.of(context)?.settings.arguments as Map<String, String?>;
     final id = params['id'];
+
     return FutureBuilder(
         future: contestsService.getContestEntry(id!),
         builder: (context, snapshot) {
@@ -104,11 +108,11 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                                               child: const Icon(Icons.abc, size: 64),
                                             ),
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
                                                 Text('${t('duration')} ${entry?.duration}'),
                                                 Text('${t('startsOn')} ${entry?.startDate}'),
-                                                Text('${t('status')} ${entry?.status}')
+                                                Text('${t('status')} ${tGlobal('contestStatus.${entry?.status}')}')
                                               ],
                                             )
                                           ],
@@ -158,9 +162,7 @@ class _ContestOverviewPageState extends State<ContestOverviewPage> {
                         SizedBox.fromSize(size: const Size.fromHeight(15)),
                         entry?.status == ContestStatus.OPEN
                             ? Center(
-                                child: Text(
-                                  '${t('status')}: ${entry?.status}',
-                                ),
+                                child: Text('${t('status')} ${tGlobal('contestStatus.${entry?.status}')}'),
                               )
                             : VerticalListView(
                                 padding: EdgeInsets.zero,

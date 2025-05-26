@@ -54,35 +54,37 @@ class ForumOverviewPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
-              height: constraints.maxHeight * 0.20,
+                height: constraints.maxHeight * 0.235,
                 child: FutureBuilder(
-                  future: communityService.getAllCommunities(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      throw ErrorCode.HOME;
-                    }
+                    future: communityService.getAllCommunities(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        throw ErrorCode.HOME;
+                      }
 
-                    if (!snapshot.hasData) {
-                      return const Card(
-                        child: Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
+                      if (!snapshot.hasData) {
+                        return const Card(
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        );
+                      }
+                      final entries = snapshot.data!;
+
+                      return HorizontalListView(
+                        title: ft('communities'),
+                        items: entries.communities
+                            .map(
+                              (entry) => Item(
+                                title: entry.name,
+                                onTap: () => ForumCommunityPage.navigate(context, CommunityPageArguments(communityName: entry.name)),
+                              ),
+                        )
+                            .toList(),
                       );
-                    }
-                    final entries = snapshot.data!;
-
-                    return HorizontalListView(
-                      title: ft('communities'),
-                      items: entries.communities
-                          .map(
-                            (entry) => Item(
-                          onTap: () => ForumCommunityPage.navigate(context, CommunityPageArguments(communityName: entry.name)),
-                        ),
-                      )
-                          .toList(),
-                    );
-                  },
-                )),
+                    },
+                  )
+                ),
                 Padding(padding: EdgeInsets.only(left: 20, top: 10),
                     child: Text(ft('recentPosts'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
                 FutureBuilder<ShortPosts?>(

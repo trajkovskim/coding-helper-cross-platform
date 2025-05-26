@@ -8,7 +8,7 @@ services:
       - 80:80
       - 433:433
     depends_on:
-#      - code-help-astro-ui
+      #      - code-help-astro-ui
       - code-help-admin-proxy
       - code-help-admin-ui
       - code-help-core
@@ -32,17 +32,17 @@ services:
       - --import-realm
     volumes:
       - ./code-help-keycloak-iam/realms:/opt/keycloak/data/import
-#  code-help-astro-ui:
-#    image: code-help-astro-ui
-#    container_name: code-help-astro-ui
-#    build:
-#      context: code-help-astro-ui
-#      dockerfile: Dockerfile
-#    environment:
-#      - PUBLIC_CORE_API=http://localhost/core/api
-#      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
-#    ports:
-#      - 4321:4321
+  #  code-help-astro-ui:
+  #    image: code-help-astro-ui
+  #    container_name: code-help-astro-ui
+  #    build:
+  #      context: code-help-astro-ui
+  #      dockerfile: Dockerfile
+  #    environment:
+  #      - PUBLIC_CORE_API=http://localhost/core/api
+  #      - PUBLIC_FORUM_API=http://localhost/forum/api/v1
+  #    ports:
+  #      - 4321:4321
   code-help-admin-proxy:
     image: code-help-admin-proxy
     container_name: code-help-admin-proxy

@@ -38,7 +38,7 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
               "Test case %d of %d failed\nOutput: %s\nExpected: %s"
                   .formatted(i, testCases.size(), output.getMessage(), expectedOutput))
           .error(output.isError())
-          .testCasesPassed(i)
+          .testCasesPassed(i - 1)
           .build();
       }
       ++i;
@@ -70,7 +70,7 @@ public class CodeRunnerServiceImpl implements CodeRunnerService {
 
     return CodeRunnerDto.builder()
         .message(output.isEmpty() ? error : output)
-        .error(output.isEmpty())
+        .error(output.isEmpty() || !error.isEmpty())
         .build();
   }
 }

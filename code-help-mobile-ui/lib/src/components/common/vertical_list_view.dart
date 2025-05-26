@@ -53,6 +53,7 @@ class VerticalListView extends StatelessWidget {
                     .map(
                       (item) => [
                         InkWell(
+                          key: item.title != null ? Key(item.title!) : null,
                           onTap: item.onTap,
                           child: ListTile(
                             leading: item.image != null

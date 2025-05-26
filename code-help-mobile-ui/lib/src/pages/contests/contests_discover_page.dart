@@ -84,6 +84,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     final t = getTranslation(context, 'contests');
+    final tGlobal = getTranslation(context);
 
     final filters = transformFilterOptionsListToMap(filterOptions);
     final sorters = transformSortOptions(sortOptions).map((e) => 'contest.$e').toList();
@@ -167,7 +168,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                   arguments: {'id': entry.id.toString()},
                                 ),
                                 subtitle:
-                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startDate} ${t('status')}: ${entry.status}',
+                                    '${t('duration')}: ${entry.duration}\n${t('startsOn')}: ${entry.startDate.toLocal()}\n${t('status')}: ${tGlobal('contestStatus.${entry.status}')}',
                               ),
                             )
                             .toList(),
@@ -183,7 +184,7 @@ class _ContestsDiscoverPageState extends State<ContestsDiscoverPage> {
                                   arguments: {'id': entry.id.toString()},
                                 ),
                                 subtitle:
-                                    '${t('duration')}: ${entry.duration} ${t('startsOn')}: ${entry.startDate} ${t('status')}: ${entry.status}',
+                                '${t('duration')}: ${entry.duration}\n${t('startsOn')}: ${entry.startDate.toLocal()}\n${t('status')}: ${tGlobal('contestStatus.${entry.status}')}',
                               ),
                             )
                             .toList(),

@@ -1,5 +1,10 @@
 {
   "codehelp": {
+    "contestStatus": {
+      "OPEN": "Open",
+      "STARTED": "Started",
+      "CLOSED": "Closed"
+    },
     "info": "Info",
     "empty": "Empty",
     "error": "Error",
@@ -44,7 +49,8 @@
       "title": "Home",
       "explore": "Explore",
       "activeContests": "Active Contests",
-      "top10Problems": "Top 10 Ranked Problems"
+      "top10Problems": "Top 10 Ranked Problems",
+      "communities": "Communities"
     },
     "contests": {
       "title": "Contests",
@@ -64,7 +70,8 @@
         "title": "Discover"
       },
       "active": "Active",
-      "recommended": "Recommended"
+      "recommended": "Recommended",
+      "top10Problems": "Top 10 Ranked Problems"
     },
     "problem": {
       "difficulty": "Difficulty",
@@ -98,7 +105,6 @@
         "newPost": "Create new post",
         "postTitleInput": "Post title",
         "postContentInput": "Post content"
-      }
       }
     },
     "profile": {

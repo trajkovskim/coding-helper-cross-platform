@@ -54,7 +54,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     Submission saved = this.submissionRepository.save(
       new Submission(
-        codeRunnerDto.isError() ? SubmissionStatus.ACCEPTED : SubmissionStatus.DECLINED,
+        codeRunnerDto.isError() || codeRunnerDto.getTestCasesPassed() < problem.getTestCases().size()
+          ? SubmissionStatus.DECLINED
+          : SubmissionStatus.ACCEPTED,
         language,
         code,
         problem,

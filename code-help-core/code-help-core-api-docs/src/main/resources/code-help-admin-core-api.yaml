@@ -107,6 +107,11 @@ paths:
           required: false
           schema:
             $ref: "code-help-common-api.yaml#/components/schemas/Long"
+        - in: query
+          name: score
+          required: false
+          schema:
+            type: integer
       requestBody:
         content:
           application/json:

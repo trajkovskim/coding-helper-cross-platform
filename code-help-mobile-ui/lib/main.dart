@@ -95,8 +95,11 @@ class MyApp extends StatelessWidget {
                 Future.wait([tryLogin(sharedContext), init(sharedContext), Future.delayed(const Duration(seconds: 2))]),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
-                return const MaterialApp(
-                  home: CodingHelperInitialPage(),
+                return MaterialApp(
+                  home: const CodingHelperInitialPage(),
+                  darkTheme: ThemeData.dark(),
+                  theme: ThemeData.light(),
+                  themeMode: ThemeMode.system,
                 );
               }
 
