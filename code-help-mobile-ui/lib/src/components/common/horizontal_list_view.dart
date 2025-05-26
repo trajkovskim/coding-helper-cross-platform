@@ -44,7 +44,7 @@ class HorizontalListView extends StatelessWidget {
                                 width: constraints.maxWidth * 0.25,
                                 child: Card(
                                   elevation: 2,
-                                  color: Colors.grey.withValues(alpha: 0.5),
+                                  color: Colors.transparent.withValues(alpha: 0.03),
                                   child: InkWell(
                                     onTap: item.onTap,
                                     child: GridTile(
