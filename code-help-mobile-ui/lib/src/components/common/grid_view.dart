@@ -24,6 +24,8 @@ class CustomGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView(
@@ -38,7 +40,9 @@ class CustomGridView extends StatelessWidget {
               ? children
                   .map(
                     (item) => Card(
-                      elevation: 2,
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 1,
+                      shadowColor: theme.primaryColor,
                       child: InkWell(
                         onTap: item.onTap,
                         child: GridTile(

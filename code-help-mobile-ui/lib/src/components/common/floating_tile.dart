@@ -28,15 +28,15 @@ class FloatingTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: InkWell(
-              onTap: onTap,
-              child: Card(
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                shadowColor: theme.primaryColor,
-                elevation: 2,
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              shadowColor: theme.primaryColor,
+              elevation: 2,
+              child: InkWell(
+                onTap: onTap,
                 child: Center(
                   child: Padding(
                     padding: padding,
