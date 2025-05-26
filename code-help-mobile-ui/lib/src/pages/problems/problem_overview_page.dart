@@ -140,8 +140,8 @@ class _ProblemOverviewPageState extends State<ProblemOverviewPage> {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
-                                        child: const Icon(
-                                          Icons.javascript,
+                                        child: Icon(
+                                          selectedLanguage == 'javascript' ? Icons.javascript :  Icons.abc,
                                           size: 64,
                                         ),
                                       ),
